@@ -1,0 +1,23 @@
+{
+  "name": "webrider",
+  "version": "1.0.0",
+  "description": "Down to metal webdriver; you will be testing in 20 minutes, not 20 hours",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mercmobily/webrider.git"
+  },
+  "keywords": [
+    "webdriver",
+    "selenium"
+  ],
+  "author": "Tony Mobily",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mercmobily/webrider/issues"
+  },
+  "homepage": "https://github.com/mercmobily/webrider#readme"
+}
