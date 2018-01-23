@@ -7,6 +7,7 @@
 
   [ ] Install JSDoc, check generated documentation
   [ ] Add missing findElement*** docs, make sure they appear in doc
+  [ ] Manage errors properly: sometimes calls fail but it's not a proper error
   [ ] You wrote an API! Double check documentation, put it online
 
 https://stackoverflow.com/questions/48396991/the-capabilities-object-in-webdriver-what-are-capabilities-and-firstmatch-e
@@ -167,7 +168,7 @@ class ElementBase {
    *                `Driver.using.XPATH`
    * @param {string} value The parameter to the `using` method
    *
-   * @return {Element} An object representing the element.
+   * @return {Promise<Element>} An object representing the element.
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '[name=q]' )
    *
@@ -186,7 +187,7 @@ class ElementBase {
    *                `Driver.using.XPATH`
    * @param {string} value The parameter to the `using` method
    *
-   * @return [{Element},{Element},...] An array of elements
+   * @return {Promise<[Element},Element,...]>} An array of elements
    * @example
    *   var el = await driver.findElements( Driver.using.CSS, '.item' })
    *
@@ -203,7 +204,7 @@ class ElementBase {
   /**
    * Check that the element is selected
    *
-   * @return {boolean} true of false
+   * @return {Promise<boolean>} true of false
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#main' })
        var isSelected = await el.isSelected()
@@ -218,7 +219,7 @@ class ElementBase {
    *
    * @param {string} name The name of the attribute to be fetched
    *
-   * @return {string} The attribute's value
+   * @return {Promise<string>} The attribute's value
    * @example
    *   var el = await driver.findElementCss('a' })
    *   var href = el.getAttribute('href')
@@ -233,7 +234,7 @@ class ElementBase {
    *
    * @param {string} name The name of the property to be fetched
    *
-   * @return {string} The property's value
+   * @return {Promise<string>} The property's value
    * @example
    *   var el = await driver.findElementCss('a' })
    *   var href = el.getProperty('href')
@@ -248,7 +249,7 @@ class ElementBase {
    *
    * @param {string} name The name of the CSS value to be fetched
    *
-   * @return {string} The CSS's value
+   * @return {Promise<string>} The CSS's value
    * @example
    *   var el = await driver.findElementCss('a' })
    *   var height = el.getCssValue('height')
@@ -261,7 +262,7 @@ class ElementBase {
   /**
    * Get text value from element
    *
-   * @return {string} The text
+   * @return {Promise<string>} The text
    * @example
    *   var el = await driver.findElementCss('a' })
    *   var text = el.getText()
@@ -273,7 +274,7 @@ class ElementBase {
   /**
    * Get tag name from element
    *
-   * @return {string} The tag's name
+   * @return {Promise<string>} The tag's name
    * @example
    *   var el = await driver.findElementCss('.link' })
    *   var tagName = el.getTagName()
@@ -285,7 +286,7 @@ class ElementBase {
   /**
    * Get rectfrom element
    *
-   * @return {string} The rect info
+   * @return {Promise<string>} The rect info
 
    * @example
    *   var el = await driver.findElementCss('a' })
@@ -298,7 +299,7 @@ class ElementBase {
   /**
    * Check that the element is enabled
    *
-   * @return {boolean} true of false
+   * @return {Promise<boolean>} true of false
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#main' })
        var isSelected = await el.isSelected()
@@ -311,7 +312,7 @@ class ElementBase {
   /**
    * Click on an element
    *
-   * @return {Element} The element itself
+   * @return {Promise<Element>} The element itself
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#button' })
        await el.click()
@@ -325,7 +326,7 @@ class ElementBase {
   /**
    * Clean an element
    *
-   * @return {Element} The element itself
+   * @return {Promise<Element>} The element itself
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#input' })
    *   await el.clear()
@@ -339,8 +340,8 @@ class ElementBase {
   /**
    * Send keys to an element
    *
-   * @return {Element} The element itself. Concatenate with `Element.KEY` to send
-   *                   special characters.
+   * @return {Promise<Element>} The element itself. Concatenate with `Element.KEY` to send
+   *                              special characters.
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#input' })
    *   await el.sendKeys("This is a search" + Element.KEY.ENTER)
@@ -356,7 +357,7 @@ class ElementBase {
   /**
    * Take screenshot of the element
    *
-   * @return {Element} The element itself
+   * @return {Promise<Element>} The element itself
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#input' })
    *   await el.takeScreenshot()
@@ -385,6 +386,16 @@ class DriverBase {
     return this.sessionId && this.ip && this.port
   }
 
+  /**
+   * Create a new session
+   *
+   * @return {Promise<session>} o The object with the timeouts
+   * @return {object} o.capabiities An object representing the capabilities of the web driver
+   * @return {string} o.sessionId The sessionId
+   *
+   * @example
+   *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
+  */
   async newSession (parameters) {
     try {
       var res = await this._execute('post', '', parameters.getData())
@@ -404,7 +415,7 @@ class DriverBase {
       if (!this.sessionId || !this.sessionCapabilities) throw new Error('Could not get sessionId and capabilities out of returned object')
 
       this._urlBase = `http://${this.ip}:${this.port}/session/${this.sessionId}`
-      return res
+      return value
     } catch (e) {
       this.sessionId = null
       this._sessionData = {}
@@ -413,6 +424,16 @@ class DriverBase {
     }
   }
 
+  /**
+   * Create a new session
+   *
+   * @param {Promise<session>} o The object with the timeouts
+   * @param {object} o.capabiities An object representing the capabilities of the web driver
+   * @param {string} o.sessionId The sessionId
+   *
+   * @example
+   *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
+  */
   async deleteSession () {
     try {
       var res = await this._execute('delete', '')
@@ -447,9 +468,11 @@ class DriverBase {
   static get using () { return USING }
 
 /**
- * Get timeouts for session
+ * Get timeouts
  * *
- * @return {object} An object with keys { implicit: 0, pageLoad: 300000, script: 30000 }
+ * @return {Promise<Object>} A promise resolving to an object
+                     with keys `implicit`, `pageLoad` and `script `. E.g.
+                    `{ implicit: 0, pageLoad: 300000, script: 30000 }`
  *
  * @example
  *   var timeouts = await driver.getTimeouts()
@@ -459,9 +482,9 @@ class DriverBase {
   }
 
   /**
-   * Set timeouts for session
+   * Set timeouts
    *
-   * @param {object} param The object with the timeouts
+   * @param {Promise<object>} param The object with the timeouts
    * @param {number} param.implicit Implicit timeout
    * @param {number} param.pageLoad Timeout for page loads
    * @param {number} param.script Timeout for scripts
@@ -476,7 +499,7 @@ class DriverBase {
   /**
    * Navigate to page
    *
-   * @return {Driver} The driver itself
+   * @return {Promise<Driver>} The driver itself
    *
    * @example
    *   await driver.navigateTo('http://www.google.com')
@@ -489,8 +512,9 @@ class DriverBase {
   /**
    * Bake a cake without coffee
    *
+   * @return {Promise<string>} The URL
    * @example
-   *   var currentUrl = await driver.setCurrentUrl()
+   *   var currentUrl = await driver.getCurrentUrl()
   */
   getCurrentUrl () {
     return this._execute('get', '/url')
@@ -499,7 +523,7 @@ class DriverBase {
   /**
    * Go back one step
    *
-   * @return {Driver} The driver itself
+   * @return {Promise<Driver>} The driver itself
    *
    * @example
    *   await driver.back()
@@ -512,7 +536,7 @@ class DriverBase {
   /**
    * Go forward one step
    *
-   * @return {Driver} The driver itself
+   * @return {Promise<Driver>} The driver itself
    *
    * @example
    *   await driver.forward()
@@ -522,12 +546,29 @@ class DriverBase {
     return this
   }
 
-  refresh (p) {
-    return this._execute('post', '/refresh', p)
+  /**
+   * Refresh the page
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.forward()
+  */
+  async refresh () {
+    await this._execute('post', '/refresh')
+    return this
   }
 
-  getTitle (p) {
-    return this._execute('get', '/title', p)
+  /**
+   * Get page title
+   *
+   * @return {Promise<string>} The page title
+   *
+   * @example
+   *   var title = await driver.getTitle()
+  */
+  getTitle () {
+    return this._execute('get', '/title')
   }
 
   getWindowHandle (p) {
@@ -717,6 +758,9 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefox', value: ['c', 'h', 'r', 'o', 'm', 'e'] }))
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefoxandchrome' + Element.KEY.ENTER }))
 
+
+
+
     await driver.navigateTo('http://usejsdoc.org')
     var article = await driver.findElementCss('article')
     console.log('Article:', article)
@@ -746,7 +790,17 @@ var Element = FindHelpersMixin(ElementBase)
     var q = await driver.findElementCss('[name=q]')
     await q.sendKeys('stocazzo' + Element.KEY.ENTER)
 
-    await driver.sleep(2000)
+    console.log('CURRNET URL:', await driver.getCurrentUrl())
+    console.log('BACK:')
+    await driver.back()
+    console.log('CURRNET URL:', await driver.getCurrentUrl())
+    console.log('BACK:')
+    await driver.forward()
+    console.log('CURRNET URL:', await driver.getCurrentUrl())
+    console.log('Refreshing...')
+    await driver.refresh()
+
+    await driver.sleep(5000)
 
     // console.log('TIMEOUTS:', await driver.getTimeouts())
 
