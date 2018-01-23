@@ -4,6 +4,7 @@
   Make up skeleton:
   [ ] Run each method, document parameters making constants when necessary
     [ ] Include Actions API
+
   [ ] Install JSDoc, check generated documentation
   [ ] Add missing findElement*** docs, make sure they appear in doc
   [ ] You wrote an API! Double check documentation, put it online
@@ -15,7 +16,7 @@ https://stackoverflow.com/questions/48396991/the-capabilities-object-in-webdrive
   [ ] Add "wait" statement, poll and checks for a condition with possible timeout
 
   Make it production-ready
-  [ ] Write tests
+  [ ] Write tests (ah!)
 
 DONE:
   [X] Figure out why sessionId is in value in firefox, and in object root in chrome
@@ -389,7 +390,6 @@ class DriverBase {
       var res = await this._execute('post', '', parameters.getData())
       // var res = await this._execute('post', '', { desiredCapabilities: {} })
 
-      console.log('RES:', res)
       // W3C conforming response; checked if value is an object containing a `capabilities` object property
       // and a `sessionId` string property
       var value = res.value
@@ -458,24 +458,68 @@ class DriverBase {
     return checkRes(await this._execute('get', '/timeouts')).value
   }
 
+  /**
+   * Set timeouts for session
+   *
+   * @param {object} param The object with the timeouts
+   * @param {number} param.implicit Implicit timeout
+   * @param {number} param.pageLoad Timeout for page loads
+   * @param {number} param.script Timeout for scripts
+   *
+   * @example
+   *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
+  */
   async setTimeouts (parameters) {
-    return checkRes(await this._execute('post', '/timeouts', { implicit: 1001, parameters, ms: 1000, type: 'implicit' })).value
+    return checkRes(await this._execute('post', '/timeouts', parameters)).value
   }
 
-  navigateTo (p) {
-    return this._execute('post', '/url', p)
+  /**
+   * Navigate to page
+   *
+   * @return {Driver} The driver itself
+   *
+   * @example
+   *   await driver.navigateTo('http://www.google.com')
+  */
+  async navigateTo (url) {
+    await this._execute('post', '/url', { url })
+    return this
   }
 
-  getCurrentUrl (p) {
-    return this._execute('get', '/url', p)
+  /**
+   * Bake a cake without coffee
+   *
+   * @example
+   *   var currentUrl = await driver.setCurrentUrl()
+  */
+  getCurrentUrl () {
+    return this._execute('get', '/url')
   }
 
-  back (p) {
-    return this._execute('post', '/back', p)
+  /**
+   * Go back one step
+   *
+   * @return {Driver} The driver itself
+   *
+   * @example
+   *   await driver.back()
+  */
+  async back () {
+    await this._execute('post', '/back')
+    return this
   }
 
-  forward (p) {
-    return this._execute('post', '/forward', p)
+  /**
+   * Go forward one step
+   *
+   * @return {Driver} The driver itself
+   *
+   * @example
+   *   await driver.forward()
+  */
+  async forward () {
+    await this._execute('post', '/forward')
+    return this
   }
 
   refresh (p) {
@@ -673,12 +717,12 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefox', value: ['c', 'h', 'r', 'o', 'm', 'e'] }))
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefoxandchrome' + Element.KEY.ENTER }))
 
-    await driver.navigateTo({ url: 'http://usejsdoc.org' })
+    await driver.navigateTo('http://usejsdoc.org')
     var article = await driver.findElementCss('article')
     console.log('Article:', article)
 
     console.log('TIMEOUTS:', await driver.getTimeouts())
-    console.log('SETTIMEOUTS:', await driver.setTimeouts({ implicit: 0, pageLoad: 300000, script: 30000 }))
+    // console.log('SETTIMEOUTS:', await driver.setTimeouts({ implicit: 0, pageLoad: 300000, script: 30000 }))
     console.log('TIMEOUTS AGAIN:', await driver.getTimeouts())
 
     var dts = await article.findElementsCss('dt')
@@ -698,7 +742,7 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('SEE CLEAR:', await h2.clear())
     // console.log('SEE SCREENSHOT:', await h2.takeScreenshot())
 
-    await driver.navigateTo({ url: 'http://www.google.com' })
+    await driver.navigateTo('http://www.google.com')
     var q = await driver.findElementCss('[name=q]')
     await q.sendKeys('stocazzo' + Element.KEY.ENTER)
 
