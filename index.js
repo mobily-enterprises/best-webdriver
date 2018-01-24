@@ -2,22 +2,17 @@
   TODO:
 
   Make up skeleton:
-  [ ] Run each method, document parameters making constants when necessary
-    [ ] Include Actions API
-
-  [ ] Install JSDoc, check generated documentation
-  [ ] Add missing findElement*** docs, make sure they appear in doc
-  [ ] Manage errors properly: sometimes calls fail but it's not a proper error
-  [ ] You wrote an API! Double check documentation, put it online
-
-https://stackoverflow.com/questions/48396991/the-capabilities-object-in-webdriver-what-are-capabilities-and-firstmatch-e
-
-  Finish it off:
-  [ ] Add code to run chrome (or whatever) automatically, passing parameters for port and more
-  [ ] Add "wait" statement, poll and checks for a condition with possible timeout
-
-  Make it production-ready
-  [ ] Write tests (ah!)
+  [X] WED 24 Finish off methods in main list
+  [ ] FRI-SAT 26 27 Finish off Actions API calls
+  [ ] SUN 28 Install JSDoc, check generated documentation
+  [ ] MON 29 Add missing findElement*** docs, make sure they appear in doc
+  [ ] TUE 30 Manage errors properly: sometimes calls fail but it's not a proper error
+  [ ] WED 31 Put it online on Github pages
+  [ ] THR 1 Add code to run chrome (or whatever) automatically, passing parameters for port and more
+  [ ] FRI 2 Add "wait" statement, poll and checks for a condition with possible timeout
+  [ ] SAT 3 Write initial tests (ah!)
+  [ ] SAT 3 Submit code for review
+  [ ] SUN 4 Write more tests
 
 DONE:
   [X] Figure out why sessionId is in value in firefox, and in object root in chrome
@@ -151,8 +146,10 @@ class ElementBase {
     if (isObject(elObject) && elObject.value) value = elObject.value
     else value = elObject
 
-    // Get the ID, using W3C's standard way
-    this.id = value['element-6066-11e4-a52e-4f735466cecf']
+    // Sets the ID. Having `element-XXX` and `ELEMENT` as keys to the object means
+    // that it can be used by switchToFrame()
+    var idx = 'element-6066-11e4-a52e-4f735466cecf'
+    this.id = this.ELEMENT = this[idx] = value[idx]
 
     // No ID could be find
     if (!this.id) throw new Error('Could not get element ID from element object')
@@ -175,7 +172,6 @@ class ElementBase {
   */
   async findElement (using, value) {
     var res = await this._execute('post', `/element/${this.id}/element`, {using, value})
-    checkRes(res)
     return new Element(this.driver, res)
   }
 
@@ -194,10 +190,7 @@ class ElementBase {
   */
   async findElements (using, value) {
     var res = await this._execute('post', `/element/${this.id}/elements`, {using, value})
-
-    checkRes(res)
     if (!Array.isArray(res.value)) throw new Error('Result from findElements must be an array')
-
     return res.value.map((v) => new Element(this.driver, v))
   }
 
@@ -211,7 +204,7 @@ class ElementBase {
    *
   */
   async isSelected () {
-    return !!checkRes(await this._execute('get', `/element/${this.id}/selected`)).value
+    return !!(await this._execute('get', `/element/${this.id}/selected`)).value
   }
 
   /**
@@ -226,7 +219,7 @@ class ElementBase {
    *
   */
   async getAttribute (name) {
-    return checkRes(await this._execute('get', `/element/${this.id}/attribute/${name}`)).value
+    return (await this._execute('get', `/element/${this.id}/attribute/${name}`)).value
   }
 
   /**
@@ -241,7 +234,7 @@ class ElementBase {
    *
   */
   async getProperty (name) {
-    return checkRes(await this._execute('get', `/element/${this.id}/property/${name}`)).value
+    return (await this._execute('get', `/element/${this.id}/property/${name}`)).value
   }
 
   /**
@@ -256,7 +249,7 @@ class ElementBase {
    *
   */
   async getCssValue (name) {
-    return checkRes(await this._execute('get', `/element/${this.id}/css/${name}`)).value
+    return (await this._execute('get', `/element/${this.id}/css/${name}`)).value
   }
 
   /**
@@ -268,7 +261,7 @@ class ElementBase {
    *   var text = el.getText()
   */
   async getText () {
-    return checkRes(await this._execute('get', `/element/${this.id}/text`)).value
+    return (await this._execute('get', `/element/${this.id}/text`)).value
   }
 
   /**
@@ -280,7 +273,7 @@ class ElementBase {
    *   var tagName = el.getTagName()
   */
   async getTagName () {
-    return checkRes(await this._execute('get', `/element/${this.id}/name`)).value
+    return (await this._execute('get', `/element/${this.id}/name`)).value
   }
 
   /**
@@ -293,7 +286,7 @@ class ElementBase {
    *   var rect = el.getRect()
   */
   async getRect () {
-    return checkRes(await this._execute('get', `/element/${this.id}/rect`)).value
+    return (await this._execute('get', `/element/${this.id}/rect`)).value
   }
 
   /**
@@ -306,7 +299,7 @@ class ElementBase {
    *
   */
   async isEnabled () {
-    return !!checkRes(await this._execute('get', `/element/${this.id}/enabled`)).value
+    return !!(await this._execute('get', `/element/${this.id}/enabled`)).value
   }
 
   /**
@@ -319,7 +312,7 @@ class ElementBase {
    *
   */
   async click () {
-    checkRes(await this._execute('post', `/element/${this.id}/click`))
+    await this._execute('post', `/element/${this.id}/click`)
     return this
   }
 
@@ -333,7 +326,7 @@ class ElementBase {
    *
   */
   async clear () {
-    checkRes(await this._execute('post', `/element/${this.id}/clear`))
+    await this._execute('post', `/element/${this.id}/clear`)
     return this
   }
 
@@ -350,22 +343,22 @@ class ElementBase {
   async sendKeys (text) {
     // W3c: Adding 'value' to parameters, so that Chrome works too
     var value = text.split('')
-    checkRes(await this._execute('post', `/element/${this.id}/value`, { text, value }))
+    await this._execute('post', `/element/${this.id}/value`, { text, value })
     return this
   }
 
   /**
    * Take screenshot of the element
-   *
-   * @return {Promise<Element>} The element itself
+   * @param {boolean} scroll If true (by default), it will scroll to the element
+   * @return {Promise<Buffer>} The screenshot data in a Buffer object
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#input' })
-   *   await el.takeScreenshot()
+   *   var screenshot = await el.takeScreenshot()
    *
   */
-  async takeScreenshot () {
-    checkRes(await this._execute('get', `/element/${this.id}/screenshot`))
-    return this
+  async takeScreenshot (scroll = true) {
+    var res = (await this._execute('get', `/element/${this.id}/screenshot`, { scroll })).value
+    return Buffer.from(res, 'base64')
   }
 
   async _execute (method, command, params) {
@@ -377,7 +370,7 @@ class DriverBase {
   constructor (ip = null, port = null, capabilities = {}) {
     this.ip = ip
     this.port = port
-    this.capabilities = capabilities
+    this.sessionCapabilities = capabilities
     this.sessionId = null
     this._urlBase = `http://${this.ip}:${this.port}/session`
   }
@@ -386,8 +379,13 @@ class DriverBase {
     return this.sessionId && this.ip && this.port
   }
 
+  inspect () {
+    return `DriverBase { ip: ${this.ip}, port: ${this.port} }`
+  }
+
   /**
    * Create a new session
+
    *
    * @return {Promise<session>} o The object with the timeouts
    * @return {object} o.capabiities An object representing the capabilities of the web driver
@@ -425,14 +423,12 @@ class DriverBase {
   }
 
   /**
-   * Create a new session
+   * Delete the session
    *
-   * @param {Promise<session>} o The object with the timeouts
-   * @param {object} o.capabiities An object representing the capabilities of the web driver
-   * @param {string} o.sessionId The sessionId
+   * {Promise<Driver>} The driver itself
    *
    * @example
-   *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
+   *   await driver.deleteSession()
   */
   async deleteSession () {
     try {
@@ -446,9 +442,17 @@ class DriverBase {
     }
   }
 
+  /**
+   * Get status
+   *
+   * @return {Promise<string>} The page title
+   *
+   * @example
+   *   var status = await driver.status()
+  */
   async status () {
     var _urlBase = `http://${this.ip}:${this.port}`
-    return request.get(`${_urlBase}/status`)
+    return (await request.get({ url: `${_urlBase}/status`, json: true })).value
   }
 
   async _execute (method, command, params) {
@@ -461,8 +465,11 @@ class DriverBase {
 
     p.json = method === 'post' ? params || {} : true
 
-    // This will return a promise
-    return request[method](p)
+    // Getting the result
+    var res = await request[method](p)
+
+    // Return the result, checking if everything is OK
+    return checkRes(res)
   }
 
   static get using () { return USING }
@@ -478,13 +485,13 @@ class DriverBase {
  *   var timeouts = await driver.getTimeouts()
 */
   async getTimeouts () {
-    return checkRes(await this._execute('get', '/timeouts')).value
+    return (await this._execute('get', '/timeouts')).value
   }
 
   /**
    * Set timeouts
    *
-   * @param {Promise<object>} param The object with the timeouts
+   * @param {<object>} param The object with the timeouts
    * @param {number} param.implicit Implicit timeout
    * @param {number} param.pageLoad Timeout for page loads
    * @param {number} param.script Timeout for scripts
@@ -493,7 +500,7 @@ class DriverBase {
    *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
   */
   async setTimeouts (parameters) {
-    return checkRes(await this._execute('post', '/timeouts', parameters)).value
+    return (await this._execute('post', '/timeouts', parameters)).value
   }
 
   /**
@@ -516,8 +523,8 @@ class DriverBase {
    * @example
    *   var currentUrl = await driver.getCurrentUrl()
   */
-  getCurrentUrl () {
-    return this._execute('get', '/url')
+  async getCurrentUrl () {
+    return (await this._execute('get', '/url')).value
   }
 
   /**
@@ -567,109 +574,354 @@ class DriverBase {
    * @example
    *   var title = await driver.getTitle()
   */
-  getTitle () {
-    return this._execute('get', '/title')
+  async getTitle () {
+    return (await this._execute('get', '/title')).value
   }
 
-  getWindowHandle (p) {
-    return this._execute('get', '/window', p)
+  /**
+   * Get the current window's handle
+   *
+   * @return {Promise<string>} The handle
+   *
+   * @example
+   *   var title = await driver.getWindowHandle()
+  */
+  async getWindowHandle () {
+    return (await this._execute('get', '/window')).value
   }
 
-  closeWindow (p) {
-    return this._execute('delete', '/window', p)
+  /**
+   * Close the current window
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.close()
+  */
+  async closeWindow () {
+    await this._execute('delete', '/window')
   }
 
-  switchToWindow (p) {
-    return this._execute('post', '/window', p)
+  /**
+   * Switch to window
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @param {handle} string The window handle to switched to
+   * @example
+   *   await driver.close()
+  */
+  async switchToWindow (handle) {
+    await this._execute('post', '/window', { handle })
+    return this
   }
 
-  getWindowHandles (p) {
-    return this._execute('get', '/window/handles', p)
+  /**
+   * Get window handles as an array
+   *
+   * @return {Promise<[string,string,...]>} An array of window handles
+   *
+   * @example
+   *   await driver.getWindowHandles()
+  */
+  async getWindowHandles () {
+    return (await this._execute('get', '/window/handles')).value
   }
 
-  switchtoFrame (p) {
-    return this._execute('post', '/frame', p)
+  /**
+   * Switch to frame
+   *
+   * @param {string|number|Element} The Element object, or element ID, of the frame
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   var frame = await driver.findElementCss('iframe')
+   *   await driver.switchToFrame(frame)
+  */
+  switchToFrame (id) {
+    // W3c: Chrome is not compliant, doing its job
+    if (id instanceof Element || typeof id === 'object') id = id.id
+    return this._execute('post', '/frame', { id })
   }
 
-  switchtoParentFrame (p) {
-    return this._execute('post', '/parent/frame', p)
+  /**
+   * Switch to the parent frame
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.close()
+  */
+  async switchToParentFrame () {
+    await this._execute('post', '/frame/parent')
+    return this
   }
 
-  getWindowRect (p) {
-    return this._execute('get', '/window/rect', p)
+  /**
+   * Get window rect
+   *
+   * @return {Promise<Object>} An object with properties `height`, `width`, `x`, `y`
+   *
+   * @example
+   *   await driver.getWindowRect()
+  */
+  async getWindowRect () {
+    return (await this._execute('get', '/window/rect')).value
   }
 
-  setWindowRect (p) {
-    return this._execute('post', '/window/rect', p)
+  /**
+   * Set window rect
+   *
+   * @param {Promise<Object>} rect An object with properties `height`, `width`, `x`, `y`
+   *
+   * @return {Promise<Object>} An object with properties `height`, `width`, `x`, `y`
+   *
+   * @example
+   *   await driver.getWindowRect()
+  */
+  async setWindowRect (rect) {
+    return (await this._execute('post', '/window/rect', rect)).value
   }
 
-  maximizeWindow (p) {
-    return this._execute('post', '/window/maximize', p)
+  /**
+   * Maximize window
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.maximizeWindow()
+  */
+  async maximizeWindow () {
+    await this._execute('post', '/window/maximize')
   }
 
-  minimizeWindow (p) {
-    return this._execute('post', '/window/minimize', p)
+  /**
+   * Minimize window
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.minimizeWindow()
+  */
+  minimizeWindow () {
+    return this._execute('post', '/window/minimize')
   }
 
-  fullScreenWindow (p) {
-    return this._execute('post', '/window/fullscreen', p)
+  /**
+   * Make window full screen
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.fullScreenWindow()
+  */
+  fullScreenWindow () {
+    return this._execute('post', '/window/fullscreen')
   }
 
-  getPageSource (p) {
-    return this._execute('get', '/source', p)
+  /**
+   * Get page source
+   *
+   * @return {Promise<string>} The current page's source
+   *
+   * @example
+   *   await driver.getPageSource()
+  */
+  async getPageSource () {
+    return (await this._execute('get', '/source')).value
   }
 
-  executeScript (p) {
-    return this._execute('post', '/execute/sync', p)
+  /**
+   * Execute sync script
+   *
+   * @param {string} script The string with the script to be executed
+   * @param {array} [args] The arguments to be passed to the script
+
+   * @return {...} Whatever was returned by the javascript code with a `return` statement
+   *
+   * @example
+   *   await driver.executeScript("return 'Hello ' + arguments[0];", ['tony'])
+  */
+  async executeScript (script, args = []) {
+    return (await this._execute('post', '/execute/sync', { script, args })).value
   }
 
-  executeAsyncScript (p) {
-    return this._execute('post', '/execute/async', p)
+  /**
+   * Execute sync script
+   * NOTE: An extra argument is added to the passed argument: it's a callback
+   *       function that will need to be called once the script has executed.
+   *       To return a value, pass that value to the callback
+   *
+   * @param {string} script The string with the script to be executed
+   * @param {array} [args] The arguments to be passed to the script
+   *
+   * @return {...} Whatever was returned by the javascript code by calling the callback
+   *
+   * @example
+   *   await driver.executeAsyncScript("var name = arguments[0];var cb = arguments[1];cb('Hello ' + name);", ['tony'])
+  */
+  async executeAsyncScript (script, args = []) {
+    return (await this._execute('post', '/execute/async', { script, args })).value
   }
 
-  getAllCookies (p) {
-    return this._execute('get', '/cookie', p)
+  /**
+   * Get all cookies
+   *
+   * @return {[Object, Object,...]} An array of cookie objects.
+   *
+   * @example
+   *   var list = await driver.getAllCookies()
+  */
+  async getAllCookies () {
+    return (await this._execute('get', '/cookie')).value
   }
 
-  getNamedCookie (name, p) {
-    return this._execute('get', `/cookie/${name}`, p)
+  /**
+   * Get cookies matching a specific name
+   *
+   * @return {Object} A cookie object
+   *
+   * @example
+   *   var cookie = await driver.getNamedCookies('NID')
+  */
+  async getNamedCookie (name) {
+    return (await this._execute('get', `/cookie/${name}`)).value
   }
 
-  addCookie (p) {
-    return this._execute('post', '/cookie', p)
+  /**
+   * Get cookies matching a specific name
+   * @param {object} cookie The cookie object
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.addCookie({
+   *     name: 'test',
+   *     value: 'a test',
+   *     path: '/',
+   *     domain: 'google.com.au',
+   *     expiry: 1732569047,
+   *     secure: true,
+   *     httpOnly: true})
+  */
+  async addCookie (cookie) {
+    await this._execute('post', '/cookie', { cookie })
+    return this
   }
 
-  deleteCookie (name, p) {
-    return this._execute('get', `/cookie/${name}`, p)
+  /**
+   * Delete cookie matching a specific name
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   var cookie = await driver.deleteCookie('test')
+  */
+  async deleteCookie (name) {
+    await this._execute('delete', `/cookie/${name}`)
+    return this
   }
 
-  deleteAllCookies (p) {
-    return this._execute('delete', '/cookie', p)
+  /**
+   * Delete all cookies
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   var list = await driver.deleteAllCookies()
+  */
+  async deleteAllCookies () {
+    await this._execute('delete', '/cookie')
+    return this
   }
 
-  dismissAlert (p) {
-    return this._execute('post', '/alert/dismiss', p)
+  /**
+   * Dismiss an alert
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.dismissAlert()
+  */
+  async dismissAlert () {
+    await this._execute('post', '/alert/dismiss')
+    return this
   }
 
-  acceptAlert (p) {
-    return this._execute('post', '/alert/accept', p)
+  /**
+   * Accepts an alert
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.acceptAlert()
+  */
+  async acceptAlert () {
+    await this._execute('post', '/alert/accept')
+    return this
   }
 
-  getAlertText (p) {
-    return this._execute('get', '/alert/text', p)
+  /**
+   * Get an alert's text
+   *
+   * @return {string} The alert's text
+   *
+   * @example
+   *   var text = await driver.getAlertText()
+  */
+  async getAlertText () {
+    return (await this._execute('get', '/alert/text')).value
   }
 
-  sendAlertText (p) {
-    return this._execute('post', '/alert/text', p)
+  /**
+   * Send text to an alert
+   *
+   * @param {string} text The text that should be sent
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   *   await driver.sendAlertText()
+  */
+  async sendAlertText (text) {
+    await this._execute('post', '/alert/text', { text })
+    return this
   }
 
-  takeScreenshot (p) {
-    return this._execute('get', '/screenshot', p)
+  /**
+   * Take screenshot
+   *   *
+   * @return {buffer} The screenshot data
+   *
+   * @example
+   *   await driver.sendAlertText()
+  */
+  async takeScreenshot () {
+    var res = (await this._execute('get', '/screenshot')).value
+    return Buffer.from(res, 'base64')
   }
 
-  getActiveElement (p) {
-    return this._execute('get', '/element/active', p)
+  /**
+   * Get active element
+   *
+   * @return {Element} An object representing the element.
+   *
+   * @example
+   *   var el await driver.getActiveElement()
+  */
+  async getActiveElement () {
+    var res = await this._execute('get', '/element/active')
+    return new Element(this, res)
   }
+
+  // ******************************************************************************
+  // ******************************************************************************
+  // ******************************************************************************
+  // ******************************************************************************
+  // ******************************************************************************
+  // ******************************************************************************
+  // ******************************************************************************
+  // ******************************************************************************
 
   performActions (p) {
     return this._execute('post', '/actions', p)
@@ -694,7 +946,6 @@ class DriverBase {
   */
   async findElement (using, value) {
     var res = await this._execute('post', '/element', {using, value})
-    checkRes(res)
     return new Element(this, res)
   }
 
@@ -714,8 +965,6 @@ class DriverBase {
   */
   async findElements (using, value) {
     var res = await this._execute('post', '/elements', {using, value})
-
-    checkRes(res)
     if (!Array.isArray(res.value)) throw new Error('Result from findElements must be an array')
     return res.value.map((v) => new Element(this, v))
   }
@@ -732,8 +981,8 @@ var Element = FindHelpersMixin(ElementBase)
 ;(async () => {
   try {
     //
-    var driver = new Driver('127.0.0.1', 9515) // 4444 or 9515
-    var parameters = new ChromeParameters()
+    var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
+    var parameters = new FirefoxParameters()
     console.log('SESSION: ', await driver.newSession(parameters))
 
 /*
@@ -757,9 +1006,6 @@ var Element = FindHelpersMixin(ElementBase)
 
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefox', value: ['c', 'h', 'r', 'o', 'm', 'e'] }))
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefoxandchrome' + Element.KEY.ENTER }))
-
-
-
 
     await driver.navigateTo('http://usejsdoc.org')
     var article = await driver.findElementCss('article')
@@ -787,8 +1033,79 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('SEE SCREENSHOT:', await h2.takeScreenshot())
 
     await driver.navigateTo('http://www.google.com')
-    var q = await driver.findElementCss('[name=q]')
-    await q.sendKeys('stocazzo' + Element.KEY.ENTER)
+    console.log('PAGE SOURCE:', await driver.getPageSource())
+    // var q = await driver.findElementCss('[name=q]')
+    // await q.sendKeys('stocazzo' + Element.KEY.ENTER)
+    // console.log('WTF', q, q.id, q.ELEMENT)
+
+    // console.log('EXECUTE 0 PRETEND:')
+    // await driver.sleep(5000)
+
+    /*
+    console.log('EXECUTE 0:', await driver.executeScript("prompt('pippo');return 'Hello ' + arguments[0];", ['tony']))
+    await driver.sleep(2000)
+    console.log('Alert text:', await driver.getAlertText())
+    await driver.sendAlertText('aaaaa')
+    // await driver.dismissAlert()
+    await driver.sleep(2000)
+    */
+    var el = await driver.getActiveElement()
+    console.log('Active Element:', el)
+    var elsc = await el.takeScreenshot(true)
+    console.log('Active Element screenshot:', elsc)
+
+    var sc = await driver.takeScreenshot()
+    console.log('Screenshot:', sc)
+
+    var fs = require('fs')
+    fs.writeFileSync('/tmp/elsc.png', elsc)
+    fs.writeFileSync('/tmp/sc.png', sc)
+
+    console.log('EXECUTE 1:', await driver.executeAsyncScript("var name = arguments[0];var cb = arguments[1];cb('Hello ' + name);", ['tony']))
+
+    console.log('Cookies', await driver.getAllCookies())
+    console.log('Cookie named', await driver.getNamedCookie('NID'))
+
+    console.log('Deleting cookie named', await driver.deleteCookie('NID'))
+    console.log('ALL Cookies again', await driver.getAllCookies())
+    console.log('Deleting ALL cookies', await driver.deleteAllCookies())
+    console.log('ALL Cookies again 2', await driver.getAllCookies())
+
+    console.log('Set cookie', await driver.addCookie({
+      name: 'test',
+      value: 'a test',
+      path: '/',
+      domain: 'google.com.au',
+      expiry: 1732569047,
+      secure: true,
+      httpOnly: true
+    }))
+
+    console.log('Cookie named test', await driver.getNamedCookie('test'))
+
+    /*
+    { name: 'test',
+        value: 'a test',
+        path: '/',
+        domain: '.example.com',
+        expiry: 1732569047,
+        secure: true,
+        httpOnly: true }
+    */
+
+    // console.log('EXECUTE 1:', await driver.executeAsyncScript("var a = arguments; var name = a[0]; var cb = a[1]; alert('Hello ' + name); setTimeout( () => { cb('ahah!') }, 2000);", ['tony']))
+    // console.log('EXECUTE:', await driver.executeScript("alert('Stocazzo! '+ arguments[0])", ['a', 'b', 'c']))
+    console.log('Window handleS:', await driver.getWindowHandles())
+
+    // console.log('Switch to frame:', await driver.switchToFrame(q))
+    console.log('Switch to parent frame:', await driver.switchToParentFrame())
+
+    console.log('STATUS:', await driver.status())
+
+    console.log('TITLE:', await driver.getTitle())
+
+    console.log('RECT:', await driver.getWindowRect())
+    console.log('SET RECT:', await driver.setWindowRect({x: 10, y: 10, width: 800, height: 800}))
 
     console.log('CURRNET URL:', await driver.getCurrentUrl())
     console.log('BACK:')
@@ -799,6 +1116,28 @@ var Element = FindHelpersMixin(ElementBase)
     console.log('CURRNET URL:', await driver.getCurrentUrl())
     console.log('Refreshing...')
     await driver.refresh()
+    console.log('Window handle:', await driver.getWindowHandle())
+    var wn = await driver.getWindowHandle()
+    console.log('Switch to window:')
+    await driver.switchToWindow(wn)
+
+    console.log('Maximize:')
+    await driver.maximizeWindow()
+    await driver.sleep(1000)
+
+    console.log('Minimize:')
+    await driver.minimizeWindow()
+    await driver.sleep(1000)
+
+    console.log('Maximize again:')
+    await driver.maximizeWindow()
+    await driver.sleep(1000)
+
+    console.log('Full screen:')
+    await driver.fullScreenWindow()
+    await driver.sleep(1000)
+
+    // await driver.closeWindow()
 
     await driver.sleep(5000)
 
@@ -806,6 +1145,7 @@ var Element = FindHelpersMixin(ElementBase)
 
     // console.log('And:', await driver.getCurrentUrl())
 
+    // console.log('EXECUTE:', await driver.closeWindow())
     await driver.deleteSession()
   } catch (e) {
     console.log('ERROR:', e)
