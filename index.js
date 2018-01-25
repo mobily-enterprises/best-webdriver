@@ -294,16 +294,12 @@ class Pointer extends Device {
     this.type = 'pointer'
   }
 
-  static get MOUSE () {
-    return 'mouse'
-  }
-
-  static get PEN () {
-    return 'pen'
-  }
-
-  static get TOUCH () {
-    return 'touch'
+  static get Type () {
+    return {
+      MOUSE: 'mouse',
+      PEN: 'pen',
+      TOUCH: 'touch'
+    }
   }
 
   tickMethods () {
@@ -343,12 +339,13 @@ class Actions {
     var self = this
     this.actions = []
 
+    this.compiledActions = []
     // Assign `devices`. If not there, assign a default 'mouse' and 'keyboard'
     if (Object.keys(devices).length) {
       this.devices = devices
     } else {
       this.devices = [
-        new Pointer('mouse', Pointer.MOUSE),
+        new Pointer('mouse', Pointer.Type.MOUSE),
         new Keyboard('keyboard')
       ]
     }
@@ -375,11 +372,14 @@ class Actions {
       var deviceTickMethods = device.tickMethods()
       Object.keys(deviceTickMethods).forEach((k) => {
         this._tickSetters[device.id + k] = function (...args) {
+          if (!self._currentAction[device.id].virgin) {
+            throw new Error(`Action for device ${device.id} already defined (${device.id + k}) for this tick`)
+          }
           var res = deviceTickMethods[k].apply(device, args)
           self._currentAction[device.id] = res
           return self._tickSetters
         }
-        this._tickSetters['pause'] = function (duration) {
+        this._tickSetters['pause'] = function (duration = 0) {
           self._currentAction[device.id] = { type: 'pause', duration }
           return self._tickSetters
         }
@@ -387,8 +387,10 @@ class Actions {
     })
   }
 
+  static get KEY () { return KEY }
+
   compile () {
-    var actions = []
+    this.compiledActions = []
 
     this.devices.forEach((device) => {
       var deviceActions = []
@@ -401,60 +403,10 @@ class Actions {
       this.actions.forEach((action) => {
         deviceActions.push(action[ device.id ])
       })
-      actions.push({ actions: deviceActions })
+      this.compiledActions.push({ actions: deviceActions })
     })
 
-    console.log('COMPILED ACTIONS:', require('util').inspect(actions, {depth: 10}))
-
-/*
-    { actions:
-      [ { actions:
-           [ { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'keyDown', value: 'f' },
-             { type: 'keyUp', value: 'f' },
-             { type: 'keyDown', value: 'o' },
-             { type: 'keyUp', value: 'o' },
-             { type: 'keyDown', value: 'o' },
-             { type: 'keyUp', value: 'o' },
-             { type: 'keyDown', value: 'b' },
-             { type: 'keyUp', value: 'b' },
-             { type: 'keyDown', value: 'a' },
-             { type: 'keyUp', value: 'a' },
-             { type: 'keyDown', value: 'r' },
-             { type: 'keyUp', value: 'r' } ],
-          type: 'key',
-          id: 'default keyboard' },
-
-        { actions:
-           [ { type: 'pointerMove',
-               origin:
-                { 'element-6066-11e4-a52e-4f735466cecf': 'b4def06e-66bc-4fe7-9190-a128b920479d',
-                  ELEMENT: 'b4def06e-66bc-4fe7-9190-a128b920479d' },
-               duration: 100,
-               x: 0,
-               y: 0 },
-             { type: 'pointerDown', button: 0 },
-             { type: 'pointerUp', button: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 },
-             { type: 'pause', duration: 0 } ],
-          parameters: { pointerType: 'mouse' },
-          type: 'pointer',
-          id: 'default mouse' } ] }
-*/
-
-    console.log('COMPILE!')
+    console.log('COMPILED ACTIONS:', require('util').inspect(this.compiledActions, {depth: 10}))
   }
 
   _setAction (deviceId, action) {
@@ -467,7 +419,7 @@ class Actions {
     // By default, ALL actions are set as 'pause'
     var action = {}
     this.devices.forEach((device) => {
-      action[ device.id ] = { type: 'pause' }
+      action[ device.id ] = { type: 'pause', duration: 0, virgin: true }
     })
     this.actions.push(action)
 
@@ -479,21 +431,6 @@ class Actions {
     return this._tickSetters
   }
 }
-
-var actions = new Actions(new Pointer('mouse'),
-new Keyboard('keyboard'))
-console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
-
-actions.tick.mouseDown().keyboardDown('r').keyboardDown('R')
-actions.tick.mouseUp()
-actions.tick.mouseDown().keyboardUp('r')
-actions.tick.mouseUp().tick.keyboardDown('p').compile()
-actions.tick.keyboardUp('p')
-actions.compile()
-
-console.log('IT IS:', actions, '\n\nAND:', actions.actions)
-
-process.exit()
 
 const FindHelpersMixin = (superClass) => class extends superClass {
   // TODO: Document these once I know documentation works
@@ -1327,12 +1264,12 @@ class DriverBase {
   // ******************************************************************************
   // ******************************************************************************
 
-  performActions (p) {
-    return this._execute('post', '/actions', p)
+  performActions (actions) {
+    return this._execute('post', '/actions', { actions: actions.getCompiledActions() })
   }
 
-  releaseActions (p) {
-    return this._execute('delete', '/actions', p)
+  releaseActions () {
+    return this._execute('delete', '/actions')
   }
 
   /**
@@ -1384,11 +1321,6 @@ var Element = FindHelpersMixin(ElementBase)
 
 ;(async () => {
   try {
-    //
-    var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
-    var parameters = new FirefoxParameters()
-    console.log('SESSION: ', await driver.newSession(parameters))
-
 /*
 * `browserName` -- Browser name -- string Identifies the user agent.
 * `browserVersion` -- Browser version -- string Identifies the version of the user agent.
@@ -1400,6 +1332,36 @@ var Element = FindHelpersMixin(ElementBase)
 * `timeouts` -- Session timeouts -- configuration JSON -- Object -- Describes the timeouts imposed on certain session operations.
 * `unhandledPromptBehavior` Unhandled prompt behavior -- string -- Describes the current session’s user prompt handler.
 */
+
+  /*
+    // var actions = new Actions(new Pointer('mouse'), new Keyboard('keyboard'))
+    var actions = new Actions(new Keyboard('keyboard'))
+
+    console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
+    actions.tick.keyboardUp('r')
+    actions.tick.keyboardDown('r').tick.keyboardDown('R')
+    actions.tick.keyboardDown('p').compile()
+    actions.tick.keyboardUp('p')
+    actions.compile()
+*/
+
+    var actions = new Actions()
+    console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
+    actions.tick.mouseDown().keyboardDown('R')
+    actions.tick.mouseUp()
+    actions.tick.mouseDown().keyboardUp('r')
+    actions.tick.mouseUp().tick.keyboardDown('p').compile()
+    actions.tick.keyboardUp('p')
+    actions.compile()
+
+    process.exit(0)
+
+    //
+    var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
+    var parameters = new FirefoxParameters()
+    console.log('SESSION: ', await driver.newSession(parameters))
+
+    console.log('IT IS:', actions, '\n\nAND:', actions.actions)
 
     // console.log('SESSION: ', await driver.newSession({}))
 
