@@ -27,7 +27,6 @@ DONE:
   https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md
   https://stackoverflow.com/questions/6460604/how-to-describe-object-arguments-in-jsdoc
 
-
 sloc `find . -iname \*js | grep -v test | grep -v example | grep -v node_modules`
 
 ---------- Result ------------
@@ -46,11 +45,6 @@ Number of files read :  32
 cat `find . -iname \*js | grep -v test | grep -v example | grep -v node_modules`  | grep ^class | wc
 92     380    3231
 
-
-
-
-
-
 { actions:
    [ { actions:
         [ { type: 'pointerMove',
@@ -65,8 +59,6 @@ cat `find . -iname \*js | grep -v test | grep -v example | grep -v node_modules`
        parameters: { pointerType: 'mouse' },
        type: 'pointer',
        id: 'default mouse' } ] }
-
-
 
 { actions:
   [ { actions:
@@ -106,7 +98,6 @@ cat `find . -iname \*js | grep -v test | grep -v example | grep -v node_modules`
        parameters: { pointerType: 'mouse' },
        type: 'pointer',
        id: 'default mouse' } ] }
-
 
 { actions:
   [ { actions:
@@ -190,11 +181,6 @@ cat `find . -iname \*js | grep -v test | grep -v example | grep -v node_modules`
       type: 'pointer',
       id: 'default mouse' } ] }
 
-
-
-
-
-
 */
 
 var request = require('request-promise-native')
@@ -259,6 +245,229 @@ class FirefoxParameters extends Parameters { // eslint-disable-line no-unused-va
     this.alwaysMatch('browserName', 'firefox')
   }
 }
+
+class Device {
+  constructor (id) {
+    this.id = id
+  }
+
+  static get pause () {
+    return 'keyDown'
+  }
+
+  makeAction (type, args) {
+    return {}
+  }
+}
+
+//  KEYBOARD: "pause", "keyUp", "keyDown"
+class Keyboard extends Device {
+  static get UP () {
+    return 'keyUp'
+  }
+
+  static get DOWN () {
+    return 'keyDown'
+  }
+
+  makeAction (type, args) {
+    return {}
+  }
+}
+
+//  POINTER: "pause", "pointerUp", "pointerDown", "pointerMove", or "pointerCancel
+class Pointer extends Device {
+  constructor (id, pointerType) {
+    super(id)
+    this.pointerType = pointerType
+  }
+
+  static get UP () {
+    return 'pointerUp'
+  }
+
+  static get DOWN () {
+    return 'pointerDown'
+  }
+
+  static get MOVE () {
+    return 'pointerMove'
+  }
+
+  static get CANCEL () {
+    return 'pointerCancel'
+  }
+
+  makeAction (type, args) {
+    return {}
+  }
+}
+
+class Actions {
+  constructor (devices = {}) {
+    var self = this
+    this.actions = []
+
+    /*
+    this.devices = [
+      new Pointer( { id: 'mouse', type: Pointer.Type.MOUSE} ),
+      new keyboard( { id: 'keyboard'})
+    ]
+  */
+
+    // Assign `devices`. If not there, assign a default 'mouse' and 'keyboard'
+    if (Object.keys(devices).length) {
+      this.devices = devices
+    } else {
+      this.devices = {
+        mouse: { type: Actions.Types.POINTER, pointerType: Actions.subTypes.MOUSE },
+        keyboard: { type: Actions.Types.KEYBOARD }
+      }
+    }
+
+    // Make up a _tickSetters object, where each key
+    // is a deviceId. So, for devices `mouse` and `keyboard`,
+    // action.tick.mouse() and and action.tick.keyboard() work.
+    // Note that the tickSetters also return a _tickSetters object. So,
+    // action.tick.mouse(...).keyboard(...) is possible
+    var r = this._tickSetters = {
+      get tick () {
+        return self.tick
+      },
+      compile: self.compile.bind(self)
+    }
+    Object.keys(this.devices).forEach((deviceId) => {
+      r[ deviceId ] = function (action) {
+        self._setAction(deviceId, action)
+        return r
+      }
+    })
+  }
+
+  static get Types () {
+    return {
+      POINTER: 'pointer',
+      KEYBOARD: 'key'
+    }
+  }
+
+  static get subTypes () {
+    return {
+      MOUSE: 'mouse',
+      PEN: 'pen',
+      TOUCH: 'touch'
+    }
+  }
+
+  compile () {
+    var actions = []
+
+    Object.keys(this.devices).forEach((deviceId) => {
+      var device = this.devices[deviceId]
+
+      var deviceActions = []
+      deviceActions.type = device.type
+      deviceActions.id = deviceId
+      if (device.type === Actions.Types.POINTER) {
+        deviceActions.parameters = { pointerType: device.pointerType }
+      }
+
+      this.actions.forEach((action) => {
+        deviceActions.push(action[ deviceId ])
+      })
+      actions.push({ actions: deviceActions })
+    })
+
+    console.log('ACTIONS:', require('util').inspect(actions, {depth: 10}))
+
+/*
+    { actions:
+      [ { actions:
+           [ { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'keyDown', value: 'f' },
+             { type: 'keyUp', value: 'f' },
+             { type: 'keyDown', value: 'o' },
+             { type: 'keyUp', value: 'o' },
+             { type: 'keyDown', value: 'o' },
+             { type: 'keyUp', value: 'o' },
+             { type: 'keyDown', value: 'b' },
+             { type: 'keyUp', value: 'b' },
+             { type: 'keyDown', value: 'a' },
+             { type: 'keyUp', value: 'a' },
+             { type: 'keyDown', value: 'r' },
+             { type: 'keyUp', value: 'r' } ],
+          type: 'key',
+          id: 'default keyboard' },
+
+        { actions:
+           [ { type: 'pointerMove',
+               origin:
+                { 'element-6066-11e4-a52e-4f735466cecf': 'b4def06e-66bc-4fe7-9190-a128b920479d',
+                  ELEMENT: 'b4def06e-66bc-4fe7-9190-a128b920479d' },
+               duration: 100,
+               x: 0,
+               y: 0 },
+             { type: 'pointerDown', button: 0 },
+             { type: 'pointerUp', button: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 },
+             { type: 'pause', duration: 0 } ],
+          parameters: { pointerType: 'mouse' },
+          type: 'pointer',
+          id: 'default mouse' } ] }
+*/
+
+    console.log('COMPILE!')
+  }
+
+  _setAction (deviceId, action) {
+    this._currentAction[ deviceId ] = action
+  }
+
+  get tick () {
+    var deviceIds = Object.keys(this.devices)
+
+    // Make up the action object. It will be an object where
+    // each key is a device ID.
+    // By default, ALL actions are set as 'pause'
+    var action = {}
+    deviceIds.forEach((deviceId) => {
+      action[ deviceId ] = { type: 'pause' }
+    })
+    this.actions.push(action)
+
+    // Set _currentAction, which is what the tickSetters will
+    // change
+    this._currentAction = action
+
+    // Return the _tickSetters, so that actions.tick.mouse() works
+    return this._tickSetters
+  }
+}
+
+var actions = new Actions()
+console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
+
+actions.tick.mouse({ type: 'pointerDown', button: 0 }).keyboard({ type: 'keyDown', value: 'r' })
+actions.tick.mouse({ type: 'pointerUp', button: 0 })
+actions.tick.mouse({ type: 'pointerUp', button: 0 }).keyboard({ type: 'keyUp', value: 'r' })
+actions.tick.mouse({ type: 'pointerUp', button: 0 }).tick.keyboard({ type: 'keyDown', value: 'p' }).compile()
+actions.compile()
+
+console.log('IT IS:', actions, '\n\nAND:', actions.actions)
+
+process.exit()
 
 const FindHelpersMixin = (superClass) => class extends superClass {
   // TODO: Document these once I know documentation works
