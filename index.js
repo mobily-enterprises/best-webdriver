@@ -250,18 +250,15 @@ class Device {
   constructor (id) {
     this.id = id
   }
-
-  static get pause () {
-    return 'keyDown'
-  }
-
-  makeAction (type, args) {
-    return {}
-  }
 }
 
 //  KEYBOARD: "pause", "keyUp", "keyDown"
 class Keyboard extends Device {
+  constructor (id) {
+    super(id)
+    this.type = 'key'
+  }
+
   static get UP () {
     return 'keyUp'
   }
@@ -270,8 +267,22 @@ class Keyboard extends Device {
     return 'keyDown'
   }
 
-  makeAction (type, args) {
-    return {}
+  tickMethods () {
+    return {
+      Up: (value) => {
+        return {
+          type: 'keyUp',
+          value
+        }
+      },
+
+      Down: (value) => {
+        return {
+          type: 'keyDown',
+          value
+        }
+      }
+    }
   }
 }
 
@@ -280,105 +291,120 @@ class Pointer extends Device {
   constructor (id, pointerType) {
     super(id)
     this.pointerType = pointerType
+    this.type = 'pointer'
   }
 
-  static get UP () {
-    return 'pointerUp'
+  static get MOUSE () {
+    return 'mouse'
   }
 
-  static get DOWN () {
-    return 'pointerDown'
+  static get PEN () {
+    return 'pen'
   }
 
-  static get MOVE () {
-    return 'pointerMove'
+  static get TOUCH () {
+    return 'touch'
   }
 
-  static get CANCEL () {
-    return 'pointerCancel'
-  }
-
-  makeAction (type, args) {
-    return {}
+  tickMethods () {
+    return {
+      Move: (x, y, duration = 100) => {
+        return {
+          type: 'pointerMove',
+          origin: 'pointer',
+          duration,
+          x,
+          y
+        }
+      },
+      Down: (button = 0) => {
+        return {
+          type: 'pointerDown',
+          button
+        }
+      },
+      Up: (button = 0) => {
+        return {
+          type: 'pointerUp',
+          button
+        }
+      },
+      Cancel: () => {
+        return {
+          type: 'pointerCancel'
+        }
+      }
+    }
   }
 }
 
 class Actions {
-  constructor (devices = {}) {
+  constructor (...devices) {
     var self = this
     this.actions = []
-
-    /*
-    this.devices = [
-      new Pointer( { id: 'mouse', type: Pointer.Type.MOUSE} ),
-      new keyboard( { id: 'keyboard'})
-    ]
-  */
 
     // Assign `devices`. If not there, assign a default 'mouse' and 'keyboard'
     if (Object.keys(devices).length) {
       this.devices = devices
     } else {
-      this.devices = {
-        mouse: { type: Actions.Types.POINTER, pointerType: Actions.subTypes.MOUSE },
-        keyboard: { type: Actions.Types.KEYBOARD }
-      }
+      this.devices = [
+        new Pointer('mouse', Pointer.MOUSE),
+        new Keyboard('keyboard')
+      ]
     }
 
-    // Make up a _tickSetters object, where each key
-    // is a deviceId. So, for devices `mouse` and `keyboard`,
-    // action.tick.mouse() and and action.tick.keyboard() work.
-    // Note that the tickSetters also return a _tickSetters object. So,
-    // action.tick.mouse(...).keyboard(...) is possible
-    var r = this._tickSetters = {
+    // Make up a _tickSetters object, which are the setters available
+    // after `driver.tick`, so that you can do `driver.tick.mouseDown()`
+    // The keys `tick` and `compile` are always available, as it's handy to
+    // get them as "chained" methods (so that you can do
+    // `actions.tick.mouseDown().tick.mouseUp()`
+    // The other keys will depend on the devices passed to the
+    // `Actions` constructor.
+    // With `Actions(new Pointer('fancyMouse'))` will establish
+    // `tick.fancyMouseUp()`, `tick.fancyMouseDown()` etc.
+    // By default, `new Actions()` will create two devices, called
+    // `mouse` and `keyboard`
+    //
+    this._tickSetters = {
       get tick () {
         return self.tick
       },
       compile: self.compile.bind(self)
     }
-    Object.keys(this.devices).forEach((deviceId) => {
-      r[ deviceId ] = function (action) {
-        self._setAction(deviceId, action)
-        return r
-      }
+    this.devices.forEach((device) => {
+      var deviceTickMethods = device.tickMethods()
+      Object.keys(deviceTickMethods).forEach((k) => {
+        this._tickSetters[device.id + k] = function (...args) {
+          var res = deviceTickMethods[k].apply(device, args)
+          self._currentAction[device.id] = res
+          return self._tickSetters
+        }
+        this._tickSetters['pause'] = function (duration) {
+          self._currentAction[device.id] = { type: 'pause', duration }
+          return self._tickSetters
+        }
+      })
     })
-  }
-
-  static get Types () {
-    return {
-      POINTER: 'pointer',
-      KEYBOARD: 'key'
-    }
-  }
-
-  static get subTypes () {
-    return {
-      MOUSE: 'mouse',
-      PEN: 'pen',
-      TOUCH: 'touch'
-    }
   }
 
   compile () {
     var actions = []
 
-    Object.keys(this.devices).forEach((deviceId) => {
-      var device = this.devices[deviceId]
-
+    this.devices.forEach((device) => {
       var deviceActions = []
       deviceActions.type = device.type
-      deviceActions.id = deviceId
-      if (device.type === Actions.Types.POINTER) {
+      deviceActions.id = device.id
+      if (device.type === 'pointer') {
         deviceActions.parameters = { pointerType: device.pointerType }
       }
 
       this.actions.forEach((action) => {
-        deviceActions.push(action[ deviceId ])
+        deviceActions.push(action[ device.id ])
       })
       actions.push({ actions: deviceActions })
     })
 
-    console.log('ACTIONS:', require('util').inspect(actions, {depth: 10}))
+    console.log('COMPILED ACTIONS:', require('util').inspect(actions, {depth: 10}))
 
 /*
     { actions:
@@ -436,14 +462,12 @@ class Actions {
   }
 
   get tick () {
-    var deviceIds = Object.keys(this.devices)
-
     // Make up the action object. It will be an object where
     // each key is a device ID.
     // By default, ALL actions are set as 'pause'
     var action = {}
-    deviceIds.forEach((deviceId) => {
-      action[ deviceId ] = { type: 'pause' }
+    this.devices.forEach((device) => {
+      action[ device.id ] = { type: 'pause' }
     })
     this.actions.push(action)
 
@@ -456,13 +480,15 @@ class Actions {
   }
 }
 
-var actions = new Actions()
+var actions = new Actions(new Pointer('mouse'),
+new Keyboard('keyboard'))
 console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
 
-actions.tick.mouse({ type: 'pointerDown', button: 0 }).keyboard({ type: 'keyDown', value: 'r' })
-actions.tick.mouse({ type: 'pointerUp', button: 0 })
-actions.tick.mouse({ type: 'pointerUp', button: 0 }).keyboard({ type: 'keyUp', value: 'r' })
-actions.tick.mouse({ type: 'pointerUp', button: 0 }).tick.keyboard({ type: 'keyDown', value: 'p' }).compile()
+actions.tick.mouseDown().keyboardDown('r').keyboardDown('R')
+actions.tick.mouseUp()
+actions.tick.mouseDown().keyboardUp('r')
+actions.tick.mouseUp().tick.keyboardDown('p').compile()
+actions.tick.keyboardUp('p')
 actions.compile()
 
 console.log('IT IS:', actions, '\n\nAND:', actions.actions)
