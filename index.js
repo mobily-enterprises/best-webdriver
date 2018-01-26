@@ -2,11 +2,9 @@
   TODO:
 
   Make up skeleton:
-  [X] WED 24 Finish off methods in main list
-  [X] FRI-SAT 26 27 Finish off Actions API calls
-
-  [ ] DEV Manage errors properly: sometimes calls fail but it's not a proper error
+  [X] DEV Manage errors properly: sometimes calls fail but it's not a proper error
   [ ] DEV Add code to run chrome (or whatever) automatically, passing parameters for port and more
+     https://www.npmjs.com/package/get-port
   [ ] DEV Add "wait" statement, poll and checks for a condition with possible timeout
 
   [ ] Install JSDoc, check generated documentation
@@ -16,177 +14,10 @@
 
   [ ] Write initial tests (ah!)
   [ ] Write more tests
-
-DONE:
-  [X] Figure out why sessionId is in value in firefox, and in object root in chrome
-  [X] Understand the element-6066-11e4-a52e-4f735466cecf and w3c_compliant issue
-  [X] Maybe create element type, and have call-forwarding for nice chaining.
-  [X] Allow entering a string as sendKeys, add constants if needed
-  [X] Understand the real differences between different browsers' responses in calls
-  [X] Add browser requirement string spec, and other parameters
-
-  http://usejsdoc.org/
-  https://w3c.github.io/webdriver/webdriver-spec.html#get-element-property
-  https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md
-  https://stackoverflow.com/questions/6460604/how-to-describe-object-arguments-in-jsdoc
-
-sloc `find . -iname \*js | grep -v test | grep -v example | grep -v node_modules`
-
----------- Result ------------
-
-            Physical :  13670
-              Source :  5654
-             Comment :  6584
- Single-line comment :  666
-       Block comment :  5918
-               Mixed :  92
-               Empty :  1529
-               To Do :  8
-
-Number of files read :  32
-
-cat `find . -iname \*js | grep -v test | grep -v example | grep -v node_modules`  | grep ^class | wc
-92     380    3231
-
-{ actions:
-   [ { actions:
-        [ { type: 'pointerMove',
-            origin:
-             { 'element-6066-11e4-a52e-4f735466cecf': 'b88dfe93-1c6c-44c9-9bf5-a73553a8d167',
-               ELEMENT: 'b88dfe93-1c6c-44c9-9bf5-a73553a8d167' },
-            duration: 100,
-            x: 0,
-            y: 0 },
-          { type: 'pointerDown', button: 0 },
-          { type: 'pointerUp', button: 0 } ],
-       parameters: { pointerType: 'mouse' },
-       type: 'pointer',
-       id: 'default mouse' } ] }
-
-{ actions:
-  [ { actions:
-       [ { type: 'pointerMove',
-           origin:
-            { 'element-6066-11e4-a52e-4f735466cecf': '6f32c095-44a6-4069-bee6-d9bb01e4669b',
-              ELEMENT: '6f32c095-44a6-4069-bee6-d9bb01e4669b' },
-           duration: 100,
-           x: 0,
-           y: 0 },
-         { type: 'pointerDown', button: 0 },
-         { type: 'pointerUp', button: 0 },
-         { type: 'pointerDown', button: 0 },
-         { type: 'pointerUp', button: 0 } ],
-      parameters: { pointerType: 'mouse' },
-      type: 'pointer',
-      id: 'default mouse' } ] }
-
-{ actions:
-   [ { actions:
-        [ { type: 'pointerMove',
-            origin:
-             { 'element-6066-11e4-a52e-4f735466cecf': '395a840e-d243-408c-affd-386c31025b4e',
-               ELEMENT: '395a840e-d243-408c-affd-386c31025b4e' },
-            duration: 100,
-            x: 0,
-            y: 0 },
-          { type: 'pointerDown', button: 0 },
-          { type: 'pointerMove',
-            origin:
-             { 'element-6066-11e4-a52e-4f735466cecf': '3e30e030-9ae9-4cbf-a808-3b6f6f70d5cb',
-               ELEMENT: '3e30e030-9ae9-4cbf-a808-3b6f6f70d5cb' },
-            duration: 100,
-            x: 0,
-            y: 0 },
-          { type: 'pointerUp', button: 0 } ],
-       parameters: { pointerType: 'mouse' },
-       type: 'pointer',
-       id: 'default mouse' } ] }
-
-{ actions:
-  [ { actions:
-       [ { type: 'pointerMove',
-           origin:
-            { 'element-6066-11e4-a52e-4f735466cecf': '5946043f-08a7-4116-9ecb-543556e07447',
-              ELEMENT: '5946043f-08a7-4116-9ecb-543556e07447' },
-           duration: 100,
-           x: 0,
-           y: 0 },
-         { type: 'pointerDown', button: 0 },
-         { type: 'pointerMove',
-           origin: 'pointer',
-           duration: 100,
-           x: 100,
-           y: 100 },
-         { type: 'pointerUp', button: 0 } ],
-      parameters: { pointerType: 'mouse' },
-      type: 'pointer',
-      id: 'default mouse' } ] },
-
-{ actions:
-   [ { actions:
-        [ { type: 'keyDown', value: 'f' },
-          { type: 'keyUp', value: 'f' },
-          { type: 'keyDown', value: 'o' },
-          { type: 'keyUp', value: 'o' },
-          { type: 'keyDown', value: 'o' },
-          { type: 'keyUp', value: 'o' },
-          { type: 'keyDown', value: 'b' },
-          { type: 'keyUp', value: 'b' },
-          { type: 'keyDown', value: 'a' },
-          { type: 'keyUp', value: 'a' },
-          { type: 'keyDown', value: 'r' },
-          { type: 'keyUp', value: 'r' } ],
-       type: 'key',
-       id: 'default keyboard' } ] }
-
-{ actions:
-  [ { actions:
-       [ { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'keyDown', value: 'f' },
-         { type: 'keyUp', value: 'f' },
-         { type: 'keyDown', value: 'o' },
-         { type: 'keyUp', value: 'o' },
-         { type: 'keyDown', value: 'o' },
-         { type: 'keyUp', value: 'o' },
-         { type: 'keyDown', value: 'b' },
-         { type: 'keyUp', value: 'b' },
-         { type: 'keyDown', value: 'a' },
-         { type: 'keyUp', value: 'a' },
-         { type: 'keyDown', value: 'r' },
-         { type: 'keyUp', value: 'r' } ],
-      type: 'key',
-      id: 'default keyboard' },
-    { actions:
-       [ { type: 'pointerMove',
-           origin:
-            { 'element-6066-11e4-a52e-4f735466cecf': 'b4def06e-66bc-4fe7-9190-a128b920479d',
-              ELEMENT: 'b4def06e-66bc-4fe7-9190-a128b920479d' },
-           duration: 100,
-           x: 0,
-           y: 0 },
-         { type: 'pointerDown', button: 0 },
-         { type: 'pointerUp', button: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 },
-         { type: 'pause', duration: 0 } ],
-      parameters: { pointerType: 'mouse' },
-      type: 'pointer',
-      id: 'default mouse' } ] }
-
 */
 
 var request = require('request-promise-native')
+const { spawn } = require('child_process')
 
 const KEY = require('./KEY.js')
 
@@ -206,9 +37,54 @@ function checkRes (res) {
   return res
 }
 
-class Parameters {
+/**
+ * Spawns a child process. The returned {@link Command} may be used to wait
+ * for the process result or to send signals to the process.
+ *
+ * Somewhat inspired by the `exec` function in the Selenium driver
+ *
+ * @param {string} command The executable to spawn.
+ * @param {Options=} commandOptions The command options.
+ * @return {!Command} The launched command.
+ */
+function exec (command, commandOptions) {
+  var options = commandOptions || {}
+
+  var proc = spawn(command, options.args || [], {
+    env: options.env || process.env,
+    stdio: options.stdio || 'ignore'
+  })
+
+  // This process should not wait on the spawned child, however, we do
+  // want to ensure the child is killed when this process exits.
+  proc.unref()
+  process.once('exit', onProcessExit)
+
+  let result = new Promise(resolve => {
+    proc.once('exit', (code, signal) => {
+      proc = null
+      process.removeListener('exit', onProcessExit)
+      resolve({ code, signal })
+    })
+  })
+  return { result, killCommand }
+
+  function onProcessExit () {
+    killCommand('SIGTERM')
+  }
+
+  function killCommand (signal) {
+    process.removeListener('exit', onProcessExit)
+    if (proc) {
+      proc.kill(signal)
+      proc = null
+    }
+  }
+}
+
+class Browser {
   constructor () {
-    this.data = {
+    this.parameters = {
       capabilities: {
         alwaysMatch: {},
         firstMatch: []
@@ -216,23 +92,23 @@ class Parameters {
     }
   }
   alwaysMatch (name, value) {
-    this.data.capabilities.alwaysMatch[ name ] = value
+    this.parameters.capabilities.alwaysMatch[ name ] = value
   }
 
   firstMatch (name, value) {
-    this.data.capabilities.firstMatch.push({ [name]: value })
+    this.parameters.capabilities.firstMatch.push({ [name]: value })
   }
 
   rootParameter (name, value) {
-    this.data[ name ] = value
+    this.parameters[ name ] = value
   }
 
-  getData () {
-    return this.data
+  getParameters () {
+    return this.parameters
   }
 }
 
-class ChromeParameters extends Parameters { // eslint-disable-line no-unused-vars
+class Chrome extends Browser { // eslint-disable-line no-unused-vars
   constructor () {
     super()
 
@@ -242,21 +118,21 @@ class ChromeParameters extends Parameters { // eslint-disable-line no-unused-var
   }
 }
 
-class FirefoxParameters extends Parameters { // eslint-disable-line no-unused-vars
+class Firefox extends Browser { // eslint-disable-line no-unused-vars
   constructor () {
     super()
     this.alwaysMatch('browserName', 'firefox')
   }
 }
 
-class Device {
+class InputDevice {
   constructor (id) {
     this.id = id
   }
 }
 
 //  KEYBOARD: "pause", "keyUp", "keyDown"
-class Keyboard extends Device {
+class Keyboard extends InputDevice {
   constructor (id) {
     super(id)
     this.type = 'key'
@@ -290,7 +166,7 @@ class Keyboard extends Device {
 }
 
 //  POINTER: "pause", "pointerUp", "pointerDown", "pointerMove", or "pointerCancel
-class Pointer extends Device {
+class Pointer extends InputDevice {
   constructor (id, pointerType) {
     super(id)
     this.pointerType = pointerType
@@ -544,8 +420,8 @@ class ElementBase {
    *
   */
   async findElement (using, value) {
-    var res = await this._execute('post', `/element/${this.id}/element`, {using, value})
-    return new Element(this.driver, res)
+    var el = await this._execute('post', `/element/${this.id}/element`, {using, value})
+    return new Element(this.driver, el)
   }
 
   /**
@@ -562,9 +438,9 @@ class ElementBase {
    *
   */
   async findElements (using, value) {
-    var res = await this._execute('post', `/element/${this.id}/elements`, {using, value})
-    if (!Array.isArray(res.value)) throw new Error('Result from findElements must be an array')
-    return res.value.map((v) => new Element(this.driver, v))
+    var els = await this._execute('post', `/element/${this.id}/elements`, {using, value})
+    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
+    return els.map((v) => new Element(this.driver, v))
   }
 
   /**
@@ -577,7 +453,7 @@ class ElementBase {
    *
   */
   async isSelected () {
-    return !!(await this._execute('get', `/element/${this.id}/selected`)).value
+    return !!(await this._execute('get', `/element/${this.id}/selected`))
   }
 
   /**
@@ -591,8 +467,8 @@ class ElementBase {
    *   var href = el.getAttribute('href')
    *
   */
-  async getAttribute (name) {
-    return (await this._execute('get', `/element/${this.id}/attribute/${name}`)).value
+  getAttribute (name) {
+    return this._execute('get', `/element/${this.id}/attribute/${name}`)
   }
 
   /**
@@ -606,8 +482,8 @@ class ElementBase {
    *   var href = el.getProperty('href')
    *
   */
-  async getProperty (name) {
-    return (await this._execute('get', `/element/${this.id}/property/${name}`)).value
+  getProperty (name) {
+    return this._execute('get', `/element/${this.id}/property/${name}`)
   }
 
   /**
@@ -621,8 +497,8 @@ class ElementBase {
    *   var height = el.getCssValue('height')
    *
   */
-  async getCssValue (name) {
-    return (await this._execute('get', `/element/${this.id}/css/${name}`)).value
+  getCssValue (name) {
+    return this._execute('get', `/element/${this.id}/css/${name}`)
   }
 
   /**
@@ -633,8 +509,8 @@ class ElementBase {
    *   var el = await driver.findElementCss('a' })
    *   var text = el.getText()
   */
-  async getText () {
-    return (await this._execute('get', `/element/${this.id}/text`)).value
+  getText () {
+    return this._execute('get', `/element/${this.id}/text`)
   }
 
   /**
@@ -645,8 +521,8 @@ class ElementBase {
    *   var el = await driver.findElementCss('.link' })
    *   var tagName = el.getTagName()
   */
-  async getTagName () {
-    return (await this._execute('get', `/element/${this.id}/name`)).value
+  getTagName () {
+    return this._execute('get', `/element/${this.id}/name`)
   }
 
   /**
@@ -658,8 +534,8 @@ class ElementBase {
    *   var el = await driver.findElementCss('a' })
    *   var rect = el.getRect()
   */
-  async getRect () {
-    return (await this._execute('get', `/element/${this.id}/rect`)).value
+  getRect () {
+    return this._execute('get', `/element/${this.id}/rect`)
   }
 
   /**
@@ -672,7 +548,7 @@ class ElementBase {
    *
   */
   async isEnabled () {
-    return !!(await this._execute('get', `/element/${this.id}/enabled`)).value
+    return !!(await this._execute('get', `/element/${this.id}/enabled`))
   }
 
   /**
@@ -730,8 +606,8 @@ class ElementBase {
    *
   */
   async takeScreenshot (scroll = true) {
-    var res = (await this._execute('get', `/element/${this.id}/screenshot`, { scroll })).value
-    return Buffer.from(res, 'base64')
+    var data = await this._execute('get', `/element/${this.id}/screenshot`, { scroll })
+    return Buffer.from(data, 'base64')
   }
 
   async _execute (method, command, params) {
@@ -767,14 +643,13 @@ class DriverBase {
    * @example
    *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
   */
-  async newSession (parameters) {
+  async newSession (browser) {
     try {
-      var res = await this._execute('post', '', parameters.getData())
+      var value = await this._execute('post', '', browser.getParameters())
       // var res = await this._execute('post', '', { desiredCapabilities: {} })
 
       // W3C conforming response; checked if value is an object containing a `capabilities` object property
       // and a `sessionId` string property
-      var value = res.value
       if (isObject(value) &&
           isObject(value.capabilities) &&
           typeof value.capabilities.browserName === 'string' &&
@@ -805,11 +680,11 @@ class DriverBase {
   */
   async deleteSession () {
     try {
-      var res = await this._execute('delete', '')
+      var value = await this._execute('delete', '')
       this.sessionId = null
       this._sessionData = {}
       this._urlBase = `http://${this.ip}:${this.port}/session`
-      return res
+      return value
     } catch (e) {
       throw (e)
     }
@@ -825,7 +700,8 @@ class DriverBase {
   */
   async status () {
     var _urlBase = `http://${this.ip}:${this.port}`
-    return (await request.get({ url: `${_urlBase}/status`, json: true })).value
+    var res = await request.get({ url: `${_urlBase}/status`, json: true })
+    return checkRes(res).value
   }
 
   async _execute (method, command, params) {
@@ -842,7 +718,7 @@ class DriverBase {
     var res = await request[method](p)
 
     // Return the result, checking if everything is OK
-    return checkRes(res)
+    return checkRes(res).value
   }
 
   static get using () { return USING }
@@ -857,8 +733,8 @@ class DriverBase {
  * @example
  *   var timeouts = await driver.getTimeouts()
 */
-  async getTimeouts () {
-    return (await this._execute('get', '/timeouts')).value
+  getTimeouts () {
+    return this._execute('get', '/timeouts')
   }
 
   /**
@@ -872,8 +748,8 @@ class DriverBase {
    * @example
    *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
   */
-  async setTimeouts (parameters) {
-    return (await this._execute('post', '/timeouts', parameters)).value
+  setTimeouts (parameters) {
+    return this._execute('post', '/timeouts', parameters)
   }
 
   /**
@@ -896,8 +772,8 @@ class DriverBase {
    * @example
    *   var currentUrl = await driver.getCurrentUrl()
   */
-  async getCurrentUrl () {
-    return (await this._execute('get', '/url')).value
+  getCurrentUrl () {
+    return this._execute('get', '/url')
   }
 
   /**
@@ -947,8 +823,8 @@ class DriverBase {
    * @example
    *   var title = await driver.getTitle()
   */
-  async getTitle () {
-    return (await this._execute('get', '/title')).value
+  getTitle () {
+    return this._execute('get', '/title')
   }
 
   /**
@@ -959,8 +835,8 @@ class DriverBase {
    * @example
    *   var title = await driver.getWindowHandle()
   */
-  async getWindowHandle () {
-    return (await this._execute('get', '/window')).value
+  getWindowHandle () {
+    return this._execute('get', '/window')
   }
 
   /**
@@ -997,8 +873,8 @@ class DriverBase {
    * @example
    *   await driver.getWindowHandles()
   */
-  async getWindowHandles () {
-    return (await this._execute('get', '/window/handles')).value
+  getWindowHandles () {
+    return this._execute('get', '/window/handles')
   }
 
   /**
@@ -1038,8 +914,8 @@ class DriverBase {
    * @example
    *   await driver.getWindowRect()
   */
-  async getWindowRect () {
-    return (await this._execute('get', '/window/rect')).value
+  getWindowRect () {
+    return this._execute('get', '/window/rect')
   }
 
   /**
@@ -1052,8 +928,8 @@ class DriverBase {
    * @example
    *   await driver.getWindowRect()
   */
-  async setWindowRect (rect) {
-    return (await this._execute('post', '/window/rect', rect)).value
+  setWindowRect (rect) {
+    return this._execute('post', '/window/rect', rect)
   }
 
   /**
@@ -1100,8 +976,8 @@ class DriverBase {
    * @example
    *   await driver.getPageSource()
   */
-  async getPageSource () {
-    return (await this._execute('get', '/source')).value
+  getPageSource () {
+    return this._execute('get', '/source')
   }
 
   /**
@@ -1115,8 +991,8 @@ class DriverBase {
    * @example
    *   await driver.executeScript("return 'Hello ' + arguments[0];", ['tony'])
   */
-  async executeScript (script, args = []) {
-    return (await this._execute('post', '/execute/sync', { script, args })).value
+  executeScript (script, args = []) {
+    return this._execute('post', '/execute/sync', { script, args })
   }
 
   /**
@@ -1133,8 +1009,8 @@ class DriverBase {
    * @example
    *   await driver.executeAsyncScript("var name = arguments[0];var cb = arguments[1];cb('Hello ' + name);", ['tony'])
   */
-  async executeAsyncScript (script, args = []) {
-    return (await this._execute('post', '/execute/async', { script, args })).value
+  executeAsyncScript (script, args = []) {
+    return this._execute('post', '/execute/async', { script, args })
   }
 
   /**
@@ -1145,8 +1021,8 @@ class DriverBase {
    * @example
    *   var list = await driver.getAllCookies()
   */
-  async getAllCookies () {
-    return (await this._execute('get', '/cookie')).value
+  getAllCookies () {
+    return this._execute('get', '/cookie')
   }
 
   /**
@@ -1157,8 +1033,8 @@ class DriverBase {
    * @example
    *   var cookie = await driver.getNamedCookies('NID')
   */
-  async getNamedCookie (name) {
-    return (await this._execute('get', `/cookie/${name}`)).value
+  getNamedCookie (name) {
+    return this._execute('get', `/cookie/${name}`)
   }
 
   /**
@@ -1242,8 +1118,8 @@ class DriverBase {
    * @example
    *   var text = await driver.getAlertText()
   */
-  async getAlertText () {
-    return (await this._execute('get', '/alert/text')).value
+  getAlertText () {
+    return this._execute('get', '/alert/text')
   }
 
   /**
@@ -1270,8 +1146,8 @@ class DriverBase {
    *   await driver.sendAlertText()
   */
   async takeScreenshot () {
-    var res = (await this._execute('get', '/screenshot')).value
-    return Buffer.from(res, 'base64')
+    var value = await this._execute('get', '/screenshot')
+    return Buffer.from(value, 'base64')
   }
 
   /**
@@ -1283,8 +1159,8 @@ class DriverBase {
    *   var el await driver.getActiveElement()
   */
   async getActiveElement () {
-    var res = await this._execute('get', '/element/active')
-    return new Element(this, res)
+    var value = await this._execute('get', '/element/active')
+    return new Element(this, value)
   }
 
   async performActions (actions) {
@@ -1313,8 +1189,8 @@ class DriverBase {
    *
   */
   async findElement (using, value) {
-    var res = await this._execute('post', '/element', {using, value})
-    return new Element(this, res)
+    var el = await this._execute('post', '/element', {using, value})
+    return new Element(this, el)
   }
 
   /**
@@ -1332,9 +1208,9 @@ class DriverBase {
    *
   */
   async findElements (using, value) {
-    var res = await this._execute('post', '/elements', {using, value})
-    if (!Array.isArray(res.value)) throw new Error('Result from findElements must be an array')
-    return res.value.map((v) => new Element(this, v))
+    var els = await this._execute('post', '/elements', {using, value})
+    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
+    return els.map((v) => new Element(this, v))
   }
 
   async sleep (ms) {
@@ -1371,10 +1247,23 @@ var Element = FindHelpersMixin(ElementBase)
     actions.tick.keyboardUp('p')
     actions.compile()
 */
+
+/*
+    var driver = new Driver(new Firefox())
+    await driver.connect() <--- also runs "driver.newSession()"
+
+    connect will:
+      - Look for a free port. Make 'port' a default settable option
+      - Run the browser on that port
+      - Make the connection on that port
+      - Create a session with driver.newSession()
+*/
     //
+    var firefox = new Firefox()
     var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
-    var parameters = new FirefoxParameters()
-    await driver.newSession(parameters)
+    // var driver = new Driver(firefox) // 4444 or 9515
+
+    await driver.newSession(firefox)
 
     // console.log('SESSION: ', await driver.newSession({}))
 
@@ -1409,7 +1298,7 @@ var Element = FindHelpersMixin(ElementBase)
 
     await driver.performActions(actions)
 
-    process.exit(0)
+    // process.exit(0)
     /* eslint-disable */
 
     console.log('Selected:', await dts[0].isSelected())
