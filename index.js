@@ -3,16 +3,19 @@
 
   Make up skeleton:
   [X] WED 24 Finish off methods in main list
-  [ ] FRI-SAT 26 27 Finish off Actions API calls
-  [ ] SUN 28 Install JSDoc, check generated documentation
-  [ ] MON 29 Add missing findElement*** docs, make sure they appear in doc
-  [ ] TUE 30 Manage errors properly: sometimes calls fail but it's not a proper error
-  [ ] WED 31 Put it online on Github pages
-  [ ] THR 1 Add code to run chrome (or whatever) automatically, passing parameters for port and more
-  [ ] FRI 2 Add "wait" statement, poll and checks for a condition with possible timeout
-  [ ] SAT 3 Write initial tests (ah!)
-  [ ] SAT 3 Submit code for review
-  [ ] SUN 4 Write more tests
+  [X] FRI-SAT 26 27 Finish off Actions API calls
+
+  [ ] DEV Manage errors properly: sometimes calls fail but it's not a proper error
+  [ ] DEV Add code to run chrome (or whatever) automatically, passing parameters for port and more
+  [ ] DEV Add "wait" statement, poll and checks for a condition with possible timeout
+
+  [ ] Install JSDoc, check generated documentation
+  [ ] Add missing findElement*** docs, make sure they appear in doc
+  [ ] Put it online on Github pages, including docco
+  [ ] Submit code for review
+
+  [ ] Write initial tests (ah!)
+  [ ] Write more tests
 
 DONE:
   [X] Figure out why sessionId is in value in firefox, and in object root in chrome
@@ -302,15 +305,44 @@ class Pointer extends Device {
     }
   }
 
+  static get Origin () {
+    return {
+      VIEWPORT: 'viewport',
+      POINTER: 'pointer'
+    }
+  }
+
   tickMethods () {
     return {
-      Move: (x, y, duration = 100) => {
+      Move: (args) => {
+        // Work out origin, defaulting to VIEWPORT.
+        // If it's an element, it will be seriaslised to please W3c AND Chrome
+        // In any case, it MUST be an element, VIEWPORT or POINTER
+        var origin
+        if (!args.origin) {
+          origin = Pointer.Origin.VIEWPORT
+        } else {
+          if (args.origin instanceof Element) {
+            origin = {
+              'element-6066-11e4-a52e-4f735466cecf': args.origin.id,
+              ELEMENT: args.origin.id
+            }
+          } else {
+            origin = args.origin
+            if (origin !== Pointer.Origin.VIEWPORT &&
+                origin !== Pointer.Origin.POINTER) {
+              throw new Error('When using move(), origin must be an element, Pointer.Origin.VIEWPORT or Pointer.Origin.POINTER')
+            } else {
+            }
+          }
+        }
+
         return {
           type: 'pointerMove',
-          origin: 'pointer',
-          duration,
-          x,
-          y
+          duration: args.duration || 0,
+          origin,
+          x: args.x,
+          y: args.y
         }
       },
       Down: (button = 0) => {
@@ -393,7 +425,7 @@ class Actions {
     this.compiledActions = []
 
     this.devices.forEach((device) => {
-      var deviceActions = []
+      var deviceActions = { actions: [] }
       deviceActions.type = device.type
       deviceActions.id = device.id
       if (device.type === 'pointer') {
@@ -401,12 +433,12 @@ class Actions {
       }
 
       this.actions.forEach((action) => {
-        deviceActions.push(action[ device.id ])
+        deviceActions.actions.push(action[ device.id ])
       })
-      this.compiledActions.push({ actions: deviceActions })
+      this.compiledActions.push(deviceActions)
     })
 
-    console.log('COMPILED ACTIONS:', require('util').inspect(this.compiledActions, {depth: 10}))
+    // console.log('COMPILED ACTIONS:', require('util').inspect(this.compiledActions, {depth: 10}))
   }
 
   _setAction (deviceId, action) {
@@ -1255,21 +1287,16 @@ class DriverBase {
     return new Element(this, res)
   }
 
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-  // ******************************************************************************
-
-  performActions (actions) {
-    return this._execute('post', '/actions', { actions: actions.getCompiledActions() })
+  async performActions (actions) {
+    if (!actions.compiledActions.length) actions.compile()
+    console.log('PERFORMING:', require('util').inspect({ actions: actions.compiledActions }, { depth: 10 }))
+    await this._execute('post', '/actions', { actions: actions.compiledActions })
+    return this
   }
 
-  releaseActions () {
-    return this._execute('delete', '/actions')
+  async releaseActions () {
+    await this._execute('delete', '/actions')
+    return this
   }
 
   /**
@@ -1344,24 +1371,10 @@ var Element = FindHelpersMixin(ElementBase)
     actions.tick.keyboardUp('p')
     actions.compile()
 */
-
-    var actions = new Actions()
-    console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
-    actions.tick.mouseDown().keyboardDown('R')
-    actions.tick.mouseUp()
-    actions.tick.mouseDown().keyboardUp('r')
-    actions.tick.mouseUp().tick.keyboardDown('p').compile()
-    actions.tick.keyboardUp('p')
-    actions.compile()
-
-    process.exit(0)
-
     //
     var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
     var parameters = new FirefoxParameters()
-    console.log('SESSION: ', await driver.newSession(parameters))
-
-    console.log('IT IS:', actions, '\n\nAND:', actions.actions)
+    await driver.newSession(parameters)
 
     // console.log('SESSION: ', await driver.newSession({}))
 
@@ -1382,7 +1395,22 @@ var Element = FindHelpersMixin(ElementBase)
     console.log('TIMEOUTS AGAIN:', await driver.getTimeouts())
 
     var dts = await article.findElementsCss('dt')
-    console.log('DTs:', dts)
+    var dt0Text = await dts[0].getText()
+    console.log('TEXT', dt0Text)
+
+    var actions = new Actions()
+    console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
+    actions.tick.mouseDown().keyboardDown('R')
+    actions.tick.mouseMove({ origin: dts[3], x: 10, y: 20, duration: 5000 })
+    actions.tick.mouseDown().keyboardUp('r')
+    actions.tick.mouseUp().tick.keyboardDown('p')
+    actions.tick.keyboardUp('p')
+    actions.compile()
+
+    await driver.performActions(actions)
+
+    process.exit(0)
+    /* eslint-disable */
 
     console.log('Selected:', await dts[0].isSelected())
     console.log('Enabled:', await dts[0].isEnabled())
@@ -1415,6 +1443,7 @@ var Element = FindHelpersMixin(ElementBase)
     // await driver.dismissAlert()
     await driver.sleep(2000)
     */
+
     var el = await driver.getActiveElement()
     console.log('Active Element:', el)
     var elsc = await el.takeScreenshot(true)
@@ -1449,15 +1478,6 @@ var Element = FindHelpersMixin(ElementBase)
 
     console.log('Cookie named test', await driver.getNamedCookie('test'))
 
-    /*
-    { name: 'test',
-        value: 'a test',
-        path: '/',
-        domain: '.example.com',
-        expiry: 1732569047,
-        secure: true,
-        httpOnly: true }
-    */
 
     // console.log('EXECUTE 1:', await driver.executeAsyncScript("var a = arguments; var name = a[0]; var cb = a[1]; alert('Hello ' + name); setTimeout( () => { cb('ahah!') }, 2000);", ['tony']))
     // console.log('EXECUTE:', await driver.executeScript("alert('Stocazzo! '+ arguments[0])", ['a', 'b', 'c']))
