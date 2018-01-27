@@ -1,11 +1,10 @@
 /*
-  TODO:
-
   Make up skeleton:
   [X] DEV Manage errors properly: sometimes calls fail but it's not a proper error
-  [ ] DEV Add code to run chrome (or whatever) automatically, passing parameters for port and more
+  [X] DEV Add code to run chrome (or whatever) automatically, passing parameters for port and more
      https://www.npmjs.com/package/get-port
   [ ] DEV Add "wait" statement, poll and checks for a condition with possible timeout
+  [ ] Add proper debug logging
 
   [ ] Install JSDoc, check generated documentation
   [ ] Add missing findElement*** docs, make sure they appear in doc
@@ -19,6 +18,7 @@
 var request = require('request-promise-native')
 const { spawn } = require('child_process')
 var DO = require('deepobject')
+const getPort = require('get-port')
 
 const KEY = require('./KEY.js')
 
@@ -56,6 +56,11 @@ function exec (command, commandOptions) {
     stdio: options.stdio || 'ignore'
   })
 
+  proc.on('error', (err) => {
+    console.error(`Could not run ${command}:`, err)
+    throw new Error(`Error running the webdriver '${command}'`)
+  })
+
   // This process should not wait on the spawned child, however, we do
   // want to ensure the child is killed when this process exits.
   proc.unref()
@@ -63,6 +68,7 @@ function exec (command, commandOptions) {
 
   let result = new Promise(resolve => {
     proc.once('exit', (code, signal) => {
+      console.error(`Process ${command} has exited! Code and signal:`, code, signal)
       proc = null
       process.removeListener('exit', onProcessExit)
       resolve({ code, signal })
@@ -71,12 +77,15 @@ function exec (command, commandOptions) {
   return { result, killCommand }
 
   function onProcessExit () {
+    console.error(`Process closed, killing ${command}`, killCommand)
     killCommand('SIGTERM')
   }
 
   function killCommand (signal) {
+    console.error(`killCommand() called! sending ${signal} to ${command}`)
     process.removeListener('exit', onProcessExit)
     if (proc) {
+      console.error(`Sending ${signal} to ${command}`)
       proc.kill(signal)
       proc = null
     }
@@ -108,6 +117,9 @@ class Browser {
     for (var k in root) {
       if (root.hasOwnProperty(k)) this.sessionParameters[ k ] = root[k]
     }
+
+    // Give it a nice, lowercase name
+    this.name = 'browser'
   }
   setAlwaysMatchKey (name, value, force = false) {
     if (force || !this.sessionParameters.capabilities.alwaysMatch.hasOwnProperty(name)) {
@@ -131,7 +143,8 @@ class Browser {
     return this.sessionParameters
   }
 
-  async run () {
+  // Options: port, args, env, stdio
+  async run (options) {
   }
 }
 
@@ -139,21 +152,67 @@ class Browser {
 // https://sites.google.com/a/chromium.org/chromedriver/capabilities
 // STATUS: https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md
 class Chrome extends Browser { // eslint-disable-line no-unused-vars
-  constructor () {
-    super()
+  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
+    super(...arguments)
+
+    // Give it a nice, lowercase name
+    this.name = 'chrome'
 
     // This is crucial so that Chrome obeys w3c
     this.setAlwaysMatchKey('chromeOptions.w3c', true, true)
-    this.setAlwaysMatchKey('browserName', 'chrome', true)
+
+    // The required browser's name
+    this.setAlwaysMatchKey('browserName', 'chrome')
+
+    // Add specific Options
+    for (var k in specific) {
+      if (specific.hasOwnProperty(k)) {
+        this.alwaysMatch.chromeOptions[ k ] = specific[ k ]
+      }
+    }
+  }
+
+  run (options) {
+    var executable = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
+    options.args.push('--port=' + options.port)
+    return exec(executable, options)
   }
 }
 
 // https://github.com/mozilla/geckodriver
 // STATUS: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status
 class Firefox extends Browser { // eslint-disable-line no-unused-vars
-  constructor () {
-    super()
+  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
+    super(...arguments)
+
+    // Give it a nice, lowercase name
+    this.name = 'firefox'
+
+    // Firefox's empty firefoxOptions
+    this.setAlwaysMatchKey('moz:firefoxOptions', {}, true)
+
+    // The required browser's name
     this.setAlwaysMatchKey('browserName', 'firefox')
+
+    // Add specific Options
+    for (var k in specific) {
+      if (specific.hasOwnProperty(k)) {
+        this.alwaysMatch['moz:firefoxOptions'][ k ] = specific[ k ]
+      }
+    }
+  }
+
+  run (options) {
+    var executable = process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver'
+    options.args.push('--port=' + options.port)
+    return exec(executable, options)
+  }
+}
+
+class Selenium extends Browser { // eslint-disable-line no-unused-vars
+  constructor () {
+    super(...arguments)
+    console.log('Selenium Browser')
   }
 }
 
@@ -373,7 +432,6 @@ class Actions {
 }
 
 const FindHelpersMixin = (superClass) => class extends superClass {
-  // TODO: Document these once I know documentation works
   findElementCss (value) {
     return this.findElement(Driver.using.CSS, value)
   }
@@ -647,21 +705,93 @@ class ElementBase {
   }
 }
 
+// Options: hostname, port, spawn, env, stdio, args
 class DriverBase {
-  constructor (ip = null, port = null, capabilities = {}) {
-    this.ip = ip
-    this.port = port
-    this.sessionCapabilities = capabilities
-    this.sessionId = null
-    this._urlBase = `http://${this.ip}:${this.port}/session`
+  constructor (browser, options = {}) {
+    this._browser = browser
+    this._hostname = options.hostname || '127.0.0.1'
+    this._spawn = typeof options.spawn !== 'undefined' ? !!options.spawn : true
+    this._webDriverRunning = !this._spawn
+
+    // Parameters passed onto child process
+    this._port = options.port
+    this._env = isObject(options.env) ? options.env : process.env
+    this._stdio = options.stdio || 'ignore'
+    this._args = Array.isArray(options.args) ? options.args : []
+
+    this._killCommand = null
+    this._commandResult = null
+
+    this._urlBase = null
+  }
+
+  stopWebDriver (signal = 'SIGTERM') {
+    if (this._killCommand) {
+      this._killCommand(signal)
+
+      this.killWebDriver('SIGTERM')
+      this._webDriverRunning = false
+    }
+  }
+
+  async startWebDriver () {
+    // If it's already connected, nothing to do
+    if (this._webDriverRunning) return
+
+    // If spawning is required, do so
+    if (this._spawn) {
+      // No port: find a free port
+      if (!this._port) {
+        this._port = await getPort({ host: this._hostname })
+      }
+
+      // Options: port, args, env, stdio
+      var res = this._browser.run({
+        port: this._port,
+        args: this._args,
+        env: this._env,
+        stdio: this._stdio }
+      )
+      this._killCommand = res.killCommand
+      this._commandResult = res.result
+    }
+
+    // It's still possible that no port has been set, since spawn was false
+    // and no port was defined. In such a case, use the default 4444
+    if (!this.port) this.port = '4444'
+
+    // `_hostname` and `_port` are finally set: make up the first `urlBase`
+    this._urlBase = `http://${this._hostname}:${this._port}/session`
+
+    // Check that the server is up, by asking for the status
+    // It might take a little while for the
+    var success = false
+    for (var i = 0; i < 10; i++) {
+      if (i > 5) {
+        console.error(`Attempt n. ${i} to connect to ${this._hostname}, port ${this._port}... `)
+      }
+      try {
+        await this.status()
+        success = true
+        break
+      } catch (e) {
+        await this.sleep(1000)
+      }
+    }
+    if (!success) {
+      throw new Error(`Could not connect to the driver`)
+    }
+
+    // Connection worked...
+    this._webDriverRunning = true
   }
 
   _ready () {
-    return this.sessionId && this.ip && this.port
+    return !!(this._sessionId && this._webDriverRunning)
   }
 
   inspect () {
-    return `DriverBase { ip: ${this.ip}, port: ${this.port} }`
+    return `DriverBase { ip: ${this.Name}, port: ${this._port} }`
   }
 
   /**
@@ -675,29 +805,34 @@ class DriverBase {
    * @example
    *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
   */
-  async newSession (browser) {
+  async newSession () {
     try {
-      var value = await this._execute('post', '', browser.getSessionParameters())
-      // var res = await this._execute('post', '', { desiredCapabilities: {} })
+      if (this._sessionId) {
+        throw new Error('Session already created. Call deleteSession() first')
+      }
+      // First of all, try and run the webdriver, if it's not running already
+      await this.startWebDriver()
 
-      // W3C conforming response; checked if value is an object containing a `capabilities` object property
+      var value = await this._execute('post', '', this._browser.getSessionParameters())
+
+      // W3C conforming response; check if value is an object containing a `capabilities` object property
       // and a `sessionId` string property
       if (isObject(value) &&
           isObject(value.capabilities) &&
           typeof value.capabilities.browserName === 'string' &&
           typeof value.sessionId === 'string'
       ) {
-        this.sessionCapabilities = value.capabilities
-        this.sessionId = value.sessionId
+        this._sessionCapabilities = value.capabilities
+        this._sessionId = value.sessionId
       }
-      if (!this.sessionId || !this.sessionCapabilities) throw new Error('Could not get sessionId and capabilities out of returned object')
+      if (!this._sessionId || !this._sessionCapabilities) throw new Error('Could not get sessionId and capabilities out of returned object')
 
-      this._urlBase = `http://${this.ip}:${this.port}/session/${this.sessionId}`
+      this._urlBase = `http://${this._hostname}:${this._port}/session/${this._sessionId}`
       return value
     } catch (e) {
-      this.sessionId = null
+      this._sessionId = null
       this._sessionData = {}
-      this._urlBase = `http://${this.ip}:${this.port}/session`
+      this._urlBase = `http://${this._hostname}:${this._port}/session`
       throw (e)
     }
   }
@@ -713,9 +848,9 @@ class DriverBase {
   async deleteSession () {
     try {
       var value = await this._execute('delete', '')
-      this.sessionId = null
+      this._sessionId = null
       this._sessionData = {}
-      this._urlBase = `http://${this.ip}:${this.port}/session`
+      this._urlBase = `http://${this._hostname}:${this._port}/session`
       return value
     } catch (e) {
       throw (e)
@@ -731,14 +866,14 @@ class DriverBase {
    *   var status = await driver.status()
   */
   async status () {
-    var _urlBase = `http://${this.ip}:${this.port}`
+    var _urlBase = `http://${this._hostname}:${this._port}`
     var res = await request.get({ url: `${_urlBase}/status`, json: true })
     return checkRes(res).value
   }
 
   async _execute (method, command, params) {
     // Check that session has been created
-    if (!(method === 'post' && command === '' && !this.sessionId)) {
+    if (!(method === 'post' && command === '' && !this._sessionId)) {
       if (!this._ready()) throw new Error('Executing command on non-ready driver')
     }
 
@@ -1197,7 +1332,6 @@ class DriverBase {
 
   async performActions (actions) {
     if (!actions.compiledActions.length) actions.compile()
-    console.log('PERFORMING:', require('util').inspect({ actions: actions.compiledActions }, { depth: 10 }))
     await this._execute('post', '/actions', { actions: actions.compiledActions })
     return this
   }
@@ -1281,7 +1415,7 @@ var Element = FindHelpersMixin(ElementBase)
 */
 
 /*
-    var driver = new Driver(new Firefox())
+    var driver = new Driver(new Firefox(), { port: 1000, spawn: false })
     await driver.connect() <--- also runs "driver.newSession()"
 
     connect will:
@@ -1291,12 +1425,12 @@ var Element = FindHelpersMixin(ElementBase)
       - Create a session with driver.newSession()
 */
     //
-    var firefox = new Firefox()
-    var chrome = new Chrome()
-    var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
+    // var firefox = new Firefox()
+    // var chrome = new Chrome()
+    // var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
     // var driver = new Driver(firefox) // 4444 or 9515
 
-    await driver.newSession(firefox)
+    // await driver.newSession(firefox)
 
     // console.log('SESSION: ', await driver.newSession({}))
 
@@ -1308,6 +1442,9 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefox', value: ['c', 'h', 'r', 'o', 'm', 'e'] }))
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefoxandchrome' + Element.KEY.ENTER }))
 
+    var driver = new Driver(new Firefox(), { spawn: true })
+    await driver.newSession()
+
     await driver.navigateTo('http://usejsdoc.org')
     var article = await driver.findElementCss('article')
     console.log('Article:', article)
@@ -1316,6 +1453,9 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('SETTIMEOUTS:', await driver.setTimeouts({ implicit: 0, pageLoad: 300000, script: 30000 }))
     console.log('TIMEOUTS AGAIN:', await driver.getTimeouts())
 
+    await driver.deleteSession()
+    await driver.newSession()
+
     var dts = await article.findElementsCss('dt')
     var dt0Text = await dts[0].getText()
     console.log('TEXT', dt0Text)
@@ -1323,7 +1463,7 @@ var Element = FindHelpersMixin(ElementBase)
     var actions = new Actions()
     console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
     actions.tick.mouseDown().keyboardDown('R')
-    actions.tick.mouseMove({ origin: dts[3], x: 10, y: 20, duration: 5000 })
+    actions.tick.mouseMove({ origin: dts[3], x: 10, y: 20, duration: 1000 })
     actions.tick.mouseDown().keyboardUp('r')
     actions.tick.mouseUp().tick.keyboardDown('p')
     actions.tick.keyboardUp('p')
