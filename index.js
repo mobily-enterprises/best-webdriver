@@ -3,8 +3,8 @@
   [X] DEV Manage errors properly: sometimes calls fail but it's not a proper error
   [X] DEV Add code to run chrome (or whatever) automatically, passing parameters for port and more
      https://www.npmjs.com/package/get-port
-  [ ] DEV Add "wait" statement, poll and checks for a condition with possible timeout
-  [ ] Add proper debug logging
+  [X] DEV Add "wait" statement, poll and checks for a condition with possible timeout
+  [X] Add proper debug logging
 
   [ ] Install JSDoc, check generated documentation
   [ ] Add missing findElement*** docs, make sure they appear in doc
@@ -19,6 +19,7 @@ var request = require('request-promise-native')
 const { spawn } = require('child_process')
 var DO = require('deepobject')
 const getPort = require('get-port')
+var consolelog = require('debug')('webdriver')
 
 const KEY = require('./KEY.js')
 
@@ -57,7 +58,7 @@ function exec (command, commandOptions) {
   })
 
   proc.on('error', (err) => {
-    console.error(`Could not run ${command}:`, err)
+    consolelog(`Could not run ${command}:`, err)
     throw new Error(`Error running the webdriver '${command}'`)
   })
 
@@ -68,7 +69,7 @@ function exec (command, commandOptions) {
 
   let result = new Promise(resolve => {
     proc.once('exit', (code, signal) => {
-      console.error(`Process ${command} has exited! Code and signal:`, code, signal)
+      consolelog(`Process ${command} has exited! Code and signal:`, code, signal)
       proc = null
       process.removeListener('exit', onProcessExit)
       resolve({ code, signal })
@@ -77,19 +78,86 @@ function exec (command, commandOptions) {
   return { result, killCommand }
 
   function onProcessExit () {
-    console.error(`Process closed, killing ${command}`, killCommand)
+    consolelog(`Process closed, killing ${command}`, killCommand)
     killCommand('SIGTERM')
   }
 
   function killCommand (signal) {
-    console.error(`killCommand() called! sending ${signal} to ${command}`)
+    consolelog(`killCommand() called! sending ${signal} to ${command}`)
     process.removeListener('exit', onProcessExit)
     if (proc) {
-      console.error(`Sending ${signal} to ${command}`)
+      consolelog(`Sending ${signal} to ${command}`)
       proc.kill(signal)
       proc = null
     }
   }
+}
+
+function waitForGenerator (self) {
+  return function (timeout = 0) {
+    return new Proxy({}, {
+      get (target, name) {
+        // if (name in target) { return target[name] }
+        if (typeof self[name] === 'function') {
+          return async function (...args) {
+            // If the last argument is a function, it's assumed
+            // to be the checker. If not, the checker is set as
+            // a yes-man noop function
+            if (typeof args[args.length - 1] === 'function') {
+              var checker = args.pop()
+            } else {
+              checker = () => true
+            }
+
+            var endTime = new Date(Date.now() + (timeout || self._defaultPollTimeout))
+            var success = false
+            var errors = []
+            while (true) {
+              try {
+                consolelog(`Attempting call ${name} with timeout ${timeout} and arguments ${args}`)
+                var res = await self[name].apply(self, args)
+
+                // If the flow gets to this point, the call was successful. However,
+                // it's also too late. Even though the call went through, it will be
+                // considered failed
+                if (new Date() > endTime) {
+                  consolelog('Call was successful, BUT it was too late. This will fail.')
+                  errors.push(new Error('Call successful but too late'))
+                  break
+                }
+                consolelog('Call was successful, checking the result with the provided checker...')
+                success = !!checker(res)
+                consolelog('Checker returned:', success)
+              } catch (e) {
+                consolelog('Call resulted in error, checker won\'t be run')
+                errors.push(e)
+              }
+              if (success || new Date() > endTime) {
+                consolelog(`Time to get out of the cycle. Success is ${success}`)
+                break
+              }
+              consolelog('Sleeping, trying again later...')
+              await sleep(self._pollInterval)
+            }
+
+            // If attempt is successful, return res
+            if (success) return res
+            else {
+              var error = new Error('Call was unsuccessful')
+              error.errors = errors
+              throw error
+            }
+          }
+        } else {
+          return self[name]
+        }
+      } // End of Proxy getter
+    }) // End of Proxy
+  }
+} // End of waitForGenerator
+
+function sleep (ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 class Browser {
@@ -492,6 +560,7 @@ class ElementBase {
 
     // No ID could be find
     if (!this.id) throw new Error('Could not get element ID from element object')
+    this.waitFor = waitForGenerator(this)
   }
 
   static get KEY () { return KEY }
@@ -705,7 +774,7 @@ class ElementBase {
   }
 }
 
-// Options: hostname, port, spawn, env, stdio, args
+// Options: hostname, port, spawn, env, stdio, args,pollInterval
 class DriverBase {
   constructor (browser, options = {}) {
     this._browser = browser
@@ -722,7 +791,11 @@ class DriverBase {
     this._killCommand = null
     this._commandResult = null
 
+    this._pollInterval = 300
+    this._defaultPollTimeout = 10000
     this._urlBase = null
+
+    this.waitFor = waitForGenerator(this)
   }
 
   stopWebDriver (signal = 'SIGTERM') {
@@ -768,7 +841,7 @@ class DriverBase {
     var success = false
     for (var i = 0; i < 10; i++) {
       if (i > 5) {
-        console.error(`Attempt n. ${i} to connect to ${this._hostname}, port ${this._port}... `)
+        consolelog(`Attempt n. ${i} to connect to ${this._hostname}, port ${this._port}... `)
       }
       try {
         await this.status()
@@ -1156,7 +1229,7 @@ class DriverBase {
    * @return {...} Whatever was returned by the javascript code with a `return` statement
    *
    * @example
-   *   await driver.executeScript("return 'Hello ' + arguments[0];", ['tony'])
+   *   await driver.executeScript('return 'Hello ' + arguments[0];', ['tony'])
   */
   executeScript (script, args = []) {
     return this._execute('post', '/execute/sync', { script, args })
@@ -1174,7 +1247,7 @@ class DriverBase {
    * @return {...} Whatever was returned by the javascript code by calling the callback
    *
    * @example
-   *   await driver.executeAsyncScript("var name = arguments[0];var cb = arguments[1];cb('Hello ' + name);", ['tony'])
+   *   await driver.executeAsyncScript('var name = arguments[0];var cb = arguments[1];cb('Hello ' + name);', ['tony'])
   */
   executeAsyncScript (script, args = []) {
     return this._execute('post', '/execute/async', { script, args })
@@ -1380,7 +1453,7 @@ class DriverBase {
   }
 
   async sleep (ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return sleep(ms)
   }
 }
 
@@ -1397,7 +1470,7 @@ var Element = FindHelpersMixin(ElementBase)
 * `acceptInsecureCerts` -- Accept insecure TLS certificates -- boolean -- Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session.
 * `pageLoadStrategy` -- Page load strategy -- string -- Defines the current session’s page load strategy.
 * `proxy` -- Proxy configuration JSON -- Object -- Defines the current session’s proxy configuration.
-* `setWindowRect` -- Window dimensioning/positioning "setWindowRect" -- boolean -- Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows.
+* `setWindowRect` -- Window dimensioning/positioning 'setWindowRect' -- boolean -- Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows.
 * `timeouts` -- Session timeouts -- configuration JSON -- Object -- Describes the timeouts imposed on certain session operations.
 * `unhandledPromptBehavior` Unhandled prompt behavior -- string -- Describes the current session’s user prompt handler.
 */
@@ -1416,7 +1489,7 @@ var Element = FindHelpersMixin(ElementBase)
 
 /*
     var driver = new Driver(new Firefox(), { port: 1000, spawn: false })
-    await driver.connect() <--- also runs "driver.newSession()"
+    await driver.connect() <--- also runs 'driver.newSession()'
 
     connect will:
       - Look for a free port. Make 'port' a default settable option
@@ -1442,8 +1515,20 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefox', value: ['c', 'h', 'r', 'o', 'm', 'e'] }))
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefoxandchrome' + Element.KEY.ENTER }))
 
-    var driver = new Driver(new Firefox(), { spawn: true })
+    var driver = new Driver(new Chrome(), { spawn: true })
     await driver.newSession()
+
+    console.log('Loading Google:', await driver.waitFor(3000).navigateTo('https://www.google.com'))
+
+    await driver.sleep(2000)
+    await driver.navigateTo('https://gigsnet.com')
+
+    var el = await driver.findElementCss('body')
+    console.log('BODY ELEMENT:', el)
+
+    console.log('GIGSNET', await el.waitFor(10000).findElementsCss('paper-card.my-book-city', (r) => r.length))
+
+    await driver.sleep(3000)
 
     await driver.navigateTo('http://usejsdoc.org')
     var article = await driver.findElementCss('article')
@@ -1452,9 +1537,6 @@ var Element = FindHelpersMixin(ElementBase)
     console.log('TIMEOUTS:', await driver.getTimeouts())
     // console.log('SETTIMEOUTS:', await driver.setTimeouts({ implicit: 0, pageLoad: 300000, script: 30000 }))
     console.log('TIMEOUTS AGAIN:', await driver.getTimeouts())
-
-    await driver.deleteSession()
-    await driver.newSession()
 
     var dts = await article.findElementsCss('dt')
     var dt0Text = await dts[0].getText()
@@ -1488,7 +1570,7 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('SEE CLEAR:', await h2.clear())
     // console.log('SEE SCREENSHOT:', await h2.takeScreenshot())
 
-    await driver.navigateTo('http://www.google.com')
+    await driver.waitFor.navigateTo('http://www.google.com')
     console.log('PAGE SOURCE:', await driver.getPageSource())
     // var q = await driver.findElementCss('[name=q]')
     // await q.sendKeys('stocazzo' + Element.KEY.ENTER)
@@ -1498,7 +1580,7 @@ var Element = FindHelpersMixin(ElementBase)
     // await driver.sleep(5000)
 
     /*
-    console.log('EXECUTE 0:', await driver.executeScript("prompt('pippo');return 'Hello ' + arguments[0];", ['tony']))
+    console.log('EXECUTE 0:', await driver.executeScript('prompt('pippo');return 'Hello ' + arguments[0];', ['tony']))
     await driver.sleep(2000)
     console.log('Alert text:', await driver.getAlertText())
     await driver.sendAlertText('aaaaa')
