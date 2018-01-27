@@ -18,6 +18,7 @@
 
 var request = require('request-promise-native')
 const { spawn } = require('child_process')
+var DO = require('deepobject')
 
 const KEY = require('./KEY.js')
 
@@ -83,45 +84,76 @@ function exec (command, commandOptions) {
 }
 
 class Browser {
-  constructor () {
+  constructor (alwaysMatch = {}, firstMatch = [], root = {}) {
+    // Sanity check. Things can go pretty bad if these are wrong
+    if (!Array.isArray(firstMatch)) {
+      throw new Error('firstmatch parameter must be an array')
+    }
+
+    if (!isObject(alwaysMatch)) {
+      throw new Error('alwaysMatch must be an object')
+    }
+
+    if (!isObject(root)) {
+      throw new Error('root options must be an object')
+    }
+
     this.sessionParameters = {
       capabilities: {
-        alwaysMatch: {},
-        firstMatch: []
+        alwaysMatch: alwaysMatch,
+        firstMatch: firstMatch
       }
     }
+    // Copy over whatever is specified in `root`
+    for (var k in root) {
+      if (root.hasOwnProperty(k)) this.sessionParameters[ k ] = root[k]
+    }
   }
-  alwaysMatch (name, value) {
-    this.sessionParameters.capabilities.alwaysMatch[ name ] = value
+  setAlwaysMatchKey (name, value, force = false) {
+    if (force || !this.sessionParameters.capabilities.alwaysMatch.hasOwnProperty(name)) {
+      DO.set(this.sessionParameters.capabilities.alwaysMatch, name, value)
+    }
   }
 
-  firstMatch (name, value) {
-    this.sessionParameters.capabilities.firstMatch.push({ [name]: value })
+  addFirstMatch (name, value, force = false) {
+    if (force || !this.sessionParameters.capabilities.firstMatch.indexOf(name) === -1) {
+      this.sessionParameters.capabilities.firstMatch.push({ [name]: value })
+    }
   }
 
-  rootParameter (name, value) {
-    this.sessionParameters[ name ] = value
+  setRootKey (name, value, force = false) {
+    if (force || !this.sessionParameters.hasOwnProperty(name)) {
+      DO.set(this.sessionParameters, name, value)
+    }
   }
 
   getSessionParameters () {
     return this.sessionParameters
   }
+
+  async run () {
+  }
 }
 
+// https://sites.google.com/a/chromium.org/chromedriver
+// https://sites.google.com/a/chromium.org/chromedriver/capabilities
+// STATUS: https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md
 class Chrome extends Browser { // eslint-disable-line no-unused-vars
   constructor () {
     super()
 
     // This is crucial so that Chrome obeys w3c
-    this.alwaysMatch('chromeOptions', { w3c: true })
-    this.alwaysMatch('browserName', 'chrome')
+    this.setAlwaysMatchKey('chromeOptions.w3c', true, true)
+    this.setAlwaysMatchKey('browserName', 'chrome', true)
   }
 }
 
+// https://github.com/mozilla/geckodriver
+// STATUS: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status
 class Firefox extends Browser { // eslint-disable-line no-unused-vars
   constructor () {
     super()
-    this.alwaysMatch('browserName', 'firefox')
+    this.setAlwaysMatchKey('browserName', 'firefox')
   }
 }
 
@@ -1260,6 +1292,7 @@ var Element = FindHelpersMixin(ElementBase)
 */
     //
     var firefox = new Firefox()
+    var chrome = new Chrome()
     var driver = new Driver('127.0.0.1', 4444) // 4444 or 9515
     // var driver = new Driver(firefox) // 4444 or 9515
 
