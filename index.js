@@ -84,7 +84,7 @@ function exec (command, commandOptions) {
 
 class Browser {
   constructor () {
-    this.parameters = {
+    this.sessionParameters = {
       capabilities: {
         alwaysMatch: {},
         firstMatch: []
@@ -92,19 +92,19 @@ class Browser {
     }
   }
   alwaysMatch (name, value) {
-    this.parameters.capabilities.alwaysMatch[ name ] = value
+    this.sessionParameters.capabilities.alwaysMatch[ name ] = value
   }
 
   firstMatch (name, value) {
-    this.parameters.capabilities.firstMatch.push({ [name]: value })
+    this.sessionParameters.capabilities.firstMatch.push({ [name]: value })
   }
 
   rootParameter (name, value) {
-    this.parameters[ name ] = value
+    this.sessionParameters[ name ] = value
   }
 
-  getParameters () {
-    return this.parameters
+  getSessionParameters () {
+    return this.sessionParameters
   }
 }
 
@@ -645,7 +645,7 @@ class DriverBase {
   */
   async newSession (browser) {
     try {
-      var value = await this._execute('post', '', browser.getParameters())
+      var value = await this._execute('post', '', browser.getSessionParameters())
       // var res = await this._execute('post', '', { desiredCapabilities: {} })
 
       // W3C conforming response; checked if value is an object containing a `capabilities` object property
