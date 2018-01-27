@@ -1,11 +1,4 @@
 /*
-  Make up skeleton:
-  [X] DEV Manage errors properly: sometimes calls fail but it's not a proper error
-  [X] DEV Add code to run chrome (or whatever) automatically, passing parameters for port and more
-     https://www.npmjs.com/package/get-port
-  [X] DEV Add "wait" statement, poll and checks for a condition with possible timeout
-  [X] Add proper debug logging
-
   [ ] Install JSDoc, check generated documentation
   [ ] Add missing findElement*** docs, make sure they appear in doc
   [ ] Put it online on Github pages, including docco
@@ -556,6 +549,8 @@ class ElementBase {
 
     // No ID could be find
     if (!this.id) throw new Error('Could not get element ID from element object')
+
+    // Make it possible to do element.waitFor()
     this.waitFor = waitForGenerator(this)
   }
 
@@ -791,6 +786,7 @@ class DriverBase {
     this._defaultPollTimeout = 10000
     this._urlBase = null
 
+    // Make it possible to do driver.waitFor()
     this.waitFor = waitForGenerator(this)
   }
 

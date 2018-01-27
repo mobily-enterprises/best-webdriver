@@ -7,6 +7,12 @@ DONE:
   [X] Allow entering a string as sendKeys, add constants if needed
   [X] Understand the real differences between different browsers' responses in calls
   [X] Add browser requirement string spec, and other parameters
+  [X] DEV Manage errors properly: sometimes calls fail but it's not a proper error
+  [X] DEV Add code to run chrome (or whatever) automatically, passing parameters for port and more
+     https://www.npmjs.com/package/get-port
+  [X] DEV Add "wait" statement, poll and checks for a condition with possible timeout
+  [X] Add proper debug logging
+
 
 
 http://usejsdoc.org/
