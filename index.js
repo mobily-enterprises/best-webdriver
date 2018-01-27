@@ -278,10 +278,6 @@ class Firefox extends Browser { // eslint-disable-line no-unused-vars
 }
 
 class Selenium extends Browser { // eslint-disable-line no-unused-vars
-  constructor () {
-    super(...arguments)
-    console.log('Selenium Browser')
-  }
 }
 
 class InputDevice {
@@ -1181,7 +1177,7 @@ class DriverBase {
    *   await driver.maximizeWindow()
   */
   async maximizeWindow () {
-    await this._execute('post', '/window/maximize')
+    return this._execute('post', '/window/maximize')
   }
 
   /**
@@ -1518,7 +1514,27 @@ var Element = FindHelpersMixin(ElementBase)
     var driver = new Driver(new Chrome(), { spawn: true })
     await driver.newSession()
 
-    console.log('Loading Google:', await driver.waitFor(3000).navigateTo('https://www.google.com'))
+    console.log('Loading Google:', await driver.waitFor(6000).navigateTo('https://www.google.com'))
+
+    console.log('Maximize:')
+    await driver.maximizeWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
+
+    console.log('Minimize:')
+    await driver.minimizeWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
+
+    console.log('Maximize again:')
+    await driver.maximizeWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
+
+    console.log('Full screen:')
+    await driver.fullScreenWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
 
     await driver.sleep(2000)
     await driver.navigateTo('https://gigsnet.com')
@@ -1570,7 +1586,7 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('SEE CLEAR:', await h2.clear())
     // console.log('SEE SCREENSHOT:', await h2.takeScreenshot())
 
-    await driver.waitFor.navigateTo('http://www.google.com')
+    await driver.waitFor(6000).navigateTo('http://www.google.com')
     console.log('PAGE SOURCE:', await driver.getPageSource())
     // var q = await driver.findElementCss('[name=q]')
     // await q.sendKeys('stocazzo' + Element.KEY.ENTER)
