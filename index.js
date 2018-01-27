@@ -36,7 +36,7 @@ function checkRes (res) {
  * Spawns a child process. The returned {@link Command} may be used to wait
  * for the process result or to send signals to the process.
  *
- * Somewhat inspired by the `exec` function in the Selenium driver
+ * "Somewhat" inspired by the `exec` function in the Selenium node driver
  *
  * @param {string} command The executable to spawn.
  * @param {Options=} commandOptions The command options.
@@ -156,12 +156,12 @@ function sleep (ms) {
 class Browser {
   constructor (alwaysMatch = {}, firstMatch = [], root = {}) {
     // Sanity check. Things can go pretty bad if these are wrong
-    if (!Array.isArray(firstMatch)) {
-      throw new Error('firstmatch parameter must be an array')
-    }
-
     if (!isObject(alwaysMatch)) {
       throw new Error('alwaysMatch must be an object')
+    }
+
+    if (!Array.isArray(firstMatch)) {
+      throw new Error('firstmatch parameter must be an array')
     }
 
     if (!isObject(root)) {
@@ -736,7 +736,7 @@ class ElementBase {
    *                              special characters.
    * @example
    *   var el = await driver.findElement( Driver.using.CSS, '#input' })
-   *   await el.sendKeys("This is a search" + Element.KEY.ENTER)
+   *   await e.sendKeys("This is a search" + Element.KEY.ENTER)
    *
   */
   async sendKeys (text) {
