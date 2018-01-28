@@ -4,7 +4,8 @@
   "description": "Down to metal webdriver; you will be testing in 20 minutes, not 20 hours",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "apiDocs":"node_modules/jsdoc/jsdoc.js -d docs/api index.js -R README.md -P package.json"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,8 @@
     "get-port": "^3.2.0",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.5.5"
   }
 }

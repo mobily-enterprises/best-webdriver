@@ -1,7 +1,13 @@
 /*
-  [ ] Install JSDoc, check generated documentation
-  [ ] Add missing findElement*** docs, make sure they appear in doc
-  [ ] Put it online on Github pages, including docco
+  [X] Install JSDoc, check generated documentation
+  [ ] Finish development off
+    [X] Add _isCompiled to actions
+    [ ] Rename ElementBase into Element
+  [ ] Finish off documentation
+    [ ] Finish rough cut of documentation
+    [ ] All async methods marked as such (some return promises but aren't marked async)
+    [ ] Make Docco documentation
+  [ ] Put it online on Github pages
   [ ] Submit code for review
 
   [ ] Write initial tests (ah!)
@@ -86,84 +92,19 @@ function exec (command, commandOptions) {
   }
 }
 
-function waitForGenerator (self) {
-  return function (timeout = 0) {
-    return new Proxy({}, {
-      get (target, name) {
-        // if (name in target) { return target[name] }
-        if (typeof self[name] === 'function') {
-          return async function (...args) {
-            // If the last argument is a function, it's assumed
-            // to be the checker. If not, the checker is set as
-            // a yes-man noop function
-            if (typeof args[args.length - 1] === 'function') {
-              var checker = args.pop()
-            } else {
-              checker = () => true
-            }
-
-            var endTime = new Date(Date.now() + (timeout || self._defaultPollTimeout))
-            var success = false
-            var errors = []
-            while (true) {
-              try {
-                consolelog(`Attempting call ${name} with timeout ${timeout} and arguments ${args}`)
-                var res = await self[name].apply(self, args)
-
-                // If the flow gets to this point, the call was successful. However,
-                // it's also too late. Even though the call went through, it will be
-                // considered failed
-                if (new Date() > endTime) {
-                  consolelog('Call was successful, BUT it was too late. This will fail.')
-                  errors.push(new Error('Call successful but too late'))
-                  break
-                }
-                consolelog('Call was successful, checking the result with the provided checker...')
-                success = !!checker(res)
-                consolelog('Checker returned:', success)
-              } catch (e) {
-                consolelog('Call resulted in error, checker won\'t be run')
-                errors.push(e)
-              }
-              if (success || new Date() > endTime) {
-                consolelog(`Time to get out of the cycle. Success is ${success}`)
-                break
-              }
-              consolelog('Sleeping, trying again later...')
-              await sleep(self._pollInterval)
-            }
-
-            // If attempt is successful, return res
-            if (success) return res
-            else {
-              var error = new Error('Call was unsuccessful')
-              error.errors = errors
-              throw error
-            }
-          }
-        } else {
-          return self[name]
-        }
-      } // End of Proxy getter
-    }) // End of Proxy
-  }
-} // End of waitForGenerator
-
 function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 class Browser {
   constructor (alwaysMatch = {}, firstMatch = [], root = {}) {
-    // Sanity check. Things can go pretty bad if these are wrong
+    // Sanity checks. Things can go pretty bad if these are wrong
     if (!isObject(alwaysMatch)) {
       throw new Error('alwaysMatch must be an object')
     }
-
     if (!Array.isArray(firstMatch)) {
       throw new Error('firstmatch parameter must be an array')
     }
-
     if (!isObject(root)) {
       throw new Error('root options must be an object')
     }
@@ -395,6 +336,7 @@ class Actions {
     var self = this
     this.actions = []
 
+    this._compiled = false
     this.compiledActions = []
     // Assign `devices`. If not there, assign a default 'mouse' and 'keyboard'
     if (Object.keys(devices).length) {
@@ -420,6 +362,7 @@ class Actions {
     //
     this._tickSetters = {
       get tick () {
+        // Return self
         return self.tick
       },
       compile: self.compile.bind(self)
@@ -446,6 +389,7 @@ class Actions {
   static get KEY () { return KEY }
 
   compile () {
+    if (this._compiled) return
     this.compiledActions = []
 
     this.devices.forEach((device) => {
@@ -470,6 +414,9 @@ class Actions {
   }
 
   get tick () {
+    // The tick you add a tick, this is no longer compiled
+    this._compiled = false
+
     // Make up the action object. It will be an object where
     // each key is a device ID.
     // By default, ALL actions are set as 'pause'
@@ -530,6 +477,9 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   }
 }
 
+/**
+ The base class for Elements
+ */
 class ElementBase {
   constructor (driver, elObject) {
     var value
@@ -549,16 +499,22 @@ class ElementBase {
 
     // No ID could be find
     if (!this.id) throw new Error('Could not get element ID from element object')
+  }
 
-    // Make it possible to do element.waitFor()
-    this.waitFor = waitForGenerator(this)
+  /** Alias to {@link ElementBase#waitFor Element's waitFor function}
+   * @async
+   */
+  waitFor (timeout = 0, pollInterval = 0) {
+    timeout = timeout || this.driver._defaultPollTimeout
+    pollInterval = pollInterval || this.driver._pollInterval
+    return Driver.prototype.waitFor.call(this, timeout, pollInterval)
   }
 
   static get KEY () { return KEY }
 
   /**
    * Find an element within the queried element
-
+   *
    * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
    *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
    *                `Driver.Using.XPATH`
@@ -568,7 +524,7 @@ class ElementBase {
    * @example
    *   var el = await driver.findElement( Driver.Using.CSS, '[name=q]' )
    *
-  */
+   */
   async findElement (using, value) {
     var el = await this._execute('post', `/element/${this.id}/element`, {using, value})
     return new Element(this.driver, el)
@@ -582,7 +538,7 @@ class ElementBase {
    *                `Driver.Using.XPATH`
    * @param {string} value The parameter to the `using` method
    *
-   * @return {Promise<[Element},Element,...]>} An array of elements
+   * @return {Promise<Array<Element>>} An array of elements
    * @example
    *   var el = await driver.findElements( Driver.Using.CSS, '.item' })
    *
@@ -735,10 +691,10 @@ class ElementBase {
    * @return {Promise<Element>} The element itself. Concatenate with `Element.KEY` to send
    *                              special characters.
    * @example
-   *   var el = await driver.findElement( Driver.Using.CSS, '#input' })
-   *   await e.sendKeys("This is a search" + Element.KEY.ENTER)
+   * var el = await driver.findElement( Driver.Using.CSS, '#input' })
+   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
    *
-  */
+   */
   async sendKeys (text) {
     // W3c: Adding 'value' to parameters, so that Chrome works too
     var value = text.split('')
@@ -754,7 +710,7 @@ class ElementBase {
    *   var el = await driver.findElement( Driver.Using.CSS, '#input' })
    *   var screenshot = await el.takeScreenshot()
    *
-  */
+   */
   async takeScreenshot (scroll = true) {
     var data = await this._execute('get', `/element/${this.id}/screenshot`, { scroll })
     return Buffer.from(data, 'base64')
@@ -765,8 +721,39 @@ class ElementBase {
   }
 }
 
-// Options: hostname, port, spawn, env, stdio, args,pollInterval
+/**
+ * The main driver class used to create a driver and actually use this API
+ * It will spawn a webdriver process by default.
+ *
+ * @example
+ * // Create a driver using the Chrome browser
+ * var driver1 = new Driver(new Chrome())
+ * await driver.newSession()
+ *
+ * // Create a driver, but does NOT spawn a new webcontroller process
+ * var driver2 = new Driver(new Chrome(), {
+ *   spawn: false,
+ *   hostname: '127.0.0.1',
+ *   port: 4444
+ * })
+ * await driver.newSession()
+ *
+ */
 class DriverBase {
+  //
+  /**
+   * Constructor returning a Driver object, which will be used to pilot the passed browser
+   *
+   *   @param {Browser} browser The browser that this API will pilot
+   *   @param {Object} opt Options to configure the driver
+   *   @param {string} opt.hostname=127.0.0.1 The hostname to connect to.
+   *   @param {number} opt.port The port. If not specified, a free port will automatically be found
+   *   @param {number} opt.pollInterval=300 How many milliseconds to wait between each poll when using `waitFor()`
+   *   @param {boolean} opt.spawn=true If true, it will spawn a new webdriver process when a new session is created
+   *   @param {Object} opt.env=process.env (If spawn === true) The environment to pass to the spawn webdriver
+   *   @param {string} opt.stdio=ignore (If spawn === true) The default parameter to pass to {@link https://nodejs.org/api/child_process.html#child_process_options_stdio stdio} when spawning new preocess.
+   *   @param {Array} opt.args (If spawn === true) The arguments to pass to the webdriver command
+   */
   constructor (browser, options = {}) {
     this._browser = browser
     this._hostname = options.hostname || '127.0.0.1'
@@ -785,20 +772,117 @@ class DriverBase {
     this._pollInterval = 300
     this._defaultPollTimeout = 10000
     this._urlBase = null
-
-    // Make it possible to do driver.waitFor()
-    this.waitFor = waitForGenerator(this)
   }
 
-  stopWebDriver (signal = 'SIGTERM') {
-    if (this._killCommand) {
-      this._killCommand(signal)
+  /**
+    * This method will wrap ANY method in Driver or Element with a polling mechanism, which will retry
+    * the call every `pollInterval` milliseconds (it defaults to 300, but it can
+    * be set when running the Driver's constructor)
+    * It's also possible to pass an extra parameter to the original method in Driver,
+    * which represents a checker function that will need to return truly for success
+    *
+    * @inner
+    * @param {(number)} timeout How long to poll for
+    *
+    * @example
+    * // Create a driver using the Chrome browser
+    * var driver = new Driver(new Chrome())
+    * await driver.navigateTo('http://www.google.com')
+    *
+    * // The findElementCss has 5 seconds to work
+    * var el = driver.waitFor(5000).findElementCss('[name=q]')
+    *
+    * // The findElementsCss (note the plural: it returns an array)
+    * // has 10 seconds to work, AND the result needs to be not-empty
+    * // (see the tester function added)
+    * await el.waitFor(10000).findElementsCss('.listItem', (r) => r.length))
+    *
+    * await driver.stopWebDriver()
+   */
+  waitFor (timeout = 0, pollInterval = 0) {
+    timeout = timeout || this._defaultPollTimeout
+    pollInterval = pollInterval || this._pollInterval
+    var self = this
+    console.log('??????????????????????????????????????????', pollInterval)
+    return new Proxy({}, {
+      get (target, name) {
+        // if (name in target) { return target[name] }
+        if (typeof self[name] === 'function') {
+          return async function (...args) {
+            // If the last argument is a function, it's assumed
+            // to be the checker. If not, the checker is set as
+            // a yes-man noop function
+            if (typeof args[args.length - 1] === 'function') {
+              var checker = args.pop()
+            } else {
+              checker = () => true
+            }
 
-      this.killWebDriver('SIGTERM')
-      this._webDriverRunning = false
-    }
+            var endTime = new Date(Date.now() + timeout)
+            var success = false
+            var errors = []
+            while (true) {
+              console.log('?????????????????????????????????????????? 2', pollInterval)
+
+              try {
+                consolelog(`Attempting call ${name} with timeout ${timeout} and arguments ${args}`)
+                var res = await self[name].apply(self, args)
+
+                // If the flow gets to this point, the call was successful. However,
+                // it's also too late. Even though the call went through, it will be
+                // considered failed
+                if (new Date() > endTime) {
+                  consolelog('Call was successful, BUT it was too late. This will fail.')
+                  errors.push(new Error('Call successful but too late'))
+                  break
+                }
+                consolelog('Call was successful, checking the result with the provided checker...')
+                success = !!checker(res)
+                consolelog('Checker returned:', success)
+              } catch (e) {
+                consolelog('Call resulted in error, checker won\'t be run')
+                errors.push(e)
+              }
+              if (success || new Date() > endTime) {
+                consolelog(`Time to get out of the cycle. Success is ${success}`)
+                break
+              }
+              consolelog(`Sleeping for ${pollInterval}, trying again later...`)
+              await sleep(pollInterval)
+            }
+
+            // If attempt is successful, return res
+            if (success) return res
+            else {
+              var error = new Error('Call was unsuccessful')
+              error.errors = errors
+              throw error
+            }
+          }
+        } else {
+          return self[name]
+        }
+      } // End of Proxy getter
+    }) // End of Proxy
   }
 
+  /**
+   * @private
+   */
+  _ready () {
+    return !!(this._sessionId && this._webDriverRunning)
+  }
+
+  /**
+   * Start the right webdriver, depending on what browser is attached to it.
+   * Since webdrivers can take a little while to answer, this method also checks
+   * that the webdriver process is actively and properly dealing with connections
+   * This method is called by {@link DriverBase#newSession|newSession}
+   *
+   * @example
+   * var driver = new Driver(new Chrome())
+   * await driver.startWebDriver()
+   */
   async startWebDriver () {
     // If it's already connected, nothing to do
     if (this._webDriverRunning) return
@@ -851,25 +935,44 @@ class DriverBase {
     this._webDriverRunning = true
   }
 
-  _ready () {
-    return !!(this._sessionId && this._webDriverRunning)
+  /**
+    * Stops the webdriver process, if running. It does so by sending it a SIGTERM message.
+    * You can specify the message to send the process
+    *
+    * @param {(string|number)} signal=SIGTERM The signal to send. To know which signals you can send,
+    *
+    * @example
+    * // Create a driver using the Chrome browser
+    * var driver = new Driver(new Chrome())
+    * // ...
+    * // ...
+    * await driver.stopWebDriver()
+   */
+  stopWebDriver (signal = 'SIGTERM') {
+    if (this._killCommand) {
+      this._killCommand(signal)
+
+      this.killWebDriver('SIGTERM')
+      this._webDriverRunning = false
+    }
   }
 
+  /**
+    * @private
+   */
   inspect () {
     return `DriverBase { ip: ${this.Name}, port: ${this._port} }`
   }
 
   /**
-   * Create a new session
-
-   *
-   * @return {Promise<session>} o The object with the timeouts
-   * @return {object} o.capabiities An object representing the capabilities of the web driver
-   * @return {string} o.sessionId The sessionId
+   * Create a new session. If the driver was created with `spawn` set to `true`, it will
+   * run the webdriver for the associated browser before asking for the session
+   * @return {Promise<object>} An object containing the keys `sessionId` and `capabilities`
    *
    * @example
-   *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
-  */
+   * var driver = new Driver(new Chrome())
+   * var session = await driver.newSession()
+   */
   async newSession () {
     try {
       if (this._sessionId) {
@@ -903,13 +1006,14 @@ class DriverBase {
   }
 
   /**
-   * Delete the session
+   * Delete the current session. This will not kill the webdriver process (if one
+   * was spawned). You can create a new session with {@link DriverBase#newSession|newSession}
    *
-   * {Promise<Driver>} The driver itself
+   * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.deleteSession()
-  */
+   * await driver.deleteSession()
+   */
   async deleteSession () {
     try {
       var value = await this._execute('delete', '')
@@ -925,17 +1029,111 @@ class DriverBase {
   /**
    * Get status
    *
-   * @return {Promise<string>} The page title
+   * @return {Promise<object>} An object status, which is guaranteed by the superClass
+   *                           to include `ready` (boolean) and `message`
    *
    * @example
-   *   var status = await driver.status()
-  */
+   * var status = await driver.status()
+   */
   async status () {
     var _urlBase = `http://${this._hostname}:${this._port}`
     var res = await request.get({ url: `${_urlBase}/status`, json: true })
     return checkRes(res).value
   }
 
+  /**
+   * Find an element.
+   * Note that you are encourage to use one of the helper functions:
+   * findElementCss(), findElementLinkText(), findElementPartialLinkText(),
+   * findElementTagName(), findElementXpath()
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return {Element} An object representing the element.
+   * @example
+   *   var el = await driver.findElement({ Driver.Using.CSS, value: '[name=q]' )
+   *
+  */
+  async findElement (using, value) {
+    var el = await this._execute('post', '/element', {using, value})
+    return new Element(this, el)
+  }
+
+  /**
+   * Find several elements
+   * Note that you are encourage to use one of the helper functions:
+   * findElementsCss(), findElemenstLinkText(), findElementsPartialLinkText(),
+   * findElementsTagName(), findElementsXpath()
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return [{Element},{Element},...] An array of elements
+   *
+   * @example
+   *   var el = await driver.findElements({ Driver.Using.CSS, value: '.item' )
+   *
+  */
+  async findElements (using, value) {
+    var els = await this._execute('post', '/elements', {using, value})
+    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
+    return els.map((v) => new Element(this, v))
+  }
+
+  /**
+   * Perform actions as specified in the passed actions object
+   * To see how to create an actions object, check the
+   * {@link Actions Actions class}
+   *
+   * @param {Actions} actions An object
+   *
+   * @return {Promise<Driver>} The driver itself
+   *
+   * @example
+   * var actions = new Actions()
+   * actions.tick.keyboardDown('R').keyboardUp('R')
+   * await driver.performActions(actions)
+  */
+  async performActions (actions) {
+    actions.compile()
+    await this._execute('post', '/actions', { actions: actions.compiledActions })
+    return this
+  }
+
+  /**
+   * Release the current actions
+   * @example
+   * await driver.releaseActions(actions)
+   *
+  */
+  async releaseActions () {
+    await this._execute('delete', '/actions')
+    return this
+  }
+
+  /**
+   * Sleep for ms milliseconds
+   * NOTE: you shouldn't use this as a quick means to wait for AJAX calls to finish.
+   * If you need to poll-wait, use {@link Driver#waitFor waitFor}
+   *
+   * @param {number} ms The number of milliseconds to wait for
+   *   *
+   * @example
+   *   await driver.sleep(1000)
+   *
+  */
+  async sleep (ms) {
+    return sleep(ms)
+  }
+
+  /**
+    * @private
+   */
   async _execute (method, command, params) {
     // Check that session has been created
     if (!(method === 'post' && command === '' && !this._sessionId)) {
@@ -956,15 +1154,15 @@ class DriverBase {
   static get Using () { return USING }
 
 /**
- * Get timeouts
+ * Get timeout settings in the page
  * *
  * @return {Promise<Object>} A promise resolving to an object
-                     with keys `implicit`, `pageLoad` and `script `. E.g.
-                    `{ implicit: 0, pageLoad: 300000, script: 30000 }`
+ *                   with keys `implicit`, `pageLoad` and `script `. E.g.
+ *                  `{ implicit: 0, pageLoad: 300000, script: 30000 }`
  *
  * @example
- *   var timeouts = await driver.getTimeouts()
-*/
+ * var timeouts = await driver.getTimeouts()
+ */
   getTimeouts () {
     return this._execute('get', '/timeouts')
   }
@@ -972,14 +1170,14 @@ class DriverBase {
   /**
    * Set timeouts
    *
-   * @param {<object>} param The object with the timeouts
+   * @param {Object} param The object with the timeouts
    * @param {number} param.implicit Implicit timeout
    * @param {number} param.pageLoad Timeout for page loads
    * @param {number} param.script Timeout for scripts
    *
    * @example
-   *   var timeouts = await driver.setTimeouts({ implicit: 7000 })
-  */
+   * var timeouts = await driver.setTimeouts({ implicit: 7000 })
+   */
   setTimeouts (parameters) {
     return this._execute('post', '/timeouts', parameters)
   }
@@ -990,8 +1188,8 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.navigateTo('http://www.google.com')
-  */
+   * await driver.navigateTo('http://www.google.com')
+   */
   async navigateTo (url) {
     await this._execute('post', '/url', { url })
     return this
@@ -999,10 +1197,11 @@ class DriverBase {
 
   /**
    * Bake a cake without coffee
+   * Also, get the current URL
    *
    * @return {Promise<string>} The URL
    * @example
-   *   var currentUrl = await driver.getCurrentUrl()
+   * var currentUrl = await driver.getCurrentUrl()
   */
   getCurrentUrl () {
     return this._execute('get', '/url')
@@ -1014,8 +1213,8 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.back()
-  */
+   * await driver.back()
+   */
   async back () {
     await this._execute('post', '/back')
     return this
@@ -1027,8 +1226,8 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.forward()
-  */
+   * await driver.forward()
+   */
   async forward () {
     await this._execute('post', '/forward')
     return this
@@ -1040,21 +1239,21 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.forward()
-  */
+   * await driver.refresh()
+   */
   async refresh () {
     await this._execute('post', '/refresh')
     return this
   }
 
   /**
-   * Get page title
+   * Get page's title
    *
-   * @return {Promise<string>} The page title
+   * @return {Promise<string>} The page's title
    *
    * @example
-   *   var title = await driver.getTitle()
-  */
+   * var title = await driver.getTitle()
+   */
   getTitle () {
     return this._execute('get', '/title')
   }
@@ -1062,11 +1261,11 @@ class DriverBase {
   /**
    * Get the current window's handle
    *
-   * @return {Promise<string>} The handle
+   * @return {Promise<string>} The handle, as a string
    *
    * @example
-   *   var title = await driver.getWindowHandle()
-  */
+   * var title = await driver.getWindowHandle()
+   */
   getWindowHandle () {
     return this._execute('get', '/window')
   }
@@ -1077,10 +1276,22 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.close()
-  */
+   * await driver.closeWindow()
+   */
   async closeWindow () {
     await this._execute('delete', '/window')
+  }
+
+  /**
+   * Get window handles as an array
+   *
+   * @return {Promise<Array<string>>} An array of window handles
+   *
+   * @example
+   * var wins = await driver.getWindowHandles()
+   */
+  getWindowHandles () {
+    return this._execute('get', '/window/handles')
   }
 
   /**
@@ -1090,37 +1301,26 @@ class DriverBase {
    *
    * @param {handle} string The window handle to switched to
    * @example
-   *   await driver.close()
-  */
+   * var wins = await driver.getWindowHandles()
+   * if (wins[1]) await switchToWindow (wins[1])
+   */
   async switchToWindow (handle) {
     await this._execute('post', '/window', { handle })
     return this
   }
 
   /**
-   * Get window handles as an array
-   *
-   * @return {Promise<[string,string,...]>} An array of window handles
-   *
-   * @example
-   *   await driver.getWindowHandles()
-  */
-  getWindowHandles () {
-    return this._execute('get', '/window/handles')
-  }
-
-  /**
    * Switch to frame
    *
-   * @param {string|number|Element} The Element object, or element ID, of the frame
+   * @param {string|number|Element} frame Element object, or element ID, of the frame
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   var frame = await driver.findElementCss('iframe')
-   *   await driver.switchToFrame(frame)
-  */
+   * var frame = await driver.findElementCss('iframe')
+   * await driver.switchToFrame(frame)
+   */
   switchToFrame (id) {
-    // W3c: Chrome is not compliant, doing its job
+    // W3c: Chrome is not compliant, so we have to do its job
     if (id instanceof Element || typeof id === 'object') id = id.id
     return this._execute('post', '/frame', { id })
   }
@@ -1131,8 +1331,10 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.close()
-  */
+   *   var frame = await driver.findElementCss('iframe')
+   *   await driver.switchToFrame(frame)
+   *   await driver.switchToParentFrame()
+   */
   async switchToParentFrame () {
     await this._execute('post', '/frame/parent')
     return this
@@ -1144,8 +1346,8 @@ class DriverBase {
    * @return {Promise<Object>} An object with properties `height`, `width`, `x`, `y`
    *
    * @example
-   *   await driver.getWindowRect()
-  */
+   * await driver.getWindowRect()
+   */
   getWindowRect () {
     return this._execute('get', '/window/rect')
   }
@@ -1154,12 +1356,16 @@ class DriverBase {
    * Set window rect
    *
    * @param {Promise<Object>} rect An object with properties `height`, `width`, `x`, `y`
+   * @param {Object} rect.height The desired height
+   * @param {Object} rect.width The desired width
+   * @param {Object} rect.x The desired x position
+   * @param {Object} rect.y The desired y position
    *
    * @return {Promise<Object>} An object with properties `height`, `width`, `x`, `y`
    *
    * @example
-   *   await driver.getWindowRect()
-  */
+   * await driver.getWindowRect()
+   */
   setWindowRect (rect) {
     return this._execute('post', '/window/rect', rect)
   }
@@ -1170,7 +1376,7 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.maximizeWindow()
+   * await driver.maximizeWindow()
   */
   async maximizeWindow () {
     return this._execute('post', '/window/maximize')
@@ -1182,7 +1388,7 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.minimizeWindow()
+   * await driver.minimizeWindow()
   */
   minimizeWindow () {
     return this._execute('post', '/window/minimize')
@@ -1206,8 +1412,8 @@ class DriverBase {
    * @return {Promise<string>} The current page's source
    *
    * @example
-   *   await driver.getPageSource()
-  */
+   * await driver.getPageSource()
+   */
   getPageSource () {
     return this._execute('get', '/source')
   }
@@ -1216,31 +1422,33 @@ class DriverBase {
    * Execute sync script
    *
    * @param {string} script The string with the script to be executed
-   * @param {array} [args] The arguments to be passed to the script
+   * @param {array} args The arguments to be passed to the script
 
-   * @return {...} Whatever was returned by the javascript code with a `return` statement
+   * @return Whatever was returned by the javascript code with a `return` statement
    *
    * @example
-   *   await driver.executeScript('return 'Hello ' + arguments[0];', ['tony'])
-  */
+   * await driver.executeScript('return 'Hello ' + arguments[0];', ['tony'])
+   */
   executeScript (script, args = []) {
     return this._execute('post', '/execute/sync', { script, args })
   }
 
   /**
-   * Execute sync script
-   * NOTE: An extra argument is added to the passed argument: it's a callback
-   *       function that will need to be called once the script has executed.
-   *       To return a value, pass that value to the callback
+   * Execute async script
+   * NOTE: An extra argument is passed to the script, in addition to the arguments
+   *       in `args`: it's the callback the script will need to call
+   *       once the script has executed.
+   *       To return a value from the async script, pass that value to the callback
    *
    * @param {string} script The string with the script to be executed
-   * @param {array} [args] The arguments to be passed to the script
+   * @param {Array} args The arguments to be passed to the script
    *
-   * @return {...} Whatever was returned by the javascript code by calling the callback
+   * @return Whatever was returned by the javascript code by calling the callback
    *
    * @example
-   *   await driver.executeAsyncScript('var name = arguments[0];var cb = arguments[1];cb('Hello ' + name);', ['tony'])
-  */
+   * var script = 'var name = arguments[0];var cb = arguments[1];cb(\'Hello \' + name);'
+   * await driver.executeAsyncScript(script, ['tony'])
+   */
   executeAsyncScript (script, args = []) {
     return this._execute('post', '/execute/async', { script, args })
   }
@@ -1248,7 +1456,7 @@ class DriverBase {
   /**
    * Get all cookies
    *
-   * @return {[Object, Object,...]} An array of cookie objects.
+   * @return {Array<Object>} An array of cookie objects.
    *
    * @example
    *   var list = await driver.getAllCookies()
@@ -1362,7 +1570,7 @@ class DriverBase {
    * @return {Promise<Driver>} The driver itself
    *
    * @example
-   *   await driver.sendAlertText()
+   *   await driver.sendAlertText('This is my answer')
   */
   async sendAlertText (text) {
     await this._execute('post', '/alert/text', { text })
@@ -1393,59 +1601,6 @@ class DriverBase {
   async getActiveElement () {
     var value = await this._execute('get', '/element/active')
     return new Element(this, value)
-  }
-
-  async performActions (actions) {
-    if (!actions.compiledActions.length) actions.compile()
-    await this._execute('post', '/actions', { actions: actions.compiledActions })
-    return this
-  }
-
-  async releaseActions () {
-    await this._execute('delete', '/actions')
-    return this
-  }
-
-  /**
-   * Find an element
-
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return {Element} An object representing the element.
-   * @example
-   *   var el = await driver.findElement({ Driver.Using.CSS, value: '[name=q]' )
-   *
-  */
-  async findElement (using, value) {
-    var el = await this._execute('post', '/element', {using, value})
-    return new Element(this, el)
-  }
-
-  /**
-   * Find several elements
-   *
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return [{Element},{Element},...] An array of elements
-   *
-   * @example
-   *   var el = await driver.findElements({ Driver.Using.CSS, value: '.item' )
-   *
-  */
-  async findElements (using, value) {
-    var els = await this._execute('post', '/elements', {using, value})
-    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
-    return els.map((v) => new Element(this, v))
-  }
-
-  async sleep (ms) {
-    return sleep(ms)
   }
 }
 
@@ -1507,30 +1662,10 @@ var Element = FindHelpersMixin(ElementBase)
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefox', value: ['c', 'h', 'r', 'o', 'm', 'e'] }))
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefoxandchrome' + Element.KEY.ENTER }))
 
-    var driver = new Driver(new Chrome(), { spawn: true })
+    var driver = new Driver(new Firefox(), { spawn: true })
     await driver.newSession()
 
-    console.log('Loading Google:', await driver.waitFor(6000).navigateTo('https://www.google.com'))
-
-    console.log('Maximize:')
-    await driver.maximizeWindow()
-    console.log('(done)')
-    await driver.sleep(2000)
-
-    console.log('Minimize:')
-    await driver.minimizeWindow()
-    console.log('(done)')
-    await driver.sleep(2000)
-
-    console.log('Maximize again:')
-    await driver.maximizeWindow()
-    console.log('(done)')
-    await driver.sleep(2000)
-
-    console.log('Full screen:')
-    await driver.fullScreenWindow()
-    console.log('(done)')
-    await driver.sleep(2000)
+    console.log('Loading Google:', await driver.waitFor(6000, 100).navigateTo('https://www.google.com'))
 
     await driver.sleep(2000)
     await driver.navigateTo('https://gigsnet.com')
@@ -1538,7 +1673,7 @@ var Element = FindHelpersMixin(ElementBase)
     var el = await driver.findElementCss('body')
     console.log('BODY ELEMENT:', el)
 
-    console.log('GIGSNET', await el.waitFor(10000).findElementsCss('paper-card.my-book-city', (r) => r.length))
+    console.log('GIGSNET', await el.waitFor(10000, 150).findElementsCss('paper-card.my-book-city', (r) => r.length))
 
     await driver.sleep(3000)
 
@@ -1565,8 +1700,27 @@ var Element = FindHelpersMixin(ElementBase)
 
     await driver.performActions(actions)
 
-    // process.exit(0)
-    /* eslint-disable */
+    /*
+    console.log('Maximize:')
+    await driver.maximizeWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
+
+    console.log('Minimize:')
+    await driver.minimizeWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
+
+    console.log('Maximize again:')
+    await driver.maximizeWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
+
+    console.log('Full screen:')
+    await driver.fullScreenWindow()
+    console.log('(done)')
+    await driver.sleep(2000)
+    */
 
     console.log('Selected:', await dts[0].isSelected())
     console.log('Enabled:', await dts[0].isEnabled())
@@ -1600,9 +1754,9 @@ var Element = FindHelpersMixin(ElementBase)
     await driver.sleep(2000)
     */
 
-    var el = await driver.getActiveElement()
-    console.log('Active Element:', el)
-    var elsc = await el.takeScreenshot(true)
+    var el2 = await driver.getActiveElement()
+    console.log('Active Element:', el2)
+    var elsc = await el2.takeScreenshot(true)
     console.log('Active Element screenshot:', elsc)
 
     var sc = await driver.takeScreenshot()
@@ -1633,7 +1787,6 @@ var Element = FindHelpersMixin(ElementBase)
     }))
 
     console.log('Cookie named test', await driver.getNamedCookie('test'))
-
 
     // console.log('EXECUTE 1:', await driver.executeAsyncScript("var a = arguments; var name = a[0]; var cb = a[1]; alert('Hello ' + name); setTimeout( () => { cb('ahah!') }, 2000);", ['tony']))
     // console.log('EXECUTE:', await driver.executeScript("alert('Stocazzo! '+ arguments[0])", ['a', 'b', 'c']))
