@@ -3,19 +3,22 @@
   [X] Finish development off
     [X] Add _isCompiled to actions
     [X] Rename Element into Element
-  [ ] Finish off documentation
-    [ ] Finish rough cut of documentation
-       [ ] All element methods
-       [ ] Helper mixin
-       [ ] See how to clone documentation for findElement and findElements
+  [-] Finish off JSDOC documentation
+    [ ] All element methods
+    [ ] All helper mixins documented within the classes
     [ ] All async methods marked as such (some return promises but aren't marked async)
+    [ ] See how to clone documentation for findElement and findElements
+    [ ] Check other themes
   [ ] Make Docco documentation
   [ ] Write guide in README.md
   [ ] Put it online on Github pages
-  [ ] Submit code for review
+  [X] Submit code for review on codereview
 
   [ ] Write initial tests (ah!)
   [ ] Write more tests
+
+https://codereview.stackexchange.com/questions/186203/check-an-es6-api-implementation-can-you-see-anything-terrible
+
 */
 
 var request = require('request-promise-native')
