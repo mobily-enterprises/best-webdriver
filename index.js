@@ -490,43 +490,43 @@ class Actions {
 
 const FindHelpersMixin = (superClass) => class extends superClass {
   findElementCss (value) {
-    return this.findElement(Driver.using.CSS, value)
+    return this.findElement(Driver.Using.CSS, value)
   }
 
   findElementLinkText (value) {
-    return this.findElement(Driver.using.LINK_TEXT, value)
+    return this.findElement(Driver.Using.LINK_TEXT, value)
   }
 
   findElementPartialLinkText (value) {
-    return this.findElement(Driver.using.PARTIAL_LINK_TEXT, value)
+    return this.findElement(Driver.Using.PARTIAL_LINK_TEXT, value)
   }
 
   findElementTagName (value) {
-    return this.findElement(Driver.using.TAG_NAME, value)
+    return this.findElement(Driver.Using.TAG_NAME, value)
   }
 
   findElementXpath (value) {
-    return this.findElement(Driver.using.XPATH, value)
+    return this.findElement(Driver.Using.XPATH, value)
   }
 
   findElementsCss (value) {
-    return this.findElements(Driver.using.CSS, value)
+    return this.findElements(Driver.Using.CSS, value)
   }
 
   findElementsLinkText (value) {
-    return this.findElements(Driver.using.LINK_TEXT, value)
+    return this.findElements(Driver.Using.LINK_TEXT, value)
   }
 
   findElementsPartialLinkText (value) {
-    return this.findElements(Driver.using.PARTIAL_LINK_TEXT, value)
+    return this.findElements(Driver.Using.PARTIAL_LINK_TEXT, value)
   }
 
   findElementsTagName (value) {
-    return this.findElements(Driver.using.TAG_NAME, value)
+    return this.findElements(Driver.Using.TAG_NAME, value)
   }
 
   findElementsXpath (value) {
-    return this.findElements(Driver.using.XPATH, value)
+    return this.findElements(Driver.Using.XPATH, value)
   }
 }
 
@@ -559,14 +559,14 @@ class ElementBase {
   /**
    * Find an element within the queried element
 
-   * @param {string} using It can be `Driver.using.CSS`, `Driver.using.LINK_TEXT`,
-   *                `Driver.using.PARTIAL_LINK_TEXT`, `Driver.using.TAG_NAME`,
-   *                `Driver.using.XPATH`
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
    * @param {string} value The parameter to the `using` method
    *
    * @return {Promise<Element>} An object representing the element.
    * @example
-   *   var el = await driver.findElement( Driver.using.CSS, '[name=q]' )
+   *   var el = await driver.findElement( Driver.Using.CSS, '[name=q]' )
    *
   */
   async findElement (using, value) {
@@ -577,14 +577,14 @@ class ElementBase {
   /**
    * Find several elements within the queried element
    *
-   * @param {string} using It can be `Driver.using.CSS`, `Driver.using.LINK_TEXT`,
-   *                `Driver.using.PARTIAL_LINK_TEXT`, `Driver.using.TAG_NAME`,
-   *                `Driver.using.XPATH`
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
    * @param {string} value The parameter to the `using` method
    *
    * @return {Promise<[Element},Element,...]>} An array of elements
    * @example
-   *   var el = await driver.findElements( Driver.using.CSS, '.item' })
+   *   var el = await driver.findElements( Driver.Using.CSS, '.item' })
    *
   */
   async findElements (using, value) {
@@ -598,7 +598,7 @@ class ElementBase {
    *
    * @return {Promise<boolean>} true of false
    * @example
-   *   var el = await driver.findElement( Driver.using.CSS, '#main' })
+   *   var el = await driver.findElement( Driver.Using.CSS, '#main' })
        var isSelected = await el.isSelected()
    *
   */
@@ -693,7 +693,7 @@ class ElementBase {
    *
    * @return {Promise<boolean>} true of false
    * @example
-   *   var el = await driver.findElement( Driver.using.CSS, '#main' })
+   *   var el = await driver.findElement( Driver.Using.CSS, '#main' })
        var isSelected = await el.isSelected()
    *
   */
@@ -706,7 +706,7 @@ class ElementBase {
    *
    * @return {Promise<Element>} The element itself
    * @example
-   *   var el = await driver.findElement( Driver.using.CSS, '#button' })
+   *   var el = await driver.findElement( Driver.Using.CSS, '#button' })
        await el.click()
    *
   */
@@ -720,7 +720,7 @@ class ElementBase {
    *
    * @return {Promise<Element>} The element itself
    * @example
-   *   var el = await driver.findElement( Driver.using.CSS, '#input' })
+   *   var el = await driver.findElement( Driver.Using.CSS, '#input' })
    *   await el.clear()
    *
   */
@@ -735,7 +735,7 @@ class ElementBase {
    * @return {Promise<Element>} The element itself. Concatenate with `Element.KEY` to send
    *                              special characters.
    * @example
-   *   var el = await driver.findElement( Driver.using.CSS, '#input' })
+   *   var el = await driver.findElement( Driver.Using.CSS, '#input' })
    *   await e.sendKeys("This is a search" + Element.KEY.ENTER)
    *
   */
@@ -751,7 +751,7 @@ class ElementBase {
    * @param {boolean} scroll If true (by default), it will scroll to the element
    * @return {Promise<Buffer>} The screenshot data in a Buffer object
    * @example
-   *   var el = await driver.findElement( Driver.using.CSS, '#input' })
+   *   var el = await driver.findElement( Driver.Using.CSS, '#input' })
    *   var screenshot = await el.takeScreenshot()
    *
   */
@@ -953,7 +953,7 @@ class DriverBase {
     return checkRes(res).value
   }
 
-  static get using () { return USING }
+  static get Using () { return USING }
 
 /**
  * Get timeouts
@@ -1409,14 +1409,14 @@ class DriverBase {
   /**
    * Find an element
 
-   * @param {string} using It can be `Driver.using.CSS`, `Driver.using.LINK_TEXT`,
-   *                `Driver.using.PARTIAL_LINK_TEXT`, `Driver.using.TAG_NAME`,
-   *                `Driver.using.XPATH`
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
    * @param {string} value The parameter to the `using` method
    *
    * @return {Element} An object representing the element.
    * @example
-   *   var el = await driver.findElement({ Driver.using.CSS, value: '[name=q]' )
+   *   var el = await driver.findElement({ Driver.Using.CSS, value: '[name=q]' )
    *
   */
   async findElement (using, value) {
@@ -1427,15 +1427,15 @@ class DriverBase {
   /**
    * Find several elements
    *
-   * @param {string} using It can be `Driver.using.CSS`, `Driver.using.LINK_TEXT`,
-   *                `Driver.using.PARTIAL_LINK_TEXT`, `Driver.using.TAG_NAME`,
-   *                `Driver.using.XPATH`
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
    * @param {string} value The parameter to the `using` method
    *
    * @return [{Element},{Element},...] An array of elements
    *
    * @example
-   *   var el = await driver.findElements({ Driver.using.CSS, value: '.item' )
+   *   var el = await driver.findElements({ Driver.Using.CSS, value: '.item' )
    *
   */
   async findElements (using, value) {
@@ -1501,7 +1501,7 @@ var Element = FindHelpersMixin(ElementBase)
 
     // await driver.navigateTo({ url: 'http://www.google.com' })
 
-    // var el = await driver.findElements({ using: Driver.using.CSS, value: '[name=q]' })
+    // var el = await driver.findElements({ using: Driver.Using.CSS, value: '[name=q]' })
     // console.log('ELEMENTS:', el)
 
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefox', value: ['c', 'h', 'r', 'o', 'm', 'e'] }))
