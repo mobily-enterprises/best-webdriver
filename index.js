@@ -8,9 +8,9 @@
     [ ] All helper mixins documented within the classes
     [ ] All async methods marked as such (some return promises but aren't marked async)
     [ ] See how to clone documentation for findElement and findElements
-    [ ] Check other themes
+    [ ] Write guide in README.md
+    [ ] Check other themes, hopefully better
   [ ] Make Docco documentation
-  [ ] Write guide in README.md
   [ ] Put it online on Github pages
   [X] Submit code for review on codereview
 
