@@ -1,12 +1,16 @@
 /*
   [X] Install JSDoc, check generated documentation
-  [ ] Finish development off
+  [X] Finish development off
     [X] Add _isCompiled to actions
-    [ ] Rename ElementBase into Element
+    [X] Rename Element into Element
   [ ] Finish off documentation
     [ ] Finish rough cut of documentation
+       [ ] All element methods
+       [ ] Helper mixin
+       [ ] See how to clone documentation for findElement and findElements
     [ ] All async methods marked as such (some return promises but aren't marked async)
-    [ ] Make Docco documentation
+  [ ] Make Docco documentation
+  [ ] Write guide in README.md
   [ ] Put it online on Github pages
   [ ] Submit code for review
 
@@ -480,7 +484,7 @@ const FindHelpersMixin = (superClass) => class extends superClass {
 /**
  The base class for Elements
  */
-class ElementBase {
+var Element = class {
   constructor (driver, elObject) {
     var value
 
@@ -501,7 +505,7 @@ class ElementBase {
     if (!this.id) throw new Error('Could not get element ID from element object')
   }
 
-  /** Alias to {@link ElementBase#waitFor Element's waitFor function}
+  /** Alias to {@link Element#waitFor Element's waitFor function}
    * @async
    */
   waitFor (timeout = 0, pollInterval = 0) {
@@ -739,7 +743,7 @@ class ElementBase {
  * await driver.newSession()
  *
  */
-class DriverBase {
+var Driver = class {
   //
   /**
    * Constructor returning a Driver object, which will be used to pilot the passed browser
@@ -877,7 +881,7 @@ class DriverBase {
    * Start the right webdriver, depending on what browser is attached to it.
    * Since webdrivers can take a little while to answer, this method also checks
    * that the webdriver process is actively and properly dealing with connections
-   * This method is called by {@link DriverBase#newSession|newSession}
+   * This method is called by {@link Driver#newSession|newSession}
    *
    * @example
    * var driver = new Driver(new Chrome())
@@ -961,7 +965,7 @@ class DriverBase {
     * @private
    */
   inspect () {
-    return `DriverBase { ip: ${this.Name}, port: ${this._port} }`
+    return `Driver { ip: ${this.Name}, port: ${this._port} }`
   }
 
   /**
@@ -1007,7 +1011,7 @@ class DriverBase {
 
   /**
    * Delete the current session. This will not kill the webdriver process (if one
-   * was spawned). You can create a new session with {@link DriverBase#newSession|newSession}
+   * was spawned). You can create a new session with {@link Driver#newSession|newSession}
    *
    * @return {Promise<Driver>} The driver itself
    *
@@ -1604,9 +1608,9 @@ class DriverBase {
   }
 }
 
-// Mixin the find helpers with DriverBase and ElementBase
-var Driver = FindHelpersMixin(DriverBase)
-var Element = FindHelpersMixin(ElementBase)
+// Mixin the find helpers with Driver and Element
+Driver = FindHelpersMixin(Driver)
+Element = FindHelpersMixin(Element)
 
 ;(async () => {
   try {
