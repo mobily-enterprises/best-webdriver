@@ -22,11 +22,10 @@ exports = module.exports = { Driver, browser, Actions }
       [-] Document Browsers (Chrome, Firefox, Generic), decide how to document them
       [ ] Document InputDevice
       [ ] Document Actions
+      [ ] Put API online on Github pages
+      [ ] Check other JSDoc themes, hopefully better
     [ ] Write guide in README.md
-    [ ] Check other JSDoc themes, hopefully better
-  [ ] Put API online on Github pages
   [X] Submit code for review on codereview
-
   [ ] Write initial tests (ah!)
   [ ] Write more tests
 
