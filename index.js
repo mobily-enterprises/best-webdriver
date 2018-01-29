@@ -18,7 +18,7 @@ exports = module.exports = { Driver, browser, Actions }
     [X] Write examples for findElementHelpers
     [X] All gloval consts
     [-] Document remaining methods
-      [X] Document Browsers
+      [-] Document Browsers (Chrome, Firefox, Generic), decide how to document them
       [ ] Document InputDevice
       [ ] Document Actions
     [ ] Write guide in README.md
