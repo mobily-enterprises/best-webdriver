@@ -8,7 +8,7 @@
  * @constant
  *
  */
-const KEY = exports = module.exports = {
+exports = module.exports = {
   NULL:         '\uE000',
   CANCEL:       '\uE001',  // ^break
   HELP:         '\uE002',
