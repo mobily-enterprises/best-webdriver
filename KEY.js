@@ -1,6 +1,14 @@
 // Gracefully borrowed from https://github.com/SeleniumHQ/selenium/blob/2e913973d5171a9aa3c7697733c521bcae5fff4c/javascript/node/selenium-webdriver/lib/input.js
 /* eslint-disable key-spacing */
-exports = module.exports = {
+
+/**
+ * A constant used by {@link Actions} and {@link Element}
+ * which defines all special keys usable with
+ * {@link Element#sendKeys} and `keyUp`/`keyDown`
+ * @constant
+ *
+ */
+const KEY = exports = module.exports = {
   NULL:         '\uE000',
   CANCEL:       '\uE001',  // ^break
   HELP:         '\uE002',

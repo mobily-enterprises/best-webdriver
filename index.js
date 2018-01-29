@@ -9,8 +9,12 @@
     [X] All async methods marked as such (some return promises but aren't marked async)
     [X] See how to clone documentation for findElement and findElements
     [X] All helper mixins documented within the classes
-    [ ] Write examples for findElementHelpers
-    [ ] All remaining methods (Browsers, InputDevice, Actions)
+    [X] Write examples for findElementHelpers
+    [X] All gloval consts
+    [-] Document remaining methods
+      [-] Document Browsers
+      [ ] Document InputDevice
+      [ ] Document Actions
     [ ] Write guide in README.md
     [ ] Check other themes, hopefully better
   [ ] Make Docco documentation
@@ -31,14 +35,6 @@ var consolelog = require('debug')('webdriver')
 
 const KEY = require('./KEY.js')
 
-const USING = {
-  CSS: 'css selector',
-  LINK_TEXT: 'link text',
-  PARTIAL_LINK_TEXT: 'partial link text',
-  TAG_NAME: 'tag name',
-  XPATH: 'xpath'
-}
-
 function isObject (p) { return typeof p === 'object' && p !== null && !Array.isArray(p) }
 
 function checkRes (res) {
@@ -47,16 +43,7 @@ function checkRes (res) {
   return res
 }
 
-/**
- * Spawns a child process. The returned {@link Command} may be used to wait
- * for the process result or to send signals to the process.
- *
- * "Somewhat" inspired by the `exec` function in the Selenium node driver
- *
- * @param {string} command The executable to spawn.
- * @param {Options=} commandOptions The command options.
- * @return {!Command} The launched command.
- */
+/* Options: args[], stdio{}, env{}, */
 function exec (command, commandOptions) {
   var options = commandOptions || {}
 
@@ -103,345 +90,6 @@ function exec (command, commandOptions) {
 
 function sleep (ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-class Browser {
-  constructor (alwaysMatch = {}, firstMatch = [], root = {}) {
-    // Sanity checks. Things can go pretty bad if these are wrong
-    if (!isObject(alwaysMatch)) {
-      throw new Error('alwaysMatch must be an object')
-    }
-    if (!Array.isArray(firstMatch)) {
-      throw new Error('firstmatch parameter must be an array')
-    }
-    if (!isObject(root)) {
-      throw new Error('root options must be an object')
-    }
-
-    this.sessionParameters = {
-      capabilities: {
-        alwaysMatch: alwaysMatch,
-        firstMatch: firstMatch
-      }
-    }
-    // Copy over whatever is specified in `root`
-    for (var k in root) {
-      if (root.hasOwnProperty(k)) this.sessionParameters[ k ] = root[k]
-    }
-
-    // Give it a nice, lowercase name
-    this.name = 'browser'
-  }
-  setAlwaysMatchKey (name, value, force = false) {
-    if (force || !this.sessionParameters.capabilities.alwaysMatch.hasOwnProperty(name)) {
-      DO.set(this.sessionParameters.capabilities.alwaysMatch, name, value)
-    }
-  }
-
-  addFirstMatch (name, value, force = false) {
-    if (force || !this.sessionParameters.capabilities.firstMatch.indexOf(name) === -1) {
-      this.sessionParameters.capabilities.firstMatch.push({ [name]: value })
-    }
-  }
-
-  setRootKey (name, value, force = false) {
-    if (force || !this.sessionParameters.hasOwnProperty(name)) {
-      DO.set(this.sessionParameters, name, value)
-    }
-  }
-
-  getSessionParameters () {
-    return this.sessionParameters
-  }
-
-  // Options: port, args, env, stdio
-  async run (options) {
-  }
-}
-
-// https://sites.google.com/a/chromium.org/chromedriver
-// https://sites.google.com/a/chromium.org/chromedriver/capabilities
-// STATUS: https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md
-class Chrome extends Browser { // eslint-disable-line no-unused-vars
-  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
-    super(...arguments)
-
-    // Give it a nice, lowercase name
-    this.name = 'chrome'
-
-    // This is crucial so that Chrome obeys w3c
-    this.setAlwaysMatchKey('chromeOptions.w3c', true, true)
-
-    // The required browser's name
-    this.setAlwaysMatchKey('browserName', 'chrome')
-
-    // Add specific Options
-    for (var k in specific) {
-      if (specific.hasOwnProperty(k)) {
-        this.alwaysMatch.chromeOptions[ k ] = specific[ k ]
-      }
-    }
-  }
-
-  run (options) {
-    var executable = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
-    options.args.push('--port=' + options.port)
-    return exec(executable, options)
-  }
-}
-
-// https://github.com/mozilla/geckodriver
-// STATUS: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status
-class Firefox extends Browser { // eslint-disable-line no-unused-vars
-  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
-    super(...arguments)
-
-    // Give it a nice, lowercase name
-    this.name = 'firefox'
-
-    // Firefox's empty firefoxOptions
-    this.setAlwaysMatchKey('moz:firefoxOptions', {}, true)
-
-    // The required browser's name
-    this.setAlwaysMatchKey('browserName', 'firefox')
-
-    // Add specific Options
-    for (var k in specific) {
-      if (specific.hasOwnProperty(k)) {
-        this.alwaysMatch['moz:firefoxOptions'][ k ] = specific[ k ]
-      }
-    }
-  }
-
-  run (options) {
-    var executable = process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver'
-    options.args.push('--port=' + options.port)
-    return exec(executable, options)
-  }
-}
-
-class Selenium extends Browser { // eslint-disable-line no-unused-vars
-}
-
-class InputDevice {
-  constructor (id) {
-    this.id = id
-  }
-}
-
-//  KEYBOARD: "pause", "keyUp", "keyDown"
-class Keyboard extends InputDevice {
-  constructor (id) {
-    super(id)
-    this.type = 'key'
-  }
-
-  static get UP () {
-    return 'keyUp'
-  }
-
-  static get DOWN () {
-    return 'keyDown'
-  }
-
-  tickMethods () {
-    return {
-      Up: (value) => {
-        return {
-          type: 'keyUp',
-          value
-        }
-      },
-
-      Down: (value) => {
-        return {
-          type: 'keyDown',
-          value
-        }
-      }
-    }
-  }
-}
-
-//  POINTER: "pause", "pointerUp", "pointerDown", "pointerMove", or "pointerCancel
-class Pointer extends InputDevice {
-  constructor (id, pointerType) {
-    super(id)
-    this.pointerType = pointerType
-    this.type = 'pointer'
-  }
-
-  static get Type () {
-    return {
-      MOUSE: 'mouse',
-      PEN: 'pen',
-      TOUCH: 'touch'
-    }
-  }
-
-  static get Origin () {
-    return {
-      VIEWPORT: 'viewport',
-      POINTER: 'pointer'
-    }
-  }
-
-  tickMethods () {
-    return {
-      Move: (args) => {
-        // Work out origin, defaulting to VIEWPORT.
-        // If it's an element, it will be seriaslised to please W3c AND Chrome
-        // In any case, it MUST be an element, VIEWPORT or POINTER
-        var origin
-        if (!args.origin) {
-          origin = Pointer.Origin.VIEWPORT
-        } else {
-          if (args.origin instanceof Element) {
-            origin = {
-              'element-6066-11e4-a52e-4f735466cecf': args.origin.id,
-              ELEMENT: args.origin.id
-            }
-          } else {
-            origin = args.origin
-            if (origin !== Pointer.Origin.VIEWPORT &&
-                origin !== Pointer.Origin.POINTER) {
-              throw new Error('When using move(), origin must be an element, Pointer.Origin.VIEWPORT or Pointer.Origin.POINTER')
-            } else {
-            }
-          }
-        }
-
-        return {
-          type: 'pointerMove',
-          duration: args.duration || 0,
-          origin,
-          x: args.x,
-          y: args.y
-        }
-      },
-      Down: (button = 0) => {
-        return {
-          type: 'pointerDown',
-          button
-        }
-      },
-      Up: (button = 0) => {
-        return {
-          type: 'pointerUp',
-          button
-        }
-      },
-      Cancel: () => {
-        return {
-          type: 'pointerCancel'
-        }
-      }
-    }
-  }
-}
-
-class Actions {
-  constructor (...devices) {
-    var self = this
-    this.actions = []
-
-    this._compiled = false
-    this.compiledActions = []
-    // Assign `devices`. If not there, assign a default 'mouse' and 'keyboard'
-    if (Object.keys(devices).length) {
-      this.devices = devices
-    } else {
-      this.devices = [
-        new Pointer('mouse', Pointer.Type.MOUSE),
-        new Keyboard('keyboard')
-      ]
-    }
-
-    // Make up a _tickSetters object, which are the setters available
-    // after `driver.tick`, so that you can do `driver.tick.mouseDown()`
-    // The keys `tick` and `compile` are always available, as it's handy to
-    // get them as "chained" methods (so that you can do
-    // `actions.tick.mouseDown().tick.mouseUp()`
-    // The other keys will depend on the devices passed to the
-    // `Actions` constructor.
-    // With `Actions(new Pointer('fancyMouse'))` will establish
-    // `tick.fancyMouseUp()`, `tick.fancyMouseDown()` etc.
-    // By default, `new Actions()` will create two devices, called
-    // `mouse` and `keyboard`
-    //
-    this._tickSetters = {
-      get tick () {
-        // Return self
-        return self.tick
-      },
-      compile: self.compile.bind(self)
-    }
-    this.devices.forEach((device) => {
-      var deviceTickMethods = device.tickMethods()
-      Object.keys(deviceTickMethods).forEach((k) => {
-        this._tickSetters[device.id + k] = function (...args) {
-          if (!self._currentAction[device.id].virgin) {
-            throw new Error(`Action for device ${device.id} already defined (${device.id + k}) for this tick`)
-          }
-          var res = deviceTickMethods[k].apply(device, args)
-          self._currentAction[device.id] = res
-          return self._tickSetters
-        }
-        this._tickSetters['pause'] = function (duration = 0) {
-          self._currentAction[device.id] = { type: 'pause', duration }
-          return self._tickSetters
-        }
-      })
-    })
-  }
-
-  static get KEY () { return KEY }
-
-  compile () {
-    if (this._compiled) return
-    this.compiledActions = []
-
-    this.devices.forEach((device) => {
-      var deviceActions = { actions: [] }
-      deviceActions.type = device.type
-      deviceActions.id = device.id
-      if (device.type === 'pointer') {
-        deviceActions.parameters = { pointerType: device.pointerType }
-      }
-
-      this.actions.forEach((action) => {
-        deviceActions.actions.push(action[ device.id ])
-      })
-      this.compiledActions.push(deviceActions)
-    })
-
-    // console.log('COMPILED ACTIONS:', require('util').inspect(this.compiledActions, {depth: 10}))
-  }
-
-  _setAction (deviceId, action) {
-    this._currentAction[ deviceId ] = action
-  }
-
-  get tick () {
-    // The tick you add a tick, this is no longer compiled
-    this._compiled = false
-
-    // Make up the action object. It will be an object where
-    // each key is a device ID.
-    // By default, ALL actions are set as 'pause'
-    var action = {}
-    this.devices.forEach((device) => {
-      action[ device.id ] = { type: 'pause', duration: 0, virgin: true }
-    })
-    this.actions.push(action)
-
-    // Set _currentAction, which is what the tickSetters will
-    // change
-    this._currentAction = action
-
-    // Return the _tickSetters, so that actions.tick.mouse() works
-    return this._tickSetters
-  }
 }
 
 /**
@@ -609,299 +257,6 @@ const FindHelpersMixin = (superClass) => class extends superClass {
    */
   findElementsXpath (value) {
     return this.findElements(Driver.Using.XPATH, value)
-  }
-}
-
-/**
- * The base class for Elements
- * @mixes FindHelpersMixin
- * @augments FindHelpersMixin
- *
- * An Element object is returned by {@link Driver#findElement} and
- * {@link Driver#findElements}.
- *
- * Element objects are then used to either get specific information about them
- * using for example `element.getText()`, or to perform actions on them such as
- * `element.click()` or `element.findElements` (which will return more elements)
- * @inheritdoc
- */
-var Element = class {
-  /**
-   * Constructor. You never have to run this yourself, since both {@link Driver#findElement}
-   * and {@link Driver#findElements} will run `new Element()` for you based on what was
-   * returned by the webdriver.
-   *
-   * @param {Driver} driver The driver that originally created this element
-   * @param {object} elObject An element object as it was returned by the webdriver.
-   *
-  */
-  constructor (driver, elObject) {
-    var value
-
-    // Assssign the driver
-    this.driver = driver
-
-    // elObject will contain `value` if it's a straight answer from the webdriver
-    // Otherwise, it's assumed to be passed `res.value`
-    if (isObject(elObject) && elObject.value) value = elObject.value
-    else value = elObject
-
-    // Sets the ID. Having `element-XXX` and `ELEMENT` as keys to the object means
-    // that it can be used by switchToFrame()
-    var idx = 'element-6066-11e4-a52e-4f735466cecf'
-    this.id = this.ELEMENT = this[idx] = value[idx]
-
-    // No ID could be find
-    if (!this.id) throw new Error('Could not get element ID from element object')
-  }
-
-  /** Alias to {@link Driver#waitFor Driver's waitFor function}
-   * @async
-   */
-  waitFor (timeout = 0, pollInterval = 0) {
-    timeout = timeout || this.driver._defaultPollTimeout
-    pollInterval = pollInterval || this.driver._pollInterval
-    return Driver.prototype.waitFor.call(this, timeout, pollInterval)
-  }
-
-  /** Constant returning special KEY characters (enter, etc.)
-   *
-   * @example
-   * var el = await driver.findElementCss('#input')
-   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
-   */
-  static get KEY () { return KEY }
-
-  /**
-   * Find an element within this element
-   *
-   * Note that you are encouraged to use one of the helper functions:
-   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
-   * `findElementTagName()`, `findElementXpath()`
-   *
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return {Promise<Element>} An object representing the element.
-   *
-   * @example
-   * // Find the element using the driver's `findElement()` call
-   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
-   * // Find the first LI element within the found UL
-   * var items = await ul.findElement({ Driver.Using.CSS, value: 'li')
-   *
-   */
-  async findElement (using, value) {
-    var el = await this._execute('post', `/element/${this.id}/element`, {using, value})
-    return new Element(this.driver, el)
-  }
-
-  /**
-   * Find several elements within this element
-   *
-   * Note that you are encouraged to use one of the helper functions:
-   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
-   * `findElementTagName()`, `findElementXpath()`
-   *
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return {Promise<Array<Element>>} An array of elements
-   *
-   * @example
-   * // Find the element using the driver's `findElement()` call
-   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
-   * // Find ALL LI sub-elements within the found UL element
-   * var items = await ul.findElements({ Driver.Using.CSS, value: 'li')
-   *
-   */
-  async findElements (using, value) {
-    var els = await this._execute('post', `/element/${this.id}/elements`, {using, value})
-    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
-    return els.map((v) => new Element(this.driver, v))
-  }
-
-  /**
-   * Check that the element is selected
-   *
-   * @return {Promise<boolean>} true of false
-   * @example
-   * var el = await driver.findElementCss('#main')
-   * var isSelected = await el.isSelected()
-   *
-   */
-  async isSelected () {
-    return !!(await this._execute('get', `/element/${this.id}/selected`))
-  }
-
-  /**
-   * Get attribute called `name` from element
-   * @async
-   * @param {string} name The name of the attribute to be fetched
-   *
-   * @return {Promise<string>} The attribute's value
-   * @example
-   * var el = await driver.findElementCss('a' })
-   * var href = el.getAttribute('href')
-   *
-   */
-  getAttribute (name) {
-    return this._execute('get', `/element/${this.id}/attribute/${name}`)
-  }
-
-  /**
-   * Get property called `name` from element
-   * @async
-   *
-   * @param {string} name The name of the property to be fetched
-   *
-   * @return {Promise<string>} The property's value
-   * @example
-   * var el = await driver.findElementCss('a' })
-   * var href = el.getProperty('href')
-   *
-   */
-  getProperty (name) {
-    return this._execute('get', `/element/${this.id}/property/${name}`)
-  }
-
-  /**
-   * Get css value from element
-   * @async
-   *
-   * @param {string} name The name of the CSS value to be fetched
-   *
-   * @return {Promise<string>} The CSS's value
-   * @example
-   * var el = await driver.findElementCss('a' })
-   * var height = el.getCssValue('height')
-   *
-   */
-  getCssValue (name) {
-    return this._execute('get', `/element/${this.id}/css/${name}`)
-  }
-
-  /**
-   * Get text value from element
-   * @async
-   *
-   * @return {Promise<string>} The text
-   * @example
-   * var el = await driver.findElementCss('a' })
-   * var text = el.getText()
-   */
-  getText () {
-    return this._execute('get', `/element/${this.id}/text`)
-  }
-
-  /**
-   * Get tag name from element
-   * @async
-   *
-   * @return {Promise<string>} The tag's name
-   * @example
-   * var el = await driver.findElementCss('.link' })
-   * var tagName = el.getTagName()
-   */
-  getTagName () {
-    return this._execute('get', `/element/${this.id}/name`)
-  }
-
-  /**
-   * Get rect from element
-   * @async
-   *
-   * @return {Promise<string>} The rect info
-
-   * @example
-   * var el = await driver.findElementCss('a' })
-   * var rect = el.getRect()
-   */
-  getRect () {
-    return this._execute('get', `/element/${this.id}/rect`)
-  }
-
-  /**
-   * Check that the element is enabled
-   *
-   * @return {Promise<boolean>} true of false
-   * @example
-   * var el = await driver.findElementCss('#main')
-    var isSelected = await el.isSelected()
-   *
-   */
-  async isEnabled () {
-    return !!(await this._execute('get', `/element/${this.id}/enabled`))
-  }
-
-  /**
-   * Click on an element
-   *
-   * @return {Promise<Element>} The element itself
-   * @example
-   * var el = await driver.findElementCss('#button')
-   * await el.click()
-   *
-   */
-  async click () {
-    await this._execute('post', `/element/${this.id}/click`)
-    return this
-  }
-
-  /**
-   * Clear an element
-   *
-   * @return {Promise<Element>} The element itself
-   * @example
-   * var el = await driver.findElementCss('#input')
-   * await el.clear()
-   *
-   */
-  async clear () {
-    await this._execute('post', `/element/${this.id}/clear`)
-    return this
-  }
-
-  /**
-   * Send keys to an element
-   *
-   * @return {Promise<Element>} The element itself. Concatenate with `Element.KEY` to send
-   *                              special characters.
-   * @example
-   * var el = await driver.findElementCss('#input')
-   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
-   *
-   */
-  async sendKeys (text) {
-    // W3c: Adding 'value' to parameters, so that Chrome works too
-    var value = text.split('')
-    await this._execute('post', `/element/${this.id}/value`, { text, value })
-    return this
-  }
-
-  /**
-   * Take screenshot of the element
-   * @param {boolean} scroll If true (by default), it will scroll to the element
-   * @return {Promise<Buffer>} The screenshot data in a Buffer object
-   * @example
-   * var el = await driver.findElementCss('#input')
-   * var screenshot = await el.takeScreenshot()
-   *
-   */
-  async takeScreenshot (scroll = true) {
-    var data = await this._execute('get', `/element/${this.id}/screenshot`, { scroll })
-    return Buffer.from(data, 'base64')
-  }
-
-  /**
-   * @private
-   */
-  async _execute (method, command, params) {
-    return this.driver._execute(method, command, params)
   }
 }
 
@@ -1332,7 +687,20 @@ var Driver = class {
     return checkRes(res).value
   }
 
-  static get Using () { return USING }
+  /**
+   * A value used by {@link Driver#findElement} and
+   * {@link Driver#findElements} to decide what kind of
+   * filter will be applied
+   */
+  static get Using () {
+    return {
+      CSS: 'css selector',
+      LINK_TEXT: 'link text',
+      PARTIAL_LINK_TEXT: 'partial link text',
+      TAG_NAME: 'tag name',
+      XPATH: 'xpath'
+    }
+  }
 
 /**
  * Get timeout settings in the page
@@ -1799,6 +1167,727 @@ var Driver = class {
   async getActiveElement () {
     var value = await this._execute('get', '/element/active')
     return new Element(this, value)
+  }
+}
+
+/**
+ * The base class for Elements
+ * @mixes FindHelpersMixin
+ * @augments FindHelpersMixin
+ *
+ * An Element object is returned by {@link Driver#findElement} and
+ * {@link Driver#findElements}.
+ *
+ * Element objects are then used to either get specific information about them
+ * using for example `element.getText()`, or to perform actions on them such as
+ * `element.click()` or `element.findElements` (which will return more elements)
+ * @inheritdoc
+ */
+var Element = class {
+  /**
+   * Constructor. You never have to run this yourself, since both {@link Driver#findElement}
+   * and {@link Driver#findElements} will run `new Element()` for you based on what was
+   * returned by the webdriver.
+   *
+   * @param {Driver} driver The driver that originally created this element
+   * @param {object} elObject An element object as it was returned by the webdriver.
+   *
+  */
+  constructor (driver, elObject) {
+    var value
+
+    // Assssign the driver
+    this.driver = driver
+
+    // elObject will contain `value` if it's a straight answer from the webdriver
+    // Otherwise, it's assumed to be passed `res.value`
+    if (isObject(elObject) && elObject.value) value = elObject.value
+    else value = elObject
+
+    // Sets the ID. Having `element-XXX` and `ELEMENT` as keys to the object means
+    // that it can be used by switchToFrame()
+    var idx = 'element-6066-11e4-a52e-4f735466cecf'
+    this.id = this.ELEMENT = this[idx] = value[idx]
+
+    // No ID could be find
+    if (!this.id) throw new Error('Could not get element ID from element object')
+  }
+
+  /** Alias to {@link Driver#waitFor Driver's waitFor function}
+   * @async
+   */
+  waitFor (timeout = 0, pollInterval = 0) {
+    timeout = timeout || this.driver._defaultPollTimeout
+    pollInterval = pollInterval || this.driver._pollInterval
+    return Driver.prototype.waitFor.call(this, timeout, pollInterval)
+  }
+
+  /** Constant returning special KEY characters (enter, etc.)
+   *  Constant are from the global variable {@link KEY}
+   *  @static
+   *
+   * @example
+   * var el = await driver.findElementCss('#input')
+   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
+   */
+  static get KEY () { return KEY }
+
+  /**
+   * Find an element within this element
+   *
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return {Promise<Element>} An object representing the element.
+   *
+   * @example
+   * // Find the element using the driver's `findElement()` call
+   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
+   * // Find the first LI element within the found UL
+   * var items = await ul.findElement({ Driver.Using.CSS, value: 'li')
+   *
+   */
+  async findElement (using, value) {
+    var el = await this._execute('post', `/element/${this.id}/element`, {using, value})
+    return new Element(this.driver, el)
+  }
+
+  /**
+   * Find several elements within this element
+   *
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return {Promise<Array<Element>>} An array of elements
+   *
+   * @example
+   * // Find the element using the driver's `findElement()` call
+   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
+   * // Find ALL LI sub-elements within the found UL element
+   * var items = await ul.findElements({ Driver.Using.CSS, value: 'li')
+   *
+   */
+  async findElements (using, value) {
+    var els = await this._execute('post', `/element/${this.id}/elements`, {using, value})
+    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
+    return els.map((v) => new Element(this.driver, v))
+  }
+
+  /**
+   * Check that the element is selected
+   *
+   * @return {Promise<boolean>} true of false
+   * @example
+   * var el = await driver.findElementCss('#main')
+   * var isSelected = await el.isSelected()
+   *
+   */
+  async isSelected () {
+    return !!(await this._execute('get', `/element/${this.id}/selected`))
+  }
+
+  /**
+   * Get attribute called `name` from element
+   * @async
+   * @param {string} name The name of the attribute to be fetched
+   *
+   * @return {Promise<string>} The attribute's value
+   * @example
+   * var el = await driver.findElementCss('a' })
+   * var href = el.getAttribute('href')
+   *
+   */
+  getAttribute (name) {
+    return this._execute('get', `/element/${this.id}/attribute/${name}`)
+  }
+
+  /**
+   * Get property called `name` from element
+   * @async
+   *
+   * @param {string} name The name of the property to be fetched
+   *
+   * @return {Promise<string>} The property's value
+   * @example
+   * var el = await driver.findElementCss('a' })
+   * var href = el.getProperty('href')
+   *
+   */
+  getProperty (name) {
+    return this._execute('get', `/element/${this.id}/property/${name}`)
+  }
+
+  /**
+   * Get css value from element
+   * @async
+   *
+   * @param {string} name The name of the CSS value to be fetched
+   *
+   * @return {Promise<string>} The CSS's value
+   * @example
+   * var el = await driver.findElementCss('a' })
+   * var height = el.getCssValue('height')
+   *
+   */
+  getCssValue (name) {
+    return this._execute('get', `/element/${this.id}/css/${name}`)
+  }
+
+  /**
+   * Get text value from element
+   * @async
+   *
+   * @return {Promise<string>} The text
+   * @example
+   * var el = await driver.findElementCss('a' })
+   * var text = el.getText()
+   */
+  getText () {
+    return this._execute('get', `/element/${this.id}/text`)
+  }
+
+  /**
+   * Get tag name from element
+   * @async
+   *
+   * @return {Promise<string>} The tag's name
+   * @example
+   * var el = await driver.findElementCss('.link' })
+   * var tagName = el.getTagName()
+   */
+  getTagName () {
+    return this._execute('get', `/element/${this.id}/name`)
+  }
+
+  /**
+   * Get rect from element
+   * @async
+   *
+   * @return {Promise<string>} The rect info
+
+   * @example
+   * var el = await driver.findElementCss('a' })
+   * var rect = el.getRect()
+   */
+  getRect () {
+    return this._execute('get', `/element/${this.id}/rect`)
+  }
+
+  /**
+   * Check that the element is enabled
+   *
+   * @return {Promise<boolean>} true of false
+   * @example
+   * var el = await driver.findElementCss('#main')
+    var isSelected = await el.isSelected()
+   *
+   */
+  async isEnabled () {
+    return !!(await this._execute('get', `/element/${this.id}/enabled`))
+  }
+
+  /**
+   * Click on an element
+   *
+   * @return {Promise<Element>} The element itself
+   * @example
+   * var el = await driver.findElementCss('#button')
+   * await el.click()
+   *
+   */
+  async click () {
+    await this._execute('post', `/element/${this.id}/click`)
+    return this
+  }
+
+  /**
+   * Clear an element
+   *
+   * @return {Promise<Element>} The element itself
+   * @example
+   * var el = await driver.findElementCss('#input')
+   * await el.clear()
+   *
+   */
+  async clear () {
+    await this._execute('post', `/element/${this.id}/clear`)
+    return this
+  }
+
+  /**
+   * Send keys to an element
+   *
+   * @return {Promise<Element>} The element itself. Concatenate with `Element.KEY` to send
+   *                              special characters.
+   * @example
+   * var el = await driver.findElementCss('#input')
+   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
+   *
+   */
+  async sendKeys (text) {
+    // W3c: Adding 'value' to parameters, so that Chrome works too
+    var value = text.split('')
+    await this._execute('post', `/element/${this.id}/value`, { text, value })
+    return this
+  }
+
+  /**
+   * Take screenshot of the element
+   * @param {boolean} scroll If true (by default), it will scroll to the element
+   * @return {Promise<Buffer>} The screenshot data in a Buffer object
+   * @example
+   * var el = await driver.findElementCss('#input')
+   * var screenshot = await el.takeScreenshot()
+   *
+   */
+  async takeScreenshot (scroll = true) {
+    var data = await this._execute('get', `/element/${this.id}/screenshot`, { scroll })
+    return Buffer.from(data, 'base64')
+  }
+
+  /**
+   * @private
+   */
+  async _execute (method, command, params) {
+    return this.driver._execute(method, command, params)
+  }
+}
+
+class Actions {
+  constructor (...devices) {
+    var self = this
+    this.actions = []
+
+    this._compiled = false
+    this.compiledActions = []
+    // Assign `devices`. If not there, assign a default 'mouse' and 'keyboard'
+    if (Object.keys(devices).length) {
+      this.devices = devices
+    } else {
+      this.devices = [
+        new Pointer('mouse', Pointer.Type.MOUSE),
+        new Keyboard('keyboard')
+      ]
+    }
+
+    // Make up a _tickSetters object, which are the setters available
+    // after `driver.tick`, so that you can do `driver.tick.mouseDown()`
+    // The keys `tick` and `compile` are always available, as it's handy to
+    // get them as "chained" methods (so that you can do
+    // `actions.tick.mouseDown().tick.mouseUp()`
+    // The other keys will depend on the devices passed to the
+    // `Actions` constructor.
+    // With `Actions(new Pointer('fancyMouse'))` will establish
+    // `tick.fancyMouseUp()`, `tick.fancyMouseDown()` etc.
+    // By default, `new Actions()` will create two devices, called
+    // `mouse` and `keyboard`
+    //
+    this._tickSetters = {
+      get tick () {
+        // Return self
+        return self.tick
+      },
+      compile: self.compile.bind(self)
+    }
+    this.devices.forEach((device) => {
+      var deviceTickMethods = device._tickMethods()
+      Object.keys(deviceTickMethods).forEach((k) => {
+        this._tickSetters[device.id + k] = function (...args) {
+          if (!self._currentAction[device.id].virgin) {
+            throw new Error(`Action for device ${device.id} already defined (${device.id + k}) for this tick`)
+          }
+          var res = deviceTickMethods[k].apply(device, args)
+          self._currentAction[device.id] = res
+          return self._tickSetters
+        }
+        this._tickSetters['pause'] = function (duration = 0) {
+          self._currentAction[device.id] = { type: 'pause', duration }
+          return self._tickSetters
+        }
+      })
+    })
+  }
+
+  /** Constant returning special KEY characters (enter, etc.)
+   *  Constant are from the global variable {@link KEY}
+   *
+   * @example
+   * var actions = new Actions()
+   * actions.tick.keyboardDown(Actions.KEY.ENTER).keyboardUp(Actions.KEY.ENTER)
+   */
+  static get KEY () { return KEY }
+
+  compile () {
+    if (this._compiled) return
+    this.compiledActions = []
+
+    this.devices.forEach((device) => {
+      var deviceActions = { actions: [] }
+      deviceActions.type = device.type
+      deviceActions.id = device.id
+      if (device.type === 'pointer') {
+        deviceActions.parameters = { pointerType: device.pointerType }
+      }
+
+      this.actions.forEach((action) => {
+        deviceActions.actions.push(action[ device.id ])
+      })
+      this.compiledActions.push(deviceActions)
+    })
+
+    // console.log('COMPILED ACTIONS:', require('util').inspect(this.compiledActions, {depth: 10}))
+  }
+
+  _setAction (deviceId, action) {
+    this._currentAction[ deviceId ] = action
+  }
+
+  get tick () {
+    // The tick you add a tick, this is no longer compiled
+    this._compiled = false
+
+    // Make up the action object. It will be an object where
+    // each key is a device ID.
+    // By default, ALL actions are set as 'pause'
+    var action = {}
+    this.devices.forEach((device) => {
+      action[ device.id ] = { type: 'pause', duration: 0, virgin: true }
+    })
+    this.actions.push(action)
+
+    // Set _currentAction, which is what the tickSetters will
+    // change
+    this._currentAction = action
+
+    // Return the _tickSetters, so that actions.tick.mouse() works
+    return this._tickSetters
+  }
+}
+
+/**
+ * A base class that represents a generic browser. All browsers ({@link Chrome},
+{@link Firefox}) will inherit from this class
+ */
+class Browser {
+  /**
+   * Class to create Browser objects, which will be used to pilot the passed browser.
+   *
+   * When creating a session, the webdriver accepts an object parameter.
+   * The special key `capabilities`, which include `alwaysMatch` (an object) and `firstMatch` (an array),
+   * determine the requirements for the testing browser.
+   *
+   * If no arguments are passed to the constructor, the parameter object will look like this:
+   *
+   *        {
+   *          capabilities: {
+   *            alwaysMatch: {},
+   *            firstMatch: []
+   *          }
+   *        }
+   *
+   * The `alwaysMatch` property can have the following values:
+   * * `browserName` -- string -- Identifies the user agent.
+   * * `browserVersion` -- string -- Identifies the version of the user agent.
+   * * `platformName` -- string -- Identifies the operating system of the endpoint node.
+   * * `acceptInsecureCerts` -- boolean -- Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session.
+   * * `pageLoadStrategy`  --string -- Defines the current session’s page load strategy.
+   * * `proxy` -- Object -- Defines the current session’s proxy configuration.
+   * * `setWindowRect` -- boolean -- Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows.
+   * * `timeouts` -- Object -- Describes the timeouts imposed on certain session operations. Can have keys `implicit`, `pageLoad` or `script`
+   * * `unhandledPromptBehavior` -- string -- Describes the current session’s user prompt handler. It can be:
+   *    `dismiss`, `accept`, `dismiss and notify`, `accept and notify`, `ignore`
+   *
+   * The last parameter `specific` is used by inheriting classes, to set browser-specific options. For example:
+   * * In Chrome, having `specific` set as `{ detach: false }` will set
+   * `capabilities.alwaysMatch.chromeOptions.detach` to `false`.
+   * * In Firefox, having `specific` set as `{ profile: 'tony' }` will set
+   * `capabilities.alwaysMatch.moz:firefoxOptions.profile` to `tony`
+   *
+   * @param {Object} alwaysMatch The alwaysMatch object passed to the webdriver
+   * @param {Array} firstMatch The firstMatch array passed to the webdriver
+   * @param {Object} root The keys of this object will be copied over the webdriver object
+   * @param {Object} specific Specific keys for the browser
+   */
+  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
+    // Sanity checks. Things can go pretty bad if these are wrong
+    if (!isObject(alwaysMatch)) {
+      throw new Error('alwaysMatch must be an object')
+    }
+    if (!Array.isArray(firstMatch)) {
+      throw new Error('firstmatch parameter must be an array')
+    }
+    if (!isObject(root)) {
+      throw new Error('root options must be an object')
+    }
+
+    this.sessionParameters = {
+      capabilities: {
+        alwaysMatch: alwaysMatch,
+        firstMatch: firstMatch
+      }
+    }
+    // Copy over whatever is specified in `root`
+    for (var k in root) {
+      if (root.hasOwnProperty(k)) this.sessionParameters[ k ] = root[k]
+    }
+
+    // Give it a nice, lowercase name
+    this.name = 'browser'
+  }
+
+  /**
+   * Method to set the `alwaysMatch` property in the browser's capabilities
+   *
+   * @param {string} path The name of the property to set. It can be a path; if path is has a `.` (e.g.
+   *                      `something.other`), the property
+   *                      `sessionParameters.capabilities.alwaysMatch.something.other` will be set
+   * @param {*} value The value to assign
+   * @param {boolean} force It will overwrite keys if already present.
+   *
+   * @example
+   * this.setAlwaysMatchKey('timeouts.implicit', 10000, true)
+   */
+  setAlwaysMatchKey (path, value, force = false) {
+    var alwaysMatch = this.sessionParameters.capabilities.alwaysMatch
+    if (force || typeof DO.get(alwaysMatch, path) === 'undefined') {
+      DO.set(alwaysMatch, path, value)
+    }
+  }
+
+  /**
+   * Adds a property to the `firstMatch` array in the browser's capabilities.
+   *
+   * @param {string} name The name of the property to set
+   * @param {*} value The value to assign
+   * @param {boolean} force It will overwrite keys if needed
+   *
+   * @example
+   * this.addFirstMatch('browserName', 'chrome')
+   * this.addFirstMatch('browserName', 'firefox')
+   */
+  addFirstMatch (name, value, force = false) {
+    if (force || !this.sessionParameters.capabilities.firstMatch.indexOf(name) === -1) {
+      this.sessionParameters.capabilities.firstMatch.push({ [name]: value })
+    }
+  }
+
+  /**
+   * Sets a key (or a path) on the object which will be sent to the webdriver when
+   * creating a session
+   *
+   * @param {string} path The name of the property to set. It can be a path; if path is has a `.` (e.g.
+   *                      `something.other`), the property
+   *                      `sessionParameters.something.other` will be set
+   * @param {*} value The value to assign
+   * @param {boolean} force It will overwrite keys if needed
+   *
+   * @example
+   * this.setRootKey('login', 'blah')
+   * this.setRootKey('pass', 'blah')
+   */
+  setRootKey (path, value, force = true) {
+    if (force || typeof DO.get(this.sessionParameters, path) === 'undefined') {
+      DO.set(this.sessionParameters, path, value)
+    }
+  }
+
+  /**
+   * Return the current session parameters. This is used by the {@link Driver#newSession} call
+   * to get the parameters to be sent over
+   */
+  getSessionParameters () {
+    return this.sessionParameters
+  }
+
+  // Options: port, args, env, stdio
+
+  async run (options) {
+  }
+}
+
+// https://sites.google.com/a/chromium.org/chromedriver
+// https://sites.google.com/a/chromium.org/chromedriver/capabilities
+// STATUS: https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md
+class Chrome extends Browser { // eslint-disable-line no-unused-vars
+  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
+    super(...arguments)
+
+    // Give it a nice, lowercase name
+    this.name = 'chrome'
+
+    // This is crucial so that Chrome obeys w3c
+    this.setAlwaysMatchKey('chromeOptions.w3c', true, true)
+
+    // The required browser's name
+    this.setAlwaysMatchKey('browserName', 'chrome')
+
+    // Add specific Options
+    for (var k in specific) {
+      if (specific.hasOwnProperty(k)) {
+        this.alwaysMatch.chromeOptions[ k ] = specific[ k ]
+      }
+    }
+  }
+
+  run (options) {
+    var executable = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
+    options.args.push('--port=' + options.port)
+    return exec(executable, options)
+  }
+}
+
+// https://github.com/mozilla/geckodriver/blob/master/README.md
+// https://github.com/mozilla/geckodriver
+// STATUS: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status
+class Firefox extends Browser { // eslint-disable-line no-unused-vars
+  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
+    super(...arguments)
+
+    // Give it a nice, lowercase name
+    this.name = 'firefox'
+
+    // Firefox's empty firefoxOptions
+    this.setAlwaysMatchKey('moz:firefoxOptions', {}, true)
+
+    // The required browser's name
+    this.setAlwaysMatchKey('browserName', 'firefox')
+
+    // Add specific Options
+    for (var k in specific) {
+      if (specific.hasOwnProperty(k)) {
+        this.alwaysMatch['moz:firefoxOptions'][ k ] = specific[ k ]
+      }
+    }
+  }
+
+  run (options) {
+    var executable = process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver'
+    options.args.push('--port=' + options.port)
+    return exec(executable, options)
+  }
+}
+
+class Selenium extends Browser { // eslint-disable-line no-unused-vars
+}
+
+class InputDevice {
+  constructor (id) {
+    this.id = id
+  }
+}
+
+//  KEYBOARD: "pause", "keyUp", "keyDown"
+class Keyboard extends InputDevice {
+  constructor (id) {
+    super(id)
+    this.type = 'key'
+  }
+
+  _tickMethods () {
+    return {
+      Up: (value) => {
+        return {
+          type: 'keyUp',
+          value
+        }
+      },
+
+      Down: (value) => {
+        return {
+          type: 'keyDown',
+          value
+        }
+      }
+    }
+  }
+}
+
+//  POINTER: "pause", "pointerUp", "pointerDown", "pointerMove", or "pointerCancel
+class Pointer extends InputDevice {
+  constructor (id, pointerType) {
+    super(id)
+    this.pointerType = pointerType
+    this.type = 'pointer'
+  }
+
+  static get Type () {
+    return {
+      MOUSE: 'mouse',
+      PEN: 'pen',
+      TOUCH: 'touch'
+    }
+  }
+
+  static get Origin () {
+    return {
+      VIEWPORT: 'viewport',
+      POINTER: 'pointer'
+    }
+  }
+
+  _tickMethods () {
+    return {
+      Move: (args) => {
+        // Work out origin, defaulting to VIEWPORT.
+        // If it's an element, it will be seriaslised to please W3c AND Chrome
+        // In any case, it MUST be an element, VIEWPORT or POINTER
+        var origin
+        if (!args.origin) {
+          origin = Pointer.Origin.VIEWPORT
+        } else {
+          if (args.origin instanceof Element) {
+            origin = {
+              'element-6066-11e4-a52e-4f735466cecf': args.origin.id,
+              ELEMENT: args.origin.id
+            }
+          } else {
+            origin = args.origin
+            if (origin !== Pointer.Origin.VIEWPORT &&
+                origin !== Pointer.Origin.POINTER) {
+              throw new Error('When using move(), origin must be an element, Pointer.Origin.VIEWPORT or Pointer.Origin.POINTER')
+            } else {
+            }
+          }
+        }
+
+        return {
+          type: 'pointerMove',
+          duration: args.duration || 0,
+          origin,
+          x: args.x,
+          y: args.y
+        }
+      },
+      Down: (button = 0) => {
+        return {
+          type: 'pointerDown',
+          button
+        }
+      },
+      Up: (button = 0) => {
+        return {
+          type: 'pointerUp',
+          button
+        }
+      },
+      Cancel: () => {
+        return {
+          type: 'pointerCancel'
+        }
+      }
+    }
   }
 }
 
