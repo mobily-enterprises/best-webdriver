@@ -43,7 +43,7 @@ const { Driver, browser, Actions } = require('./index')
     // console.log('TRY:', await el[0].sendKeys({ text: 'thisworksonfirefoxandchrome' + Element.KEY.ENTER }))
 
     var driverChrome = new Driver(new browser.Chrome(), { spawn: true })
-    console.log('HERE:', driverChrome)
+    console.log('DriverChrome:', driverChrome)
 
     var driver = new Driver(new browser.Firefox(), { spawn: true })
     await driver.newSession()
