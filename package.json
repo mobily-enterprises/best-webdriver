@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "apiDocs":"node_modules/jsdoc/jsdoc.js -c .jsdoc.config.js -d docs/api index.js -R README.md -P package.json"
+    "apiDocs":"node_modules/jsdoc/jsdoc.js -c .jsdoc.config.js -d docs/api -R README.md -P package.json KEY.js index.js"
   },
   "repository": {
     "type": "git",
