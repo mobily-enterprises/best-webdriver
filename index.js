@@ -14,7 +14,7 @@
     [ ] Write guide in README.md
     [ ] Check other themes, hopefully better
   [ ] Make Docco documentation
-  [ ] Put it online on Github pages
+  [ ] Put documentation online on Github pages
   [X] Submit code for review on codereview
 
   [ ] Write initial tests (ah!)
@@ -445,7 +445,8 @@ class Actions {
 }
 
 /**
- * It provides utility methods for the findElement and findElements
+ * It provides utility methods for the `findElement` and `findElements`.
+ * Both {@link Driver} and {@link Element} include this mixin
  * @mixin FindHelpersMixin
  */
 const FindHelpersMixin = (superClass) => class extends superClass {
@@ -455,6 +456,10 @@ const FindHelpersMixin = (superClass) => class extends superClass {
    * @async
    *
    * @param {string} value The CSS expression
+   *
+   * @example
+   * var list = driver.findElementCss('.list')
+   * var listTitle = list.findElementCss('.title')
    */
   findElementCss (value) {
     return this.findElement(Driver.Using.CSS, value)
@@ -463,7 +468,15 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find first element matching text
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The text to match
+   *
+   * @example
+   * var a = driver.findElementLinkText('cick here')
+   * // or...
+   * var el = driver.findElementCss('#something') // or
+   * var l = item.findElementLinkText('click here')
    */
   findElementLinkText (value) {
     return this.findElement(Driver.Using.LINK_TEXT, value)
@@ -472,7 +485,15 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find first element matching link text
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The link text to match
+   *
+   * @example
+   * var a = driver.findElementPartialLinkText('cick here')
+   * // or...
+   * var el = driver.findElementCss('#something') // or
+   * var l = item.findElementPartialLinkText('click here')
    */
   findElementPartialLinkText (value) {
     return this.findElement(Driver.Using.PARTIAL_LINK_TEXT, value)
@@ -481,7 +502,13 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find first element matching tag name
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The tag name to match
+   *
+   * @example
+   * var item = driver.findElementTagName('item') // or
+   * var subItem = item.findElementTagName('subitem')
    */
   findElementTagName (value) {
     return this.findElement(Driver.Using.TAG_NAME, value)
@@ -490,7 +517,13 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find first element matching xpath
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The xpath to match
+   *
+   * @example
+   * var item = driver.findElementXpath('/html/body/form[1]') // or
+   * var subItem = item.findElementXpath('/div/div/subitem')
    */
   findElementXpath (value) {
     return this.findElement(Driver.Using.XPATH, value)
@@ -499,7 +532,14 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find all elements matching CSS
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The CSS expression
+   *
+   * @example
+   * var allItems = driver.findElementsCss('.list')
+   * var item = allItems[0]
+   * var allTitles = item.findElementsCss('.title')
    */
   findElementsCss (value) {
     return this.findElements(Driver.Using.CSS, value)
@@ -508,7 +548,15 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find all elements matching text
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The text to match
+   *
+   * @example
+   * var links = driver.findElementsLinkText('cick here')
+   * // or...
+   * var el = driver.findElementCss('#something') // or
+   * var links = item.findElementsLinkText('click here')
    */
   findElementsLinkText (value) {
     return this.findElements(Driver.Using.LINK_TEXT, value)
@@ -517,7 +565,15 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find all elements matching link text
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The link text to match
+   *
+   * @example
+   * var links = driver.findElementsPartialLinkText('cick here')
+   * // or...
+   * var el = driver.findElementCss('#something') // or
+   * var links = item.findElementsPartialLinkText('click here')
    */
   findElementsPartialLinkText (value) {
     return this.findElements(Driver.Using.PARTIAL_LINK_TEXT, value)
@@ -526,7 +582,14 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find all elements matching tag name
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The tag name to match
+   *
+   * @example
+   * var items = driver.findElementsTagName('item') // or
+   * var el = items[0]
+   * var subItem = el.findElementsTagName('subitem')
    */
   findElementsTagName (value) {
     return this.findElements(Driver.Using.TAG_NAME, value)
@@ -535,7 +598,14 @@ const FindHelpersMixin = (superClass) => class extends superClass {
   /**
    * Find all elements matching xpath
    * @memberof FindHelpersMixin#
+   * @async
+   *
    * @param {string} value The xpath to match
+   *
+   * @example
+   * var items = driver.findElementsXpath('/html/body') // or
+   * var el = items[0]
+   * var subItems = el.findElementXpath('/div/div/subitem')
    */
   findElementsXpath (value) {
     return this.findElements(Driver.Using.XPATH, value)
