@@ -60,7 +60,7 @@ var Element = class {
    *
    * @example
    * var el = await driver.findElementCss('#input')
-   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
+   * await e.sendKeys("This is a search" + Element.Key.ENTER)
    */
   static get KEY () { return KEY }
 
@@ -261,11 +261,11 @@ var Element = class {
   /**
    * Send keys to an element
    *
-   * @return {Promise<Element>} The element itself. Concatenate with `Element.KEY` to send
+   * @return {Promise<Element>} The element itself. Concatenate with `Element.Key` to send
    *                              special characters.
    * @example
    * var el = await driver.findElementCss('#input')
-   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
+   * await e.sendKeys("This is a search" + Element.Key.ENTER)
    *
    */
   async sendKeys (text) {

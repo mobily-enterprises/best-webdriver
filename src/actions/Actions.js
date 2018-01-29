@@ -1,8 +1,6 @@
 const Pointer = require('./Pointer')
 const Keyboard = require('./Keyboard')
-const KEY = require('../KEY')
-
-console.log('CAZ:', Pointer, Keyboard)
+const Key = require('../KEY')
 
 class Actions {
   constructor (...devices) {
@@ -64,9 +62,9 @@ class Actions {
    *
    * @example
    * var actions = new Actions()
-   * actions.tick.keyboardDown(Actions.KEY.ENTER).keyboardUp(Actions.KEY.ENTER)
+   * actions.tick.keyboardDown(Actions.Key.ENTER).keyboardUp(Actions.Key.ENTER)
    */
-  static get KEY () { return KEY }
+  static get Key () { return Key }
 
   static get Keyboard () {
     return Keyboard
