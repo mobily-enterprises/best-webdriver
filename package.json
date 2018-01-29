@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "apiDocs":"node_modules/jsdoc/jsdoc.js -c .jsdoc.config.js -d docs/api -R README.md -P package.json KEY.js index.js"
+    "apiDocs":"node_modules/jsdoc/jsdoc.js -c .jsdoc.config.js -d docs/api -R README.md -P package.json src/KEY.js src/Driver.js src/Element.js src/browsers/Browser.js src/browsers/Chrome.js src/browsers/Firefox.js src/browsers/Remote.js src/actions/Actions.js src/actions/InputDevice.js src/actions/Keyboard.js src/actions/Pointer.js"
   },
   "repository": {
     "type": "git",
