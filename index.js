@@ -17,14 +17,14 @@ exports = module.exports = { Driver, browser, Actions }
     [X] All helper mixins documented within the classes
     [X] Write examples for findElementHelpers
     [X] All gloval consts
+    [X] Split into smaller files
     [-] Document remaining methods
       [-] Document Browsers (Chrome, Firefox, Generic), decide how to document them
       [ ] Document InputDevice
       [ ] Document Actions
     [ ] Write guide in README.md
-    [ ] Check other themes, hopefully better
-  [ ] Make Docco documentation
-  [ ] Put documentation online on Github pages
+    [ ] Check other JSDoc themes, hopefully better
+  [ ] Put API online on Github pages
   [X] Submit code for review on codereview
 
   [ ] Write initial tests (ah!)
