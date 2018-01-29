@@ -4,10 +4,13 @@
     [X] Add _isCompiled to actions
     [X] Rename Element into Element
   [-] Finish off JSDOC documentation
-    [ ] All element methods
-    [ ] All helper mixins documented within the classes
-    [ ] All async methods marked as such (some return promises but aren't marked async)
-    [ ] See how to clone documentation for findElement and findElements
+    [X] Make markdown work
+    [X] All element methods
+    [X] All async methods marked as such (some return promises but aren't marked async)
+    [X] See how to clone documentation for findElement and findElements
+    [X] All helper mixins documented within the classes
+    [ ] Write examples for findElementHelpers
+    [ ] All remaining methods (Browsers, InputDevice, Actions)
     [ ] Write guide in README.md
     [ ] Check other themes, hopefully better
   [ ] Make Docco documentation
@@ -18,7 +21,6 @@
   [ ] Write more tests
 
 https://codereview.stackexchange.com/questions/186203/check-an-es6-api-implementation-can-you-see-anything-terrible
-
 */
 
 var request = require('request-promise-native')
@@ -442,52 +444,127 @@ class Actions {
   }
 }
 
+/**
+ * It provides utility methods for the findElement and findElements
+ * @mixin FindHelpersMixin
+ */
 const FindHelpersMixin = (superClass) => class extends superClass {
+  /**
+   * Find first element matching CSS
+   * @memberof FindHelpersMixin#
+   * @async
+   *
+   * @param {string} value The CSS expression
+   */
   findElementCss (value) {
     return this.findElement(Driver.Using.CSS, value)
   }
 
+  /**
+   * Find first element matching text
+   * @memberof FindHelpersMixin#
+   * @param {string} value The text to match
+   */
   findElementLinkText (value) {
     return this.findElement(Driver.Using.LINK_TEXT, value)
   }
 
+  /**
+   * Find first element matching link text
+   * @memberof FindHelpersMixin#
+   * @param {string} value The link text to match
+   */
   findElementPartialLinkText (value) {
     return this.findElement(Driver.Using.PARTIAL_LINK_TEXT, value)
   }
 
+  /**
+   * Find first element matching tag name
+   * @memberof FindHelpersMixin#
+   * @param {string} value The tag name to match
+   */
   findElementTagName (value) {
     return this.findElement(Driver.Using.TAG_NAME, value)
   }
 
+  /**
+   * Find first element matching xpath
+   * @memberof FindHelpersMixin#
+   * @param {string} value The xpath to match
+   */
   findElementXpath (value) {
     return this.findElement(Driver.Using.XPATH, value)
   }
 
+  /**
+   * Find all elements matching CSS
+   * @memberof FindHelpersMixin#
+   * @param {string} value The CSS expression
+   */
   findElementsCss (value) {
     return this.findElements(Driver.Using.CSS, value)
   }
 
+  /**
+   * Find all elements matching text
+   * @memberof FindHelpersMixin#
+   * @param {string} value The text to match
+   */
   findElementsLinkText (value) {
     return this.findElements(Driver.Using.LINK_TEXT, value)
   }
 
+  /**
+   * Find all elements matching link text
+   * @memberof FindHelpersMixin#
+   * @param {string} value The link text to match
+   */
   findElementsPartialLinkText (value) {
     return this.findElements(Driver.Using.PARTIAL_LINK_TEXT, value)
   }
 
+  /**
+   * Find all elements matching tag name
+   * @memberof FindHelpersMixin#
+   * @param {string} value The tag name to match
+   */
   findElementsTagName (value) {
     return this.findElements(Driver.Using.TAG_NAME, value)
   }
 
+  /**
+   * Find all elements matching xpath
+   * @memberof FindHelpersMixin#
+   * @param {string} value The xpath to match
+   */
   findElementsXpath (value) {
     return this.findElements(Driver.Using.XPATH, value)
   }
 }
 
 /**
- The base class for Elements
+ * The base class for Elements
+ * @mixes FindHelpersMixin
+ * @augments FindHelpersMixin
+ *
+ * An Element object is returned by {@link Driver#findElement} and
+ * {@link Driver#findElements}.
+ *
+ * Element objects are then used to either get specific information about them
+ * using for example `element.getText()`, or to perform actions on them such as
+ * `element.click()` or `element.findElements` (which will return more elements)
+ * @inheritdoc
  */
 var Element = class {
+  /**
+   * Constructor. You never have to run this yourself, since both {@link Driver#findElement}
+   * and {@link Driver#findElements} will run `new Element()` for you based on what was
+   * returned by the webdriver.
+   *
+   * @param {Driver} driver The driver that originally created this element
+   * @param {object} elObject An element object as it was returned by the webdriver.
+   *
+  */
   constructor (driver, elObject) {
     var value
 
@@ -508,7 +585,7 @@ var Element = class {
     if (!this.id) throw new Error('Could not get element ID from element object')
   }
 
-  /** Alias to {@link Element#waitFor Element's waitFor function}
+  /** Alias to {@link Driver#waitFor Driver's waitFor function}
    * @async
    */
   waitFor (timeout = 0, pollInterval = 0) {
@@ -517,10 +594,20 @@ var Element = class {
     return Driver.prototype.waitFor.call(this, timeout, pollInterval)
   }
 
+  /** Constant returning special KEY characters (enter, etc.)
+   *
+   * @example
+   * var el = await driver.findElementCss('#input')
+   * await e.sendKeys("This is a search" + Element.KEY.ENTER)
+   */
   static get KEY () { return KEY }
 
   /**
-   * Find an element within the queried element
+   * Find an element within this element
+   *
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
    *
    * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
    *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
@@ -528,8 +615,12 @@ var Element = class {
    * @param {string} value The parameter to the `using` method
    *
    * @return {Promise<Element>} An object representing the element.
+   *
    * @example
-   *   var el = await driver.findElement( Driver.Using.CSS, '[name=q]' )
+   * // Find the element using the driver's `findElement()` call
+   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
+   * // Find the first LI element within the found UL
+   * var items = await ul.findElement({ Driver.Using.CSS, value: 'li')
    *
    */
   async findElement (using, value) {
@@ -538,7 +629,11 @@ var Element = class {
   }
 
   /**
-   * Find several elements within the queried element
+   * Find several elements within this element
+   *
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
    *
    * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
    *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
@@ -546,10 +641,14 @@ var Element = class {
    * @param {string} value The parameter to the `using` method
    *
    * @return {Promise<Array<Element>>} An array of elements
-   * @example
-   *   var el = await driver.findElements( Driver.Using.CSS, '.item' })
    *
-  */
+   * @example
+   * // Find the element using the driver's `findElement()` call
+   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
+   * // Find ALL LI sub-elements within the found UL element
+   * var items = await ul.findElements({ Driver.Using.CSS, value: 'li')
+   *
+   */
   async findElements (using, value) {
     var els = await this._execute('post', `/element/${this.id}/elements`, {using, value})
     if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
@@ -561,92 +660,97 @@ var Element = class {
    *
    * @return {Promise<boolean>} true of false
    * @example
-   *   var el = await driver.findElement( Driver.Using.CSS, '#main' })
-       var isSelected = await el.isSelected()
+   * var el = await driver.findElementCss('#main')
+   * var isSelected = await el.isSelected()
    *
-  */
+   */
   async isSelected () {
     return !!(await this._execute('get', `/element/${this.id}/selected`))
   }
 
   /**
    * Get attribute called `name` from element
-   *
+   * @async
    * @param {string} name The name of the attribute to be fetched
    *
    * @return {Promise<string>} The attribute's value
    * @example
-   *   var el = await driver.findElementCss('a' })
-   *   var href = el.getAttribute('href')
+   * var el = await driver.findElementCss('a' })
+   * var href = el.getAttribute('href')
    *
-  */
+   */
   getAttribute (name) {
     return this._execute('get', `/element/${this.id}/attribute/${name}`)
   }
 
   /**
    * Get property called `name` from element
+   * @async
    *
    * @param {string} name The name of the property to be fetched
    *
    * @return {Promise<string>} The property's value
    * @example
-   *   var el = await driver.findElementCss('a' })
-   *   var href = el.getProperty('href')
+   * var el = await driver.findElementCss('a' })
+   * var href = el.getProperty('href')
    *
-  */
+   */
   getProperty (name) {
     return this._execute('get', `/element/${this.id}/property/${name}`)
   }
 
   /**
    * Get css value from element
+   * @async
    *
    * @param {string} name The name of the CSS value to be fetched
    *
    * @return {Promise<string>} The CSS's value
    * @example
-   *   var el = await driver.findElementCss('a' })
-   *   var height = el.getCssValue('height')
+   * var el = await driver.findElementCss('a' })
+   * var height = el.getCssValue('height')
    *
-  */
+   */
   getCssValue (name) {
     return this._execute('get', `/element/${this.id}/css/${name}`)
   }
 
   /**
    * Get text value from element
+   * @async
    *
    * @return {Promise<string>} The text
    * @example
-   *   var el = await driver.findElementCss('a' })
-   *   var text = el.getText()
-  */
+   * var el = await driver.findElementCss('a' })
+   * var text = el.getText()
+   */
   getText () {
     return this._execute('get', `/element/${this.id}/text`)
   }
 
   /**
    * Get tag name from element
+   * @async
    *
    * @return {Promise<string>} The tag's name
    * @example
-   *   var el = await driver.findElementCss('.link' })
-   *   var tagName = el.getTagName()
-  */
+   * var el = await driver.findElementCss('.link' })
+   * var tagName = el.getTagName()
+   */
   getTagName () {
     return this._execute('get', `/element/${this.id}/name`)
   }
 
   /**
-   * Get rectfrom element
+   * Get rect from element
+   * @async
    *
    * @return {Promise<string>} The rect info
 
    * @example
-   *   var el = await driver.findElementCss('a' })
-   *   var rect = el.getRect()
-  */
+   * var el = await driver.findElementCss('a' })
+   * var rect = el.getRect()
+   */
   getRect () {
     return this._execute('get', `/element/${this.id}/rect`)
   }
@@ -656,10 +760,10 @@ var Element = class {
    *
    * @return {Promise<boolean>} true of false
    * @example
-   *   var el = await driver.findElement( Driver.Using.CSS, '#main' })
-       var isSelected = await el.isSelected()
+   * var el = await driver.findElementCss('#main')
+    var isSelected = await el.isSelected()
    *
-  */
+   */
   async isEnabled () {
     return !!(await this._execute('get', `/element/${this.id}/enabled`))
   }
@@ -669,24 +773,24 @@ var Element = class {
    *
    * @return {Promise<Element>} The element itself
    * @example
-   *   var el = await driver.findElement( Driver.Using.CSS, '#button' })
-       await el.click()
+   * var el = await driver.findElementCss('#button')
+   * await el.click()
    *
-  */
+   */
   async click () {
     await this._execute('post', `/element/${this.id}/click`)
     return this
   }
 
   /**
-   * Clean an element
+   * Clear an element
    *
    * @return {Promise<Element>} The element itself
    * @example
-   *   var el = await driver.findElement( Driver.Using.CSS, '#input' })
-   *   await el.clear()
+   * var el = await driver.findElementCss('#input')
+   * await el.clear()
    *
-  */
+   */
   async clear () {
     await this._execute('post', `/element/${this.id}/clear`)
     return this
@@ -698,7 +802,7 @@ var Element = class {
    * @return {Promise<Element>} The element itself. Concatenate with `Element.KEY` to send
    *                              special characters.
    * @example
-   * var el = await driver.findElement( Driver.Using.CSS, '#input' })
+   * var el = await driver.findElementCss('#input')
    * await e.sendKeys("This is a search" + Element.KEY.ENTER)
    *
    */
@@ -714,8 +818,8 @@ var Element = class {
    * @param {boolean} scroll If true (by default), it will scroll to the element
    * @return {Promise<Buffer>} The screenshot data in a Buffer object
    * @example
-   *   var el = await driver.findElement( Driver.Using.CSS, '#input' })
-   *   var screenshot = await el.takeScreenshot()
+   * var el = await driver.findElementCss('#input')
+   * var screenshot = await el.takeScreenshot()
    *
    */
   async takeScreenshot (scroll = true) {
@@ -723,6 +827,9 @@ var Element = class {
     return Buffer.from(data, 'base64')
   }
 
+  /**
+   * @private
+   */
   async _execute (method, command, params) {
     return this.driver._execute(method, command, params)
   }
@@ -750,16 +857,18 @@ var Driver = class {
   //
   /**
    * Constructor returning a Driver object, which will be used to pilot the passed browser
+   * @mixes FindHelpersMixin
+   * @augments FindHelpersMixin
    *
-   *   @param {Browser} browser The browser that this API will pilot
-   *   @param {Object} opt Options to configure the driver
-   *   @param {string} opt.hostname=127.0.0.1 The hostname to connect to.
-   *   @param {number} opt.port The port. If not specified, a free port will automatically be found
-   *   @param {number} opt.pollInterval=300 How many milliseconds to wait between each poll when using `waitFor()`
-   *   @param {boolean} opt.spawn=true If true, it will spawn a new webdriver process when a new session is created
-   *   @param {Object} opt.env=process.env (If spawn === true) The environment to pass to the spawn webdriver
-   *   @param {string} opt.stdio=ignore (If spawn === true) The default parameter to pass to {@link https://nodejs.org/api/child_process.html#child_process_options_stdio stdio} when spawning new preocess.
-   *   @param {Array} opt.args (If spawn === true) The arguments to pass to the webdriver command
+   * @param {Browser} browser The browser that this API will pilot
+   * @param {Object} opt Options to configure the driver
+   * @param {string} opt.hostname=127.0.0.1 The hostname to connect to.
+   * @param {number} opt.port The port. If not specified, a free port will automatically be found
+   * @param {number} opt.pollInterval=300 How many milliseconds to wait between each poll when using `waitFor()`
+   * @param {boolean} opt.spawn=true If true, it will spawn a new webdriver process when a new session is created
+   * @param {Object} opt.env=process.env (If spawn === true) The environment to pass to the spawn webdriver
+   * @param {string} opt.stdio=ignore (If spawn === true) The default parameter to pass to {@link https://nodejs.org/api/child_process.html#child_process_options_stdio stdio} when spawning new preocess.
+   * @param {Array} opt.args (If spawn === true) The arguments to pass to the webdriver command
    */
   constructor (browser, options = {}) {
     this._browser = browser
@@ -788,7 +897,7 @@ var Driver = class {
     * It's also possible to pass an extra parameter to the original method in Driver,
     * which represents a checker function that will need to return truly for success
     *
-    * @inner
+    * @async
     * @param {(number)} timeout How long to poll for
     *
     * @example
@@ -803,14 +912,11 @@ var Driver = class {
     * // has 10 seconds to work, AND the result needs to be not-empty
     * // (see the tester function added)
     * await el.waitFor(10000).findElementsCss('.listItem', (r) => r.length))
-    *
-    * await driver.stopWebDriver()
    */
   waitFor (timeout = 0, pollInterval = 0) {
     timeout = timeout || this._defaultPollTimeout
     pollInterval = pollInterval || this._pollInterval
     var self = this
-    console.log('??????????????????????????????????????????', pollInterval)
     return new Proxy({}, {
       get (target, name) {
         // if (name in target) { return target[name] }
@@ -829,8 +935,6 @@ var Driver = class {
             var success = false
             var errors = []
             while (true) {
-              console.log('?????????????????????????????????????????? 2', pollInterval)
-
               try {
                 consolelog(`Attempting call ${name} with timeout ${timeout} and arguments ${args}`)
                 var res = await self[name].apply(self, args)
@@ -1050,9 +1154,9 @@ var Driver = class {
 
   /**
    * Find an element.
-   * Note that you are encourage to use one of the helper functions:
-   * findElementCss(), findElementLinkText(), findElementPartialLinkText(),
-   * findElementTagName(), findElementXpath()
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
    *
    * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
    *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
@@ -1071,9 +1175,9 @@ var Driver = class {
 
   /**
    * Find several elements
-   * Note that you are encourage to use one of the helper functions:
-   * findElementsCss(), findElemenstLinkText(), findElementsPartialLinkText(),
-   * findElementsTagName(), findElementsXpath()
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementsCss()`, `findElemenstLinkText()`, `findElementsPartialLinkText()`,
+   * `findElementsTagName()`, `findElementsXpath()`
    *
    * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
    *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
@@ -1162,7 +1266,8 @@ var Driver = class {
 
 /**
  * Get timeout settings in the page
- * *
+ * @async
+ *
  * @return {Promise<Object>} A promise resolving to an object
  *                   with keys `implicit`, `pageLoad` and `script `. E.g.
  *                  `{ implicit: 0, pageLoad: 300000, script: 30000 }`
@@ -1176,6 +1281,7 @@ var Driver = class {
 
   /**
    * Set timeouts
+   * @async
    *
    * @param {Object} param The object with the timeouts
    * @param {number} param.implicit Implicit timeout
@@ -1205,6 +1311,7 @@ var Driver = class {
   /**
    * Bake a cake without coffee
    * Also, get the current URL
+   * @async
    *
    * @return {Promise<string>} The URL
    * @example
@@ -1257,6 +1364,7 @@ var Driver = class {
    * Get page's title
    *
    * @return {Promise<string>} The page's title
+   * @async
    *
    * @example
    * var title = await driver.getTitle()
@@ -1267,6 +1375,7 @@ var Driver = class {
 
   /**
    * Get the current window's handle
+   * @async
    *
    * @return {Promise<string>} The handle, as a string
    *
@@ -1291,6 +1400,7 @@ var Driver = class {
 
   /**
    * Get window handles as an array
+   * @async
    *
    * @return {Promise<Array<string>>} An array of window handles
    *
@@ -1318,6 +1428,7 @@ var Driver = class {
 
   /**
    * Switch to frame
+   * @async
    *
    * @param {string|number|Element} frame Element object, or element ID, of the frame
    * @return {Promise<Driver>} The driver itself
@@ -1349,6 +1460,7 @@ var Driver = class {
 
   /**
    * Get window rect
+   * @async
    *
    * @return {Promise<Object>} An object with properties `height`, `width`, `x`, `y`
    *
@@ -1361,6 +1473,7 @@ var Driver = class {
 
   /**
    * Set window rect
+   * @async
    *
    * @param {Promise<Object>} rect An object with properties `height`, `width`, `x`, `y`
    * @param {Object} rect.height The desired height
@@ -1391,6 +1504,7 @@ var Driver = class {
 
   /**
    * Minimize window
+   * @async
    *
    * @return {Promise<Driver>} The driver itself
    *
@@ -1403,6 +1517,7 @@ var Driver = class {
 
   /**
    * Make window full screen
+   * @async
    *
    * @return {Promise<Driver>} The driver itself
    *
@@ -1415,6 +1530,7 @@ var Driver = class {
 
   /**
    * Get page source
+   * @async
    *
    * @return {Promise<string>} The current page's source
    *
@@ -1427,6 +1543,7 @@ var Driver = class {
 
   /**
    * Execute sync script
+   * @async
    *
    * @param {string} script The string with the script to be executed
    * @param {array} args The arguments to be passed to the script
@@ -1446,6 +1563,7 @@ var Driver = class {
    *       in `args`: it's the callback the script will need to call
    *       once the script has executed.
    *       To return a value from the async script, pass that value to the callback
+   * @async
    *
    * @param {string} script The string with the script to be executed
    * @param {Array} args The arguments to be passed to the script
@@ -1462,6 +1580,7 @@ var Driver = class {
 
   /**
    * Get all cookies
+   * @async
    *
    * @return {Array<Object>} An array of cookie objects.
    *
@@ -1474,6 +1593,7 @@ var Driver = class {
 
   /**
    * Get cookies matching a specific name
+   * @async
    *
    * @return {Object} A cookie object
    *
@@ -1559,6 +1679,7 @@ var Driver = class {
 
   /**
    * Get an alert's text
+   * @async
    *
    * @return {string} The alert's text
    *
