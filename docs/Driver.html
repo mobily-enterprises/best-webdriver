@@ -1,0 +1,7926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Driver</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: Driver</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>Driver<span class="signature">(browser, opt)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>The main driver class used to create a driver and actually use this API
+It will spawn a webdriver process by default.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="Driver"><span class="type-signature"></span>new Driver<span class="signature">(browser, opt)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Constructor returning a Driver object, which will be used to pilot the passed browser</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>browser</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Browser.html">Browser</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The browser that this API will pilot</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Options to configure the driver</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hostname</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    127.0.0.1
+                
+                </td>
+            
+
+            <td class="description last"><p>The hostname to connect to.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>port</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The port. If not specified, a free port will automatically be found</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pollInterval</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    300
+                
+                </td>
+            
+
+            <td class="description last"><p>How many milliseconds to wait between each poll when using <code>waitFor()</code> by default</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>spawn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>If true, it will spawn a new webdriver process when a new session is created</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>env</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    process.env
+                
+                </td>
+            
+
+            <td class="description last"><p>(If spawn === true) The environment to pass to the spawn webdriver</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stdio</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    ignore
+                
+                </td>
+            
+
+            <td class="description last"><p>(If spawn === true) The default parameter to pass to <a href="https://nodejs.org/api/child_process.html#child_process_options_stdio">stdio</a> when spawning new preocess.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>(If spawn === true) The arguments to pass to the webdriver command</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line26">line 26</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Create a driver using the Chrome browser
+var driver1 = new Driver(new Chrome())
+await driver.newSession()
+
+// Create a driver, but does NOT spawn a new webcontroller process
+var driver2 = new Driver(new Chrome(), {
+  spawn: false,
+  hostname: '127.0.0.1',
+  port: 4444
+})
+await driver.newSession()</code></pre>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".Using"><span class="type-signature">(static) </span>Using<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>A value used by <a href="Driver.html#findElement">Driver#findElement</a> and
+<a href="Driver.html#findElements">Driver#findElements</a> to decide what kind of
+filter will be applied</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line440">line 440</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="waitFor"><span class="type-signature">(async) </span>waitFor<span class="signature">(timeout)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>This method will wrap ANY method in Driver or Element with a polling mechanism, which will retry
+the call every <code>pollInterval</code> milliseconds (it defaults to 300, but it can
+be set when running the Driver's constructor)
+It's also possible to pass an extra parameter to the original method in Driver,
+which represents a checker function that will need to return truly for success</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>timeout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>How long to poll for</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Create a driver using the Chrome browser
+var driver = new Driver(new Chrome())
+await driver.navigateTo('http://www.google.com')
+
+// The findElementCss has 5 seconds to work
+var el = driver.waitFor(5000).findElementCss('[name=q]')
+
+// The findElementsCss (note the plural: it returns an array)
+// has 10 seconds to work, AND the result needs to be not-empty
+// (see the tester function added)
+await el.waitFor(10000).findElementsCss('.listItem', (r) => r.length))</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="startWebDriver"><span class="type-signature">(async) </span>startWebDriver<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Start the right webdriver, depending on what browser is attached to it.
+Since webdrivers can take a little while to answer, this method also checks
+that the webdriver process is actively and properly dealing with connections
+This method is called by <a href="Driver.html#newSession">newSession</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line167">line 167</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var driver = new Driver(new Chrome())
+await driver.startWebDriver()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="stopWebDriver"><span class="type-signature"></span>stopWebDriver<span class="signature">(signal)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Stops the webdriver process, if running. It does so by sending it a SIGTERM message.
+You can specify the message to send the process</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>signal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    SIGTERM
+                
+                </td>
+            
+
+            <td class="description last"><p>The signal to send. To know which signals you can send,</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line232">line 232</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Create a driver using the Chrome browser
+var driver = new Driver(new Chrome())
+// ...
+// ...
+await driver.stopWebDriver()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="newSession"><span class="type-signature">(async) </span>newSession<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;object:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create a new session. If the driver was created with <code>spawn</code> set to <code>true</code>, it will
+run the webdriver for the associated browser before asking for the session</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line257">line 257</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object containing the keys <code>sessionId</code> and <code>capabilities</code></p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;object:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var driver = new Driver(new Chrome())
+var session = await driver.newSession()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deleteSession"><span class="type-signature">(async) </span>deleteSession<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Delete the current session. This will not kill the webdriver process (if one
+was spawned). You can create a new session with <a href="Driver.html#newSession">newSession</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line298">line 298</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.deleteSession()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="status"><span class="type-signature">(async) </span>status<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;object:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get status</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line319">line 319</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object status, which is guaranteed by the superClass
+                          to include <code>ready</code> (boolean) and <code>message</code></p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;object:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var status = await driver.status()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElement"><span class="type-signature">(async) </span>findElement<span class="signature">(using, value)</span><span class="type-signature"> &rarr; {<a href="Element.html">Element</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find an element.
+Note that you are encouraged to use one of the helper functions:
+<code>findElementCss()</code>, <code>findElementLinkText()</code>, <code>findElementPartialLinkText()</code>,
+<code>findElementTagName()</code>, <code>findElementXpath()</code></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>using</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>It can be <code>Driver.Using.CSS</code>, <code>Driver.Using.LINK_TEXT</code>,
+               <code>Driver.Using.PARTIAL_LINK_TEXT</code>, <code>Driver.Using.TAG_NAME</code>,
+               <code>Driver.Using.XPATH</code></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The parameter to the <code>using</code> method</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line341">line 341</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object representing the element.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Element.html">Element</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var el = await driver.findElement({ Driver.Using.CSS, value: '[name=q]' )</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElements"><span class="type-signature">(async) </span>findElements<span class="signature">(using, value)</span><span class="type-signature"> &rarr; {<a href="Element.html">Element</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find several elements
+Note that you are encouraged to use one of the helper functions:
+<code>findElementsCss()</code>, <code>findElemenstLinkText()</code>, <code>findElementsPartialLinkText()</code>,
+<code>findElementsTagName()</code>, <code>findElementsXpath()</code></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>using</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>It can be <code>Driver.Using.CSS</code>, <code>Driver.Using.LINK_TEXT</code>,
+               <code>Driver.Using.PARTIAL_LINK_TEXT</code>, <code>Driver.Using.TAG_NAME</code>,
+               <code>Driver.Using.XPATH</code></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The parameter to the <code>using</code> method</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line363">line 363</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>[,{Element},...] An array of elements</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Element.html">Element</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var el = await driver.findElements({ Driver.Using.CSS, value: '.item' )</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="performActions"><span class="type-signature">(async) </span>performActions<span class="signature">(actions)</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Perform actions as specified in the passed actions object
+To see how to create an actions object, check the
+<a href="Actions.html">Actions class</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>actions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Actions.html">Actions</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An object</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line383">line 383</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var actions = new Actions()
+actions.tick.keyboardDown('R').keyboardUp('R')
+await driver.performActions(actions)</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="releaseActions"><span class="type-signature">(async) </span>releaseActions<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Release the current actions</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line395">line 395</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.releaseActions(actions)</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="sleep"><span class="type-signature">(async) </span>sleep<span class="signature">(ms)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sleep for ms milliseconds
+NOTE: you shouldn't use this as a quick means to wait for AJAX calls to finish.
+If you need to poll-wait, use <a href="Driver.html#waitFor">waitFor</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ms</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The number of milliseconds to wait for
+  *</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line411">line 411</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.sleep(1000)</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getTimeouts"><span class="type-signature">(async) </span>getTimeouts<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get timeout settings in the page</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line455">line 455</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A promise resolving to an object
+                  with keys <code>implicit</code>, <code>pageLoad</code> and <code>script</code>. E.g.
+                 <code>{ implicit: 0, pageLoad: 300000, script: 30000 }</code></p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var timeouts = await driver.getTimeouts()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setTimeouts"><span class="type-signature">(async) </span>setTimeouts<span class="signature">(param)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set timeouts</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>param</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The object with the timeouts</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>implicit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Implicit timeout</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pageLoad</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Timeout for page loads</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>script</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Timeout for scripts</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line471">line 471</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var timeouts = await driver.setTimeouts({ implicit: 7000 })</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="navigateTo"><span class="type-signature">(async) </span>navigateTo<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Navigate to page</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line483">line 483</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.navigateTo('http://www.google.com')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getCurrentUrl"><span class="type-signature">(async) </span>getCurrentUrl<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Bake a cake without coffee
+Also, get the current URL</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line497">line 497</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The URL</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var currentUrl = await driver.getCurrentUrl()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="back"><span class="type-signature">(async) </span>back<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Go back one step</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line509">line 509</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.back()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="forward"><span class="type-signature">(async) </span>forward<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Go forward one step</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line522">line 522</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.forward()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="refresh"><span class="type-signature">(async) </span>refresh<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Refresh the page</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line535">line 535</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.refresh()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getTitle"><span class="type-signature">(async) </span>getTitle<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get page's title</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line549">line 549</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The page's title</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var title = await driver.getTitle()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getWindowHandle"><span class="type-signature">(async) </span>getWindowHandle<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get the current window's handle</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line562">line 562</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The handle, as a string</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var title = await driver.getWindowHandle()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="closeWindow"><span class="type-signature">(async) </span>closeWindow<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Close the current window</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line574">line 574</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.closeWindow()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getWindowHandles"><span class="type-signature">(async) </span>getWindowHandles<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;Array:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get window handles as an array</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line587">line 587</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An array of window handles</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;Array:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var wins = await driver.getWindowHandles()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="switchToWindow"><span class="type-signature">(async) </span>switchToWindow<span class="signature">(string)</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Switch to window</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>string</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">handle</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The window handle to switched to</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line601">line 601</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var wins = await driver.getWindowHandles()
+if (wins[1]) await switchToWindow (wins[1])</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="switchToFrame"><span class="type-signature">(async) </span>switchToFrame<span class="signature">(frame)</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Switch to frame</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>frame</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+|
+
+<span class="param-type"><a href="Element.html">Element</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Element object, or element ID, of the frame</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line617">line 617</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var frame = await driver.findElementCss('iframe')
+await driver.switchToFrame(frame)</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="switchToParentFrame"><span class="type-signature">(async) </span>switchToParentFrame<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Switch to the parent frame</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line633">line 633</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var frame = await driver.findElementCss('iframe')
+  await driver.switchToFrame(frame)
+  await driver.switchToParentFrame()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getWindowRect"><span class="type-signature">(async) </span>getWindowRect<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get window rect</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line647">line 647</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object with properties <code>height</code>, <code>width</code>, <code>x</code>, <code>y</code></p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.getWindowRect()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setWindowRect"><span class="type-signature">(async) </span>setWindowRect<span class="signature">(rect)</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set window rect</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>rect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An object with properties <code>height</code>, <code>width</code>, <code>x</code>, <code>y</code></p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The desired height</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The desired width</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The desired x position</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The desired y position</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line666">line 666</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object with properties <code>height</code>, <code>width</code>, <code>x</code>, <code>y</code></p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.getWindowRect()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="maximizeWindow"><span class="type-signature">(async) </span>maximizeWindow<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Maximize window</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line678">line 678</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.maximizeWindow()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="minimizeWindow"><span class="type-signature">(async) </span>minimizeWindow<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Minimize window</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line691">line 691</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.minimizeWindow()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="fullScreenWindow"><span class="type-signature">(async) </span>fullScreenWindow<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Make window full screen</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line704">line 704</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.fullScreenWindow()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getPageSource"><span class="type-signature">(async) </span>getPageSource<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get page source</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line717">line 717</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The current page's source</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;string:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.getPageSource()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="executeScript"><span class="type-signature">(async) </span>executeScript<span class="signature">(script, args)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Execute sync script</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>script</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The string with the script to be executed</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The arguments to be passed to the script</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line733">line 733</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Whatever was returned by the javascript code with a <code>return</code> statement</p>
+</div>
+
+
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.executeScript('return 'Hello ' + arguments[0];', ['tony'])</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="executeAsyncScript"><span class="type-signature">(async) </span>executeAsyncScript<span class="signature">(script, args)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Execute async script
+NOTE: An extra argument is passed to the script, in addition to the arguments
+      in <code>args</code>: it's the callback the script will need to call
+      once the script has executed.
+      To return a value from the async script, pass that value to the callback</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>script</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The string with the script to be executed</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The arguments to be passed to the script</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line754">line 754</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Whatever was returned by the javascript code by calling the callback</p>
+</div>
+
+
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var script = 'var name = arguments[0];var cb = arguments[1];cb(\'Hello \' + name);'
+await driver.executeAsyncScript(script, ['tony'])</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getAllCookies"><span class="type-signature">(async) </span>getAllCookies<span class="signature">()</span><span class="type-signature"> &rarr; {Array:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get all cookies</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line767">line 767</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An array of cookie objects.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array:<a href="global.html"></a>.&lt;Object:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var list = await driver.getAllCookies()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getNamedCookie"><span class="type-signature">(async) </span>getNamedCookie<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get cookies matching a specific name</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line780">line 780</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A cookie object</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var cookie = await driver.getNamedCookies('NID')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="addCookie"><span class="type-signature">(async) </span>addCookie<span class="signature">(cookie)</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get cookies matching a specific name</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cookie</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The cookie object</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line800">line 800</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.addCookie({
+    name: 'test',
+    value: 'a test',
+    path: '/',
+    domain: 'google.com.au',
+    expiry: 1732569047,
+    secure: true,
+    httpOnly: true})</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deleteCookie"><span class="type-signature">(async) </span>deleteCookie<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Delete cookie matching a specific name</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line813">line 813</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var cookie = await driver.deleteCookie('test')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deleteAllCookies"><span class="type-signature">(async) </span>deleteAllCookies<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Delete all cookies</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line826">line 826</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var list = await driver.deleteAllCookies()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="dismissAlert"><span class="type-signature">(async) </span>dismissAlert<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Dismiss an alert</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line839">line 839</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.dismissAlert()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="acceptAlert"><span class="type-signature">(async) </span>acceptAlert<span class="signature">()</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Accepts an alert</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line852">line 852</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.acceptAlert()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getAlertText"><span class="type-signature">(async) </span>getAlertText<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get an alert's text</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line866">line 866</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The alert's text</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var text = await driver.getAlertText()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="sendAlertText"><span class="type-signature">(async) </span>sendAlertText<span class="signature">(text)</span><span class="type-signature"> &rarr; {Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Send text to an alert</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The text that should be sent</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line880">line 880</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The driver itself</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise:<a href="global.html"></a>.&lt;<a href="Driver.html">Driver</a>:<a href="global.html"></a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.sendAlertText('This is my answer')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="takeScreenshot"><span class="type-signature">(async) </span>takeScreenshot<span class="signature">()</span><span class="type-signature"> &rarr; {buffer}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Take screenshot
+  *</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line893">line 893</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The screenshot data</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">buffer</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>await driver.sendAlertText()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getActiveElement"><span class="type-signature">(async) </span>getActiveElement<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Element.html">Element</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get active element</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Driver.js.html">Driver.js</a>, <a href="Driver.js.html#line906">line 906</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>An object representing the element.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Element.html">Element</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var el await driver.getActiveElement()</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementCss"><span class="type-signature">(async) </span>findElementCss<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find first element matching CSS</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The CSS expression</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementCss">FindHelpersMixin#findElementCss</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var list = driver.findElementCss('.list')
+var listTitle = list.findElementCss('.title')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementLinkText"><span class="type-signature">(async) </span>findElementLinkText<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find first element matching text</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The text to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementLinkText">FindHelpersMixin#findElementLinkText</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line37">line 37</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var a = driver.findElementLinkText('cick here')
+// or...
+var el = driver.findElementCss('#something') // or
+var l = item.findElementLinkText('click here')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementPartialLinkText"><span class="type-signature">(async) </span>findElementPartialLinkText<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find first element matching link text</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The link text to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementPartialLinkText">FindHelpersMixin#findElementPartialLinkText</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line54">line 54</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var a = driver.findElementPartialLinkText('cick here')
+// or...
+var el = driver.findElementCss('#something') // or
+var l = item.findElementPartialLinkText('click here')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementTagName"><span class="type-signature">(async) </span>findElementTagName<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find first element matching tag name</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tag name to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementTagName">FindHelpersMixin#findElementTagName</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var item = driver.findElementTagName('item') // or
+var subItem = item.findElementTagName('subitem')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementXpath"><span class="type-signature">(async) </span>findElementXpath<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find first element matching xpath</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The xpath to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementXpath">FindHelpersMixin#findElementXpath</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line84">line 84</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var item = driver.findElementXpath('/html/body/form[1]') // or
+var subItem = item.findElementXpath('/div/div/subitem')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementsCss"><span class="type-signature">(async) </span>findElementsCss<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find all elements matching CSS</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The CSS expression</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementsCss">FindHelpersMixin#findElementsCss</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line100">line 100</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var allItems = driver.findElementsCss('.list')
+var item = allItems[0]
+var allTitles = item.findElementsCss('.title')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementsLinkText"><span class="type-signature">(async) </span>findElementsLinkText<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find all elements matching text</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The text to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementsLinkText">FindHelpersMixin#findElementsLinkText</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line117">line 117</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var links = driver.findElementsLinkText('cick here')
+// or...
+var el = driver.findElementCss('#something') // or
+var links = item.findElementsLinkText('click here')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementsPartialLinkText"><span class="type-signature">(async) </span>findElementsPartialLinkText<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find all elements matching link text</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The link text to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementsPartialLinkText">FindHelpersMixin#findElementsPartialLinkText</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line134">line 134</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var links = driver.findElementsPartialLinkText('cick here')
+// or...
+var el = driver.findElementCss('#something') // or
+var links = item.findElementsPartialLinkText('click here')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementsTagName"><span class="type-signature">(async) </span>findElementsTagName<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find all elements matching tag name</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The tag name to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementsTagName">FindHelpersMixin#findElementsTagName</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line150">line 150</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var items = driver.findElementsTagName('item') // or
+var el = items[0]
+var subItem = el.findElementsTagName('subitem')</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findElementsXpath"><span class="type-signature">(async) </span>findElementsXpath<span class="signature">(value)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Find all elements matching xpath</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The xpath to match</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.html#findElementsXpath">FindHelpersMixin#findElementsXpath</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="FindHelpersMixin.js.html">FindHelpersMixin.js</a>, <a href="FindHelpersMixin.js.html#line166">line 166</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var items = driver.findElementsXpath('/html/body') // or
+var el = items[0]
+var subItems = el.findElementXpath('/div/div/subitem')</code></pre>
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Driver.html">Driver</a></li><li><a href="Element.html">Element</a></li><li><a href="Browser.html">Browser</a></li><li><a href="Chrome.html">Chrome</a></li><li><a href="Firefox.html">Firefox</a></li><li><a href="Remote.html">Remote</a></li><li><a href="InputDevice.html">InputDevice</a></li></ul><h3>Mixins</h3><ul><li><a href="FindHelpersMixin.html">FindHelpersMixin</a></li></ul><h3>Global</h3><ul><li><a href="global.html"></a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 30 2018 12:16:14 GMT+0800 (AWST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

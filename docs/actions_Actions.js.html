@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: actions/Actions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: actions/Actions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const Pointer = require('./Pointer')
+const Keyboard = require('./Keyboard')
+const KEY = require('../KEY')
+
+class Actions {
+  constructor (...devices) {
+    var self = this
+    this.actions = []
+
+    this._compiled = false
+    this.compiledActions = []
+    // Assign `devices`. If not there, assign a default 'mouse' and 'keyboard'
+    if (Object.keys(devices).length) {
+      this.devices = devices
+    } else {
+      this.devices = [
+        new Pointer('mouse', Pointer.Type.MOUSE),
+        new Keyboard('keyboard')
+      ]
+    }
+
+    // Make up a _tickSetters object, which are the setters available
+    // after `driver.tick`, so that you can do `driver.tick.mouseDown()`
+    // The keys `tick` and `compile` are always available, as it's handy to
+    // get them as "chained" methods (so that you can do
+    // `actions.tick.mouseDown().tick.mouseUp()`
+    // The other keys will depend on the devices passed to the
+    // `Actions` constructor.
+    // With `Actions(new Pointer('fancyMouse'))` will establish
+    // `tick.fancyMouseUp()`, `tick.fancyMouseDown()` etc.
+    // By default, `new Actions()` will create two devices, called
+    // `mouse` and `keyboard`
+    //
+    this._tickSetters = {
+      get tick () {
+        // Return self
+        return self.tick
+      },
+      compile: self.compile.bind(self)
+    }
+    this.devices.forEach((device) => {
+      var deviceTickMethods = device._tickMethods()
+      Object.keys(deviceTickMethods).forEach((k) => {
+        this._tickSetters[device.id + k] = function (...args) {
+          if (!self._currentAction[device.id].virgin) {
+            throw new Error(`Action for device ${device.id} already defined (${device.id + k}) for this tick`)
+          }
+          var res = deviceTickMethods[k].apply(device, args)
+          self._currentAction[device.id] = res
+          return self._tickSetters
+        }
+        this._tickSetters['pause'] = function (duration = 0) {
+          self._currentAction[device.id] = { type: 'pause', duration }
+          return self._tickSetters
+        }
+      })
+    })
+  }
+
+  /** Constant returning special KEY characters (enter, etc.)
+   *  Constant are from the global variable {@link KEY}
+   *
+   * @example
+   * var actions = new Actions()
+   * actions.tick.keyboardDown(Actions.Key.ENTER).keyboardUp(Actions.Key.ENTER)
+   */
+  static get Key () { return KEY }
+
+  static get Keyboard () {
+    return Keyboard
+  }
+
+  static get Pointer () {
+    return Pointer
+  }
+
+  compile () {
+    if (this._compiled) return
+    this.compiledActions = []
+
+    this.devices.forEach((device) => {
+      var deviceActions = { actions: [] }
+      deviceActions.type = device.type
+      deviceActions.id = device.id
+      if (device.type === 'pointer') {
+        deviceActions.parameters = { pointerType: device.pointerType }
+      }
+
+      this.actions.forEach((action) => {
+        deviceActions.actions.push(action[ device.id ])
+      })
+      this.compiledActions.push(deviceActions)
+    })
+
+    // console.log('COMPILED ACTIONS:', require('util').inspect(this.compiledActions, {depth: 10}))
+  }
+
+  _setAction (deviceId, action) {
+    this._currentAction[ deviceId ] = action
+  }
+
+  get tick () {
+    // The tick you add a tick, this is no longer compiled
+    this._compiled = false
+
+    // Make up the action object. It will be an object where
+    // each key is a device ID.
+    // By default, ALL actions are set as 'pause'
+    var action = {}
+    this.devices.forEach((device) => {
+      action[ device.id ] = { type: 'pause', duration: 0, virgin: true }
+    })
+    this.actions.push(action)
+
+    // Set _currentAction, which is what the tickSetters will
+    // change
+    this._currentAction = action
+
+    // Return the _tickSetters, so that actions.tick.mouse() works
+    return this._tickSetters
+  }
+}
+
+exports = module.exports = Actions
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Driver.html">Driver</a></li><li><a href="Element.html">Element</a></li><li><a href="Browser.html">Browser</a></li><li><a href="Chrome.html">Chrome</a></li><li><a href="Firefox.html">Firefox</a></li><li><a href="Remote.html">Remote</a></li><li><a href="InputDevice.html">InputDevice</a></li></ul><h3>Mixins</h3><ul><li><a href="FindHelpersMixin.html">FindHelpersMixin</a></li></ul><h3>Global</h3><ul><li><a href="global.html"></a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 30 2018 12:16:13 GMT+0800 (AWST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
