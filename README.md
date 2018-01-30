@@ -54,6 +54,31 @@ To open up a driver, simply run:
 If everything goes well, you will see a Chrome window appear. Note that that `(async () => {` is there to make sure that you can use `await`.
 Please note that in this guide it will always be assumed that the code is placed in `// ...add more code here`, and that the async function, require and session creation won't be repeated.
 
-### Sessions on remote webdrivers and proxys
+### Sessions without spawning a process
 
+* What the new session object looks like
 TODO. Documentation will be finished in the first week of February 2018
+
+### Running amok with driver calls
+
+All calls that do not require elements
+
+### Returning elements
+
+Explain how elements are returned
+
+### Polling
+
+waitfor
+
+### Run Actions
+
+new Actions()... mouse, keyboard, etc. Copy&paste from API.
+
+### Pitfalls
+
+Not every browser implements everything. Check the status. Nag.
+
+### Go test!
+
+That's all you need -- time to get testing!
