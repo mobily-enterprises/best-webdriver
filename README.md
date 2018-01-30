@@ -55,3 +55,5 @@ If everything goes well, you will see a Chrome window appear. Note that that `(a
 Please note that in this guide it will always be assumed that the code is placed in `// ...add more code here`, and that the async function, require and session creation won't be repeated.
 
 ### Sessions on remote webdrivers and proxys
+
+TODO. Documentation will be finished in the first week of February 2018
