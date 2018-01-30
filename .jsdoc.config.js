@@ -1,6 +1,12 @@
 module.exports = {
+  tags: {
+    allowUnknownTags: true,
+    dictionaries: ['jsdoc']
+  },
   opts: {
-    destination: './_out'// recurse: true
+    destination: './_out',
+    encoding: 'utf8',
+    recurse: false
   },
   source: {
     include: [
@@ -15,15 +21,14 @@ module.exports = {
       'src/browsers/Remote.js',
       'src/actions/Actions.js',
       'src/actions/InputDevice.js',
-      'src/actions/Keyboard.js',
-      'src/actions/Pointer.js'
-    ]
+      'src/actions/Pointer.js',
+      'src/actions/Keyboard.js'
+    ],
+    excludePattern: '(node_modules/|docs)'
   },
   plugins: ['plugins/markdown'],
   templates: {
     referenceTitle: 'Best Webdriver API',
     disableSort: true
   }
-
-  // plugins: ["plugins/summarize"]
 }
