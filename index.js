@@ -4,6 +4,8 @@ const browser = require('./src/browsers/index')
 
 exports = module.exports = { Driver, browser, Actions }
 
+// "docs": "rm -rf docs/*;node_modules/jsdoc/jsdoc.js --template node_modules/jsdoc-template -c .jsdoc.config.js -R README.md -P package.json; mv _out/*/*/** docs;rm -rf _out;touch docs/.nojekyll"
+
 /*
   [X] Install JSDoc, check generated documentation
   [X] Finish development off
@@ -18,12 +20,14 @@ exports = module.exports = { Driver, browser, Actions }
     [X] Write examples for findElementHelpers
     [X] All gloval consts
     [X] Split into smaller files
-    [-] Document remaining methods
+    [X] Document remaining methods
       [X] Document Browsers (Chrome, Firefox, Generic), decide how to document them
       [X] Put API online on Github pages
-      [ ] Document InputDevice
-      [ ] Document Actions
-      [ ] Check other JSDoc themes, hopefully better
+      [X] Check other JSDoc themes, hopefully better
+      [X] Document InputDevice
+      [X] Document Actions
+      [X] Make sure Globals are indexed right
+      [X] Document Pointer and Keyboard in Actions
     [ ] Write guide in README.md
   [X] Submit code for review on codereview
   [ ] Write initial tests (ah!)
