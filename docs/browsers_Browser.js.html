@@ -1,32 +1,93 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: browsers/Browser.js</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>
+      browsers/Browser.js - Documentation
+  </title>
+
+  <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+  
+
+  <!-- start Mixpanel -->
+  <script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
+  0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+  for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+  mixpanel.init("1919205b2da72e4da3b9b6639b444d59");</script>
+  <!-- end Mixpanel -->
 </head>
 
 <body>
+  <svg style="display: none;">
+    <defs>
+      <symbol id="linkIcon" fill="#706d77" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+      </symbol>
+    </defs>
+  </svg>
 
-<div id="main">
+  <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+  <label for="nav-trigger" class="navicon-button x">
+    <div class="navicon"></div>
+  </label>
 
-    <h1 class="page-title">Source: browsers/Browser.js</h1>
+  <label for="nav-trigger" class="overlay"></label>
 
+  <div class="top-nav-wrapper">
+    <ul>
+      <li >
+        <a href="index.html">
+          
+            <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+          
+          
+        </a>
+      </li>
+
+      
+
+    </ul>
+  </div>
+
+  <nav>
+    <h3 class="reference-title">
+      Best Webdriver API
+    </h3>
+
+    <h3>Classes</h3><ul><li id="Driver-nav"><a href="Driver.html">Driver</a><ul class='methods'><li data-type="method" id="Driver-waitFor-nav"><a href="Driver.html#waitFor">waitFor</a></li><li data-type="method" id="Driver-startWebDriver-nav"><a href="Driver.html#startWebDriver">startWebDriver</a></li><li data-type="method" id="Driver-stopWebDriver-nav"><a href="Driver.html#stopWebDriver">stopWebDriver</a></li><li data-type="method" id="Driver-newSession-nav"><a href="Driver.html#newSession">newSession</a></li><li data-type="method" id="Driver-deleteSession-nav"><a href="Driver.html#deleteSession">deleteSession</a></li><li data-type="method" id="Driver-status-nav"><a href="Driver.html#status">status</a></li><li data-type="method" id="Driver-findElement-nav"><a href="Driver.html#findElement">findElement</a></li><li data-type="method" id="Driver-findElements-nav"><a href="Driver.html#findElements">findElements</a></li><li data-type="method" id="Driver-performActions-nav"><a href="Driver.html#performActions">performActions</a></li><li data-type="method" id="Driver-releaseActions-nav"><a href="Driver.html#releaseActions">releaseActions</a></li><li data-type="method" id="Driver-sleep-nav"><a href="Driver.html#sleep">sleep</a></li><li data-type="method" id="Driver-getTimeouts-nav"><a href="Driver.html#getTimeouts">getTimeouts</a></li><li data-type="method" id="Driver-setTimeouts-nav"><a href="Driver.html#setTimeouts">setTimeouts</a></li><li data-type="method" id="Driver-navigateTo-nav"><a href="Driver.html#navigateTo">navigateTo</a></li><li data-type="method" id="Driver-getCurrentUrl-nav"><a href="Driver.html#getCurrentUrl">getCurrentUrl</a></li><li data-type="method" id="Driver-back-nav"><a href="Driver.html#back">back</a></li><li data-type="method" id="Driver-forward-nav"><a href="Driver.html#forward">forward</a></li><li data-type="method" id="Driver-refresh-nav"><a href="Driver.html#refresh">refresh</a></li><li data-type="method" id="Driver-getTitle-nav"><a href="Driver.html#getTitle">getTitle</a></li><li data-type="method" id="Driver-getWindowHandle-nav"><a href="Driver.html#getWindowHandle">getWindowHandle</a></li><li data-type="method" id="Driver-closeWindow-nav"><a href="Driver.html#closeWindow">closeWindow</a></li><li data-type="method" id="Driver-getWindowHandles-nav"><a href="Driver.html#getWindowHandles">getWindowHandles</a></li><li data-type="method" id="Driver-switchToWindow-nav"><a href="Driver.html#switchToWindow">switchToWindow</a></li><li data-type="method" id="Driver-switchToFrame-nav"><a href="Driver.html#switchToFrame">switchToFrame</a></li><li data-type="method" id="Driver-switchToParentFrame-nav"><a href="Driver.html#switchToParentFrame">switchToParentFrame</a></li><li data-type="method" id="Driver-getWindowRect-nav"><a href="Driver.html#getWindowRect">getWindowRect</a></li><li data-type="method" id="Driver-setWindowRect-nav"><a href="Driver.html#setWindowRect">setWindowRect</a></li><li data-type="method" id="Driver-maximizeWindow-nav"><a href="Driver.html#maximizeWindow">maximizeWindow</a></li><li data-type="method" id="Driver-minimizeWindow-nav"><a href="Driver.html#minimizeWindow">minimizeWindow</a></li><li data-type="method" id="Driver-fullScreenWindow-nav"><a href="Driver.html#fullScreenWindow">fullScreenWindow</a></li><li data-type="method" id="Driver-getPageSource-nav"><a href="Driver.html#getPageSource">getPageSource</a></li><li data-type="method" id="Driver-executeScript-nav"><a href="Driver.html#executeScript">executeScript</a></li><li data-type="method" id="Driver-executeAsyncScript-nav"><a href="Driver.html#executeAsyncScript">executeAsyncScript</a></li><li data-type="method" id="Driver-getAllCookies-nav"><a href="Driver.html#getAllCookies">getAllCookies</a></li><li data-type="method" id="Driver-getNamedCookie-nav"><a href="Driver.html#getNamedCookie">getNamedCookie</a></li><li data-type="method" id="Driver-addCookie-nav"><a href="Driver.html#addCookie">addCookie</a></li><li data-type="method" id="Driver-deleteCookie-nav"><a href="Driver.html#deleteCookie">deleteCookie</a></li><li data-type="method" id="Driver-deleteAllCookies-nav"><a href="Driver.html#deleteAllCookies">deleteAllCookies</a></li><li data-type="method" id="Driver-dismissAlert-nav"><a href="Driver.html#dismissAlert">dismissAlert</a></li><li data-type="method" id="Driver-acceptAlert-nav"><a href="Driver.html#acceptAlert">acceptAlert</a></li><li data-type="method" id="Driver-getAlertText-nav"><a href="Driver.html#getAlertText">getAlertText</a></li><li data-type="method" id="Driver-sendAlertText-nav"><a href="Driver.html#sendAlertText">sendAlertText</a></li><li data-type="method" id="Driver-takeScreenshot-nav"><a href="Driver.html#takeScreenshot">takeScreenshot</a></li><li data-type="method" id="Driver-getActiveElement-nav"><a href="Driver.html#getActiveElement">getActiveElement</a></li><li data-type="method" id="Driver-findElementCss-nav"><a href="Driver.html#findElementCss">findElementCss</a></li><li data-type="method" id="Driver-findElementLinkText-nav"><a href="Driver.html#findElementLinkText">findElementLinkText</a></li><li data-type="method" id="Driver-findElementPartialLinkText-nav"><a href="Driver.html#findElementPartialLinkText">findElementPartialLinkText</a></li><li data-type="method" id="Driver-findElementTagName-nav"><a href="Driver.html#findElementTagName">findElementTagName</a></li><li data-type="method" id="Driver-findElementXpath-nav"><a href="Driver.html#findElementXpath">findElementXpath</a></li><li data-type="method" id="Driver-findElementsCss-nav"><a href="Driver.html#findElementsCss">findElementsCss</a></li><li data-type="method" id="Driver-findElementsLinkText-nav"><a href="Driver.html#findElementsLinkText">findElementsLinkText</a></li><li data-type="method" id="Driver-findElementsPartialLinkText-nav"><a href="Driver.html#findElementsPartialLinkText">findElementsPartialLinkText</a></li><li data-type="method" id="Driver-findElementsTagName-nav"><a href="Driver.html#findElementsTagName">findElementsTagName</a></li><li data-type="method" id="Driver-findElementsXpath-nav"><a href="Driver.html#findElementsXpath">findElementsXpath</a></li></ul></li><li id="Element-nav"><a href="Element.html">Element</a><ul class='methods'><li data-type="method" id="Element-waitFor-nav"><a href="Element.html#waitFor">waitFor</a></li><li data-type="method" id="Element-findElement-nav"><a href="Element.html#findElement">findElement</a></li><li data-type="method" id="Element-findElements-nav"><a href="Element.html#findElements">findElements</a></li><li data-type="method" id="Element-isSelected-nav"><a href="Element.html#isSelected">isSelected</a></li><li data-type="method" id="Element-getAttribute-nav"><a href="Element.html#getAttribute">getAttribute</a></li><li data-type="method" id="Element-getProperty-nav"><a href="Element.html#getProperty">getProperty</a></li><li data-type="method" id="Element-getCssValue-nav"><a href="Element.html#getCssValue">getCssValue</a></li><li data-type="method" id="Element-getText-nav"><a href="Element.html#getText">getText</a></li><li data-type="method" id="Element-getTagName-nav"><a href="Element.html#getTagName">getTagName</a></li><li data-type="method" id="Element-getRect-nav"><a href="Element.html#getRect">getRect</a></li><li data-type="method" id="Element-isEnabled-nav"><a href="Element.html#isEnabled">isEnabled</a></li><li data-type="method" id="Element-click-nav"><a href="Element.html#click">click</a></li><li data-type="method" id="Element-clear-nav"><a href="Element.html#clear">clear</a></li><li data-type="method" id="Element-sendKeys-nav"><a href="Element.html#sendKeys">sendKeys</a></li><li data-type="method" id="Element-takeScreenshot-nav"><a href="Element.html#takeScreenshot">takeScreenshot</a></li><li data-type="method" id="Element-findElementCss-nav"><a href="Element.html#findElementCss">findElementCss</a></li><li data-type="method" id="Element-findElementLinkText-nav"><a href="Element.html#findElementLinkText">findElementLinkText</a></li><li data-type="method" id="Element-findElementPartialLinkText-nav"><a href="Element.html#findElementPartialLinkText">findElementPartialLinkText</a></li><li data-type="method" id="Element-findElementTagName-nav"><a href="Element.html#findElementTagName">findElementTagName</a></li><li data-type="method" id="Element-findElementXpath-nav"><a href="Element.html#findElementXpath">findElementXpath</a></li><li data-type="method" id="Element-findElementsCss-nav"><a href="Element.html#findElementsCss">findElementsCss</a></li><li data-type="method" id="Element-findElementsLinkText-nav"><a href="Element.html#findElementsLinkText">findElementsLinkText</a></li><li data-type="method" id="Element-findElementsPartialLinkText-nav"><a href="Element.html#findElementsPartialLinkText">findElementsPartialLinkText</a></li><li data-type="method" id="Element-findElementsTagName-nav"><a href="Element.html#findElementsTagName">findElementsTagName</a></li><li data-type="method" id="Element-findElementsXpath-nav"><a href="Element.html#findElementsXpath">findElementsXpath</a></li></ul></li><li id="Browser-nav"><a href="Browser.html">Browser</a><ul class='methods'><li data-type="method" id="Browser-setAlwaysMatchKey-nav"><a href="Browser.html#setAlwaysMatchKey">setAlwaysMatchKey</a></li><li data-type="method" id="Browser-addFirstMatch-nav"><a href="Browser.html#addFirstMatch">addFirstMatch</a></li><li data-type="method" id="Browser-setRootKey-nav"><a href="Browser.html#setRootKey">setRootKey</a></li><li data-type="method" id="Browser-getSessionParameters-nav"><a href="Browser.html#getSessionParameters">getSessionParameters</a></li><li data-type="method" id="Browser-run-nav"><a href="Browser.html#run">run</a></li></ul></li><li id="Chrome-nav"><a href="Chrome.html">Chrome</a><ul class='methods'><li data-type="method" id="Chrome-setAlwaysMatchKey-nav"><a href="Chrome.html#setAlwaysMatchKey">setAlwaysMatchKey</a></li><li data-type="method" id="Chrome-addFirstMatch-nav"><a href="Chrome.html#addFirstMatch">addFirstMatch</a></li><li data-type="method" id="Chrome-setRootKey-nav"><a href="Chrome.html#setRootKey">setRootKey</a></li><li data-type="method" id="Chrome-getSessionParameters-nav"><a href="Chrome.html#getSessionParameters">getSessionParameters</a></li><li data-type="method" id="Chrome-run-nav"><a href="Chrome.html#run">run</a></li></ul></li><li id="Firefox-nav"><a href="Firefox.html">Firefox</a><ul class='methods'><li data-type="method" id="Firefox-setAlwaysMatchKey-nav"><a href="Firefox.html#setAlwaysMatchKey">setAlwaysMatchKey</a></li><li data-type="method" id="Firefox-addFirstMatch-nav"><a href="Firefox.html#addFirstMatch">addFirstMatch</a></li><li data-type="method" id="Firefox-setRootKey-nav"><a href="Firefox.html#setRootKey">setRootKey</a></li><li data-type="method" id="Firefox-getSessionParameters-nav"><a href="Firefox.html#getSessionParameters">getSessionParameters</a></li><li data-type="method" id="Firefox-run-nav"><a href="Firefox.html#run">run</a></li></ul></li><li id="Remote-nav"><a href="Remote.html">Remote</a><ul class='methods'><li data-type="method" id="Remote-setAlwaysMatchKey-nav"><a href="Remote.html#setAlwaysMatchKey">setAlwaysMatchKey</a></li><li data-type="method" id="Remote-addFirstMatch-nav"><a href="Remote.html#addFirstMatch">addFirstMatch</a></li><li data-type="method" id="Remote-setRootKey-nav"><a href="Remote.html#setRootKey">setRootKey</a></li><li data-type="method" id="Remote-getSessionParameters-nav"><a href="Remote.html#getSessionParameters">getSessionParameters</a></li><li data-type="method" id="Remote-run-nav"><a href="Remote.html#run">run</a></li></ul></li><li id="InputDevice-nav"><a href="InputDevice.html">InputDevice</a></li></ul><h3 id="global-nav">Global</h3><ul><li><a href="global.html"></a></li></ul>
+  </nav>
+
+  <div id="main">
+    
+      <h1 class="page-title">
+        browsers/Browser.js
+      </h1>
     
 
-
-
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>
+      
+
+<section>
+  <article>
+    <pre class="prettyprint source linenums"><code>
 const utils = require('../utils')
 const DO = require('deepobject')
 
@@ -194,25 +255,24 @@ class Browser {
 }
 exports = module.exports = Browser
 </code></pre>
-        </article>
-    </section>
+  </article>
+</section>
+
+    
 
 
+  </div>
 
+  <br class="clear">
 
-</div>
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+  </footer>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Driver.html">Driver</a></li><li><a href="Element.html">Element</a></li><li><a href="Browser.html">Browser</a></li><li><a href="Chrome.html">Chrome</a></li><li><a href="Firefox.html">Firefox</a></li><li><a href="Remote.html">Remote</a></li><li><a href="InputDevice.html">InputDevice</a></li></ul><h3>Mixins</h3><ul><li><a href="FindHelpersMixin.html">FindHelpersMixin</a></li></ul><h3>Global</h3><ul><li><a href="global.html"></a></li></ul>
-</nav>
+  <script src="scripts/linenumber.js"></script>
+  <script src="scripts/pagelocation.js"></script>
 
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jan 30 2018 12:29:35 GMT+0800 (AWST)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+  
+  
 </body>
 </html>
