@@ -1,9 +1,23 @@
 const Browser = require('./Browser')
 const utils = require('../utils')
 
-// https://github.com/mozilla/geckodriver/blob/master/README.md
-// https://github.com/mozilla/geckodriver
-// STATUS: https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status
+/**
+ * Class that represents the {@link https://github.com/mozilla/geckodriver Firefox webdriver}.
+ *
+ *
+ * It implements the `run()` method, which will run `geckodriver` or `geckodriver.exe`
+ * (depending on the platform).
+ * It also:
+ *  * passed the `specific` properties onto the `alwaysMatch.moz:firefoxOptions`. Check
+ *    {@link https://github.com/mozilla/geckodriver#mozfirefoxoptions Firefox's specific options}
+ *    to see what you can pass as keys to the `specific` parameter
+ *
+ * Check the {@link https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status Status of Firefox}
+ * in terms of implementation of the w3c specs
+ *
+ * @extends Browser
+ */
+
 class Firefox extends Browser {
   constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
     super(...arguments)
@@ -25,6 +39,9 @@ class Firefox extends Browser {
     }
   }
 
+  /**
+   * @inheritdoc
+   */
   run (options) {
     var executable = process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver'
     options.args.push('--port=' + options.port)

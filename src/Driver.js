@@ -34,7 +34,7 @@ var Driver = class {
    * @param {Object} opt Options to configure the driver
    * @param {string} opt.hostname=127.0.0.1 The hostname to connect to.
    * @param {number} opt.port The port. If not specified, a free port will automatically be found
-   * @param {number} opt.pollInterval=300 How many milliseconds to wait between each poll when using `waitFor()`
+   * @param {number} opt.pollInterval=300 How many milliseconds to wait between each poll when using `waitFor()` by default
    * @param {boolean} opt.spawn=true If true, it will spawn a new webdriver process when a new session is created
    * @param {Object} opt.env=process.env (If spawn === true) The environment to pass to the spawn webdriver
    * @param {string} opt.stdio=ignore (If spawn === true) The default parameter to pass to {@link https://nodejs.org/api/child_process.html#child_process_options_stdio stdio} when spawning new preocess.

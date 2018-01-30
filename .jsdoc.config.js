@@ -1,7 +1,24 @@
 module.exports = {
   opts: {
-    recurse: true
+    destination: './_out'// recurse: true
   },
-  plugins: ["plugins/markdown"],
+  source: {
+    include: [
+      'src/FindHelpersMixin.js',
+      'src/KEY.js',
+      'src/USING.js',
+      'src/Driver.js',
+      'src/Element.js',
+      'src/browsers/Browser.js',
+      'src/browsers/Chrome.js',
+      'src/browsers/Firefox.js',
+      'src/browsers/Remote.js',
+      'src/actions/Actions.js',
+      'src/actions/InputDevice.js',
+      'src/actions/Keyboard.js',
+      'src/actions/Pointer.js'
+    ]
+  },
+  plugins: ['plugins/markdown']
   // plugins: ["plugins/summarize"]
 }

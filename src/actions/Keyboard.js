@@ -1,6 +1,5 @@
 const InputDevice = require('./InputDevice')
 
-//  KEYBOARD: "pause", "keyUp", "keyDown"
 class Keyboard extends InputDevice {
   constructor (id) {
     super(id)

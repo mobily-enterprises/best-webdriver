@@ -3,7 +3,7 @@ const utils = require('./utils')
 const KEY = require('./KEY')
 
 /**
- * The base class for Elements
+* The base class for Elements
  * @mixes FindHelpersMixin
  * @augments FindHelpersMixin
  *

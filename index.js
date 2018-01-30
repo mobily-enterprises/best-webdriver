@@ -19,7 +19,7 @@ exports = module.exports = { Driver, browser, Actions }
     [X] All gloval consts
     [X] Split into smaller files
     [-] Document remaining methods
-      [-] Document Browsers (Chrome, Firefox, Generic), decide how to document them
+      [X] Document Browsers (Chrome, Firefox, Generic), decide how to document them
       [ ] Document InputDevice
       [ ] Document Actions
       [ ] Put API online on Github pages

@@ -1,9 +1,24 @@
 const Browser = require('./Browser')
 const utils = require('../utils')
 
-// https://sites.google.com/a/chromium.org/chromedriver
-// https://sites.google.com/a/chromium.org/chromedriver/capabilities
-// STATUS: https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md
+/**
+ * Class that represents the {@link https://sites.google.com/a/chromium.org/chromedriver/ Chrome webdriver}.
+ *
+ *
+ * It implements the `run()` method, which will run `chromewebdriver` or `chromewebdriver.exe`
+ * (depending on the platform).
+ * It also:
+ *  * makes absolute sure that `chromeOptions.w3c` is set to `true`. This is crucial so that chrome
+ *    is compliant with the w3c webdriver standard, which is what this API expects.
+ *  * passed the `specific` properties onto the `alwaysMatch.chromeOptions`. Check
+ *    {@link https://sites.google.com/a/chromium.org/chromedriver/capabilities#TOC-chromeOptions-object Chrome's specific options}
+ *    to see what you can pass as keys to the `specific` parameter
+ *
+ * Check the {@link https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md Status of Chrome}
+ * in terms of implementation of the w3c specs
+ *
+ * @extends Browser
+ */
 class Chrome extends Browser {
   constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
     super(...arguments)
@@ -25,6 +40,9 @@ class Chrome extends Browser {
     }
   }
 
+  /**
+   * @inheritdoc
+   */
   run (options) {
     var executable = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
     options.args.push('--port=' + options.port)

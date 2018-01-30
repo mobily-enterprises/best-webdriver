@@ -1,7 +1,6 @@
 const InputDevice = require('./InputDevice')
 const Element = require('../Element')
 
-//  POINTER: "pause", "pointerUp", "pointerDown", "pointerMove", or "pointerCancel
 class Pointer extends InputDevice {
   constructor (id, pointerType) {
     super(id)

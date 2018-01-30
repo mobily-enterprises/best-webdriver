@@ -8,13 +8,15 @@ const DO = require('deepobject')
  */
 class Browser {
   /**
-   * Class to create Browser objects, which will be used to pilot the passed browser.
+   * Base class for all browser objects such as {@link browsers/Chrome Chrome}, {@link Firefox Firefox} and {@link Remote Remote}
    *
-   * When creating a session, the webdriver accepts an object parameter.
-   * The special key `capabilities`, which include `alwaysMatch` (an object) and `firstMatch` (an array),
-   * determine the requirements for the testing browser.
+   * The main aim of Browser objects is to:
    *
-   * If no arguments are passed to the constructor, the parameter object will look like this:
+   *  * Run the corresponding webdriver process (e.g. `geckodriver` for Firefox, `chromedriver` for Chrome, etc.).
+   *  * Provide a configuration object that will be used when creating a new session with the webdriver
+   *
+   *
+   *  A basic (empty) session configuration object looks like this:
    *
    *        {
    *          capabilities: {
@@ -23,25 +25,34 @@ class Browser {
    *          }
    *        }
    *
-   * The `alwaysMatch` property can have the following values:
-   * * `browserName` -- string -- Identifies the user agent.
-   * * `browserVersion` -- string -- Identifies the version of the user agent.
-   * * `platformName` -- string -- Identifies the operating system of the endpoint node.
-   * * `acceptInsecureCerts` -- boolean -- Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session.
-   * * `pageLoadStrategy`  --string -- Defines the current session’s page load strategy.
-   * * `proxy` -- Object -- Defines the current session’s proxy configuration.
-   * * `setWindowRect` -- boolean -- Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows.
-   * * `timeouts` -- Object -- Describes the timeouts imposed on certain session operations. Can have keys `implicit`, `pageLoad` or `script`
-   * * `unhandledPromptBehavior` -- string -- Describes the current session’s user prompt handler. It can be:
-   *    `dismiss`, `accept`, `dismiss and notify`, `accept and notify`, `ignore`
+   * Such configuration object is especially important when you connect to a webdriver proxy, which then
+   * forward your requests to the right webdriver depending on the required capabilities.
    *
-   * The last parameter `specific` is used by inheriting classes, to set browser-specific options. For example:
+   * When connecting straight to a locally launched webdriver process, the main use of the session configuraiton
+   * object is the setting of browser-specific information (there would be little point in running the Chrome
+   * webdriver and impose `firefox` as the `browserName`...).
+   *
+   * For example:
+   *
    * * In Chrome, having `specific` set as `{ detach: false }` will set
    * `capabilities.alwaysMatch.chromeOptions.detach` to `false`.
    * * In Firefox, having `specific` set as `{ profile: 'tony' }` will set
    * `capabilities.alwaysMatch.moz:firefoxOptions.profile` to `tony`
    *
    * @param {Object} alwaysMatch The alwaysMatch object passed to the webdriver
+   * @param {string} alwaysMatch.browserName The user agent
+   * @param {string} alwaysMatch.browserVersion Identifies the version of the user agent
+   * @param {string} alwaysMatch.platformName Identifies the operating system of the endpoint node
+   * @param {boolean} alwaysMatch.acceptInsecureCerts Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session
+   * @param {string} alwaysMatch.pageLoadStrategy Defines the current session’s page load strategy. It can be `none`, `eager` or `normal`
+   * @param {object} alwaysMatch.proxy Defines the current session’s proxy configuration. See the
+                     {@link https://w3c.github.io/webdriver/webdriver-spec.html#dfn-proxy-configuration spec's
+                     proxy options}
+   * @param {boolean} alwaysMatch.setWindowRect Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows
+   * @param {object} alwaysMatch.timeouts Describes the timeouts imposed on certain session operations. Can have keys `implicit`, `pageLoad` or `script`
+   * @param {string} alwaysMatch.unhandledPromptBehavior Describes the current session’s user prompt handler. It
+   *                 can be: `dismiss`, `accept`, `dismiss and notify`, `accept and notify`, `ignore`
+
    * @param {Array} firstMatch The firstMatch array passed to the webdriver
    * @param {Object} root The keys of this object will be copied over the webdriver object
    * @param {Object} specific Specific keys for the browser
@@ -141,7 +152,7 @@ class Browser {
   }
 
   /**
-   * Run the actual webdriver's executable.
+   * Run the actual webdriver's executable, depending on the browser
    *
    * @param {Object} opt Options to configure the webdriver executable
    * @param {number} opt.port The port the webdriver executable will listen to
