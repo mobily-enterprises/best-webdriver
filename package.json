@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "apiDocs":"rm -rf docs/*;node_modules/jsdoc/jsdoc.js -c .jsdoc.config.js -R README.md -P package.json; mv _out/*/*/** docs;rm -rf _out"
+    "apiDocs":"rm -rf docs/*;node_modules/jsdoc/jsdoc.js -c .jsdoc.config.js -R README.md -P package.json; mv _out/*/*/** docs;rm -rf _out;touch docs/.nojekyll"
   },
   "repository": {
     "type": "git",
