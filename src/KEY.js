@@ -5,10 +5,13 @@
  * A constant used by {@link Actions} and {@link Element}
  * which defines all special keys usable with
  * {@link Element#sendKeys} and `keyUp`/`keyDown`
+ *
+ * Look at this file's source to see all possible values
+ *
  * @constant
  *
  */
-exports = module.exports = {
+var KEY = exports = module.exports = { // eslint-disable-line no-unused-vars
   NULL:         '\uE000',
   CANCEL:       '\uE001',  // ^break
   HELP:         '\uE002',
