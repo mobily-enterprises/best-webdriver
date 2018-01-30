@@ -19,6 +19,11 @@ module.exports = {
       'src/actions/Pointer.js'
     ]
   },
-  plugins: ['plugins/markdown']
+  plugins: ['plugins/markdown'],
+  templates: {
+    referenceTitle: 'Best Webdriver API',
+    disableSort: true
+  }
+
   // plugins: ["plugins/summarize"]
 }

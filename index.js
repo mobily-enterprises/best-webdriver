@@ -20,9 +20,9 @@ exports = module.exports = { Driver, browser, Actions }
     [X] Split into smaller files
     [-] Document remaining methods
       [X] Document Browsers (Chrome, Firefox, Generic), decide how to document them
+      [X] Put API online on Github pages
       [ ] Document InputDevice
       [ ] Document Actions
-      [ ] Put API online on Github pages
       [ ] Check other JSDoc themes, hopefully better
     [ ] Write guide in README.md
   [X] Submit code for review on codereview
