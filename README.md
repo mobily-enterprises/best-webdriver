@@ -55,7 +55,11 @@ If everything goes well, you will see a Chrome window appear. Note that that `(a
 
 _Please note that in this guide it will always be assumed that the code is placed in `// ...add more code here`, and that the async function, require and session creation won't be repeated._
 
-### Session options
+### Understanding session options
+
+Understanding how sessions are created is crucial. This section explains the session object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic Remote browser.
+
+#### The session object (and helper methods)
 
 Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:
 
@@ -87,26 +91,28 @@ You will see:
 
 This is the configuration object created by default by the Chrome browser. Note that `chromeOptions` under `alwaysMatch`: they are Chrome-specific options. In this case, `w3c:true` is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).
 
-The {@link Browser}'s constructor call accepts four parameters: `alwaysMatch`, `firstMatch`, `root`, `specific` which will define the corresponding values in the session parameter (keep in mind that `root` keys wil be copied onto the object's root).  
+The {@link Browser}'s constructor call accepts four parameters: `alwaysMatch`, `firstMatch`, `root`, `specific` which will define the corresponding values in the session parameter (keep in mind that `root` keys will be copied onto the object's root).  
 So, you could run:
 
     var chrome = new browser.Chrome(
-      // alwaysMatch
+      // This first argument will set alwaysMatch
       {
         pageLoadStrategy: 'eager'  
       },
 
-      // firstMatch
+      // This second argument will set firstMatch
       {
         platformName: 'linux'
       },
 
-      // Object's root
+      // This third argument will add keys to be object
+      // Note: shallow copy is performed
       {
         login: 'merc',
         password: 'youwish'
       },
 
+      // This fourth argument will be placed as browser-specific options
       {
         detach: true  
       }
@@ -134,37 +140,28 @@ You will see:
 
 Notice that:
 
-* the `pageLoadStrategy` property was added under `alwaysMatch`
-* the object `{platformName: 'linux'}` was placed as an element of the `firstMatch` array
-* the root options `{login: 'merc', password: 'youwish'}` ended up in the object's top level keys
-* `{ detach: true }` ended up under `chromeOptions`
-* The default `{ w3c: true }` option is there
+* (first argument) the `pageLoadStrategy` property was added under `alwaysMatch`
+* (second argument) the object `{platformName: 'linux'}` was placed as an element of the `firstMatch` array
+* (third argument) the root options `{login: 'merc', password: 'youwish'}` ended up in the object's top level keys
+* (fourth argument) `{ detach: true }` ended up under `chromeOptions`
+* The default `{ w3c: true }` option is there so that Chrome "speaks" w3c
 
-You can set up options after creating the browser object. For example, you can set browser-specific options by passing parameters to `specific`, or setting browser-specific options by calling {@link Browser#setSpecificKey}:
+You can also set the session options using the setting methods:
 
-    // Straight session parameters out of the box
     var chrome = new browser.Chrome()
-
-    // Adding chrome-specific settings to the session parameter
+    chrome.setAlwaysMatchKey('pageLoadStrategy', 'eager')
+    chrome.addFirstMatch({ platformName: 'linux' })
+    chrome.setRootKey('login', 'merc')
+    chrome.setRootKey('password', 'youwish')
     chrome.setSpecificKey('detach', true)
 
-    // Show the session parameters
     var params = chrome.getSessionParameters()
     console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))
 
-Will result in:
 
-    {
-      capabilities: {
-        alwaysMatch: {
-          chromeOptions: { w3c: true, detach: true },
-          browserName: 'chrome'
-        },
-       firstMatch: []
-      }
-    }
+Remember that in {@link Browser#setAlwaysMatchKey}, {@link Browser#setRootKey} and {@link Browser#setSpecificKey}, the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatchKey('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
 
-Remember that in {@link Browser#setSpecificKey}, the key can actually be a path; if path is has a . (e.g. `something.other`), the property `sessionParameters.something.other` will be set.
+#### Running the API without spawning a webdriver
 
 You might decide to use this API _without_ spawning a process for the chromedriver.
 This is especially handy if you are using for example an online service, or a webdriver already running on a different machine.
@@ -181,6 +178,8 @@ Here is how you do it:
       host: '10.10.10.45',
       port: 4444
     })
+
+#### The generic "Remote" browser
 
 Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called {@link Remote}, which is a "blank" browser without the ability to spawn a specific webdriver, and without and specific options.
 
@@ -211,30 +210,45 @@ You could also do:
       port: 4444
     })
 
-
 ### Running amok with driver calls
 
-All calls that do not require elements
+If you have the following chunk of code:
+
+    // Create a new driver object, using the Chrome browser
+    var driver = new Driver(new browser.Chrome())
+
+    // Create a new session. This will also run `chromewebdriver` for you
+    await driver.newSession()
+
+You can then run commands using the webdriver.
+There are three types of call:
+
+* Calls that will deal with parameters and values on the currently opened page
+* Calls that will return objects {@link Driver#findElement} and {@link Driver#findElement}
+* Call to run user {@link Actions}
+
+Finally, all calls can be "polled", which implies re-running the command at intervals until it succeeds, or until it fails (after it reaches a timeout).
+
+TODO: Show how some basic commands work
 
 ### Returning elements
 
-Explain how elements are returned
-
-### Polling
-
-waitfor
+TODO: Explain how elements are returned, what to do with them
 
 ### Run Actions
 
-new Actions()... mouse, keyboard, etc. Copy&paste from API.
+TODO: explain new Actions()... mouse, keyboard, etc. with some copy&paste from API.
 
-### Pitfalls
+### Polling
 
-Not every browser implements everything. Check the status. Nag.
+TODO: explain waitfor
+
+### Limitations
+
+The main limitation of this API is that _it will only ever speak in w3c webdriver protocol_. For example, as of today Chrome doesn't yet implement {@link Actions}. While other APIs try to "emulate" actions (with crippling limitatins) by calling non-standard endpoints, this SPI will simply submit the actions to the chrome webdriver and surely receive an error in response.
+
+Another limitation is that it's an API that is very close to the metal: you are supposed to understand how the session configuration works, for example; so, while you do have helper methods such as `setAlwaysMatchKey()`, `addFirstMatch()` etc., you are still expected to _understand_ what these calls do. Also, browser-specific parameters are added via `setSpecificKey()`; however, there are no helpers methods to get these parameters right. For example, if you want to add plugins to Chrome using the `extensions` option, you will need to create an array of packed extensions loaded from the disk and converted to base64. This _may_ change in the future, as this API matures; however, it won't add more classes and any enhancement will always be close enough to the API to be easy to understand.
 
 ### Go test!
 
 That's all you need -- time to get testing!
-
-
-**TODO. Documentation will be finished in the first week of February 2018**
