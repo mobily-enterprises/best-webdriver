@@ -82,6 +82,7 @@ class Browser {
 
     // Give it a nice, lowercase name
     this.name = 'browser'
+    this.specificKey = null
   }
 
   /**
@@ -137,6 +138,28 @@ class Browser {
   setRootKey (path, value, force = true) {
     if (force || typeof DO.get(this.sessionParameters, path) === 'undefined') {
       DO.set(this.sessionParameters, path, value)
+    }
+  }
+
+  /**
+   * Sets a configuration option for the specific browser.
+   *
+   * @param {string} path The name of the property to set. It can be a path; if path is has a `.` (e.g.
+   *                      `something.other`), the property
+   *                      `sessionParameters.something.other` will be set
+   * @param {*} value The value to assign
+   * @param {boolean} force It will overwrite keys if needed
+   *
+   * @example
+   * this.setSpecificKey('FIXME1', 'blah')
+   * this.setSpecificKey('FIXME2', 'blah')
+   */
+  setSpecificKey (path, value, force = true) {
+    if (!this.specificKey) {
+      throw new Error('setSpecificKey called for a browser that doesn\'t support them')
+    }
+    if (force || typeof DO.get(this.sessionParameters, this.specificKey + '.' + path) === 'undefined') {
+      DO.set(this.sessionParameters, `capabilities.alwaysMatch.${this.specificKey}.${path}`, value)
     }
   }
 
