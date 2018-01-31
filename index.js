@@ -4,7 +4,6 @@ const browser = require('./src/browsers/index')
 
 exports = module.exports = { Driver, browser, Actions }
 
-// "docs": "rm -rf docs/*;node_modules/jsdoc/jsdoc.js --template node_modules/jsdoc-template -c .jsdoc.config.js -R README.md -P package.json; mv _out/*/*/** docs;rm -rf _out;touch docs/.nojekyll"
 
 /*
   [X] Install JSDoc, check generated documentation
@@ -35,4 +34,7 @@ exports = module.exports = { Driver, browser, Actions }
   [ ] Write more tests
 
 https://codereview.stackexchange.com/questions/186203/check-an-es6-api-implementation-can-you-see-anything-terrible
+
+https://github.com/w3c/webdriver/issues/1215
+
 */
