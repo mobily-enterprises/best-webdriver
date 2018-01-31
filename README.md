@@ -229,7 +229,9 @@ There are three types of call:
 
 Finally, all calls can be "polled", which implies re-running the command at intervals until it succeeds, or until it fails (after it reaches a timeout).
 
-TODO: Show how some basic commands work
+### Non-element driver calls
+
+TODO: Show how some basic non-element commands work
 
 ### Returning elements
 
