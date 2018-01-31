@@ -4,7 +4,6 @@ const browser = require('./src/browsers/index')
 
 exports = module.exports = { Driver, browser, Actions }
 
-
 // "docs": "rm -rf docs/*;node_modules/jsdoc/jsdoc.js --template node_modules/jsdoc-template -c .jsdoc.config.js -R README.md -P package.json; mv _out/*/*/** docs;rm -rf _out;touch docs/.nojekyll"
 
 /*
