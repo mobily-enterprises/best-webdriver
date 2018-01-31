@@ -1,0 +1,54 @@
+
+Get it finished to version 1:
+☐ Finish off README.md (last 4 TODOs)
+☐ Write a simple test structure, write first few tests
+☐ Finish off writing tests
+☐ Add IE and Safari as browsers
+
+☐ Check/follow up on these links
+  ☐ https://codereview.stackexchange.com/questions/186203/check-an-es6-api-implementation-can-you-see-anything-terrible
+  ☐ https://github.com/w3c/webdriver/issues/1215
+  ☐ https://github.com/jsdoc3/jsdoc/issues/1409
+
+
+Beyond version 1:
+☐ Add browser-specific option setters (e.g. addExtension for Chrome)
+☐ Gain more traction
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+✔ Install JSDoc, check generated documentation
+✔ Finish development off
+  ✔ Add _isCompiled to actions
+  ✔ Rename Element into Element
+✔ Finish off JSDOC documentation
+  ✔ Make markdown work
+  ✔ All element methods
+  ✔ All async methods marked as such (some return promises but aren't marked async)
+  ✔ See how to clone documentation for findElement and findElements
+  ✔ All helper mixins documented within the classes
+  ✔ Write examples for findElementHelpers
+  ✔ All gloval consts
+  ✔ Split into smaller files
+  ✔ Document remaining methods
+    ✔ Document Browsers (Chrome, Firefox, Generic), decide how to document them
+    ✔ Put API online on Github pages
+    ✔ Check other JSDoc themes, hopefully better
+    ✔ Document InputDevice
+    ✔ Document Actions
+    ✔ Make sure Globals are indexed right
+    ✔ Document Pointer and Keyboard in Actions
+
+    ✔ Run each method, document parameters making constants when necessary
+    ✔ Install JSDoc, check generated documentation
+    ✔ Add missing findElement*** docs, make sure they appear in doc
+    ✔ Manage errors properly: sometimes calls fail but it's not a proper error
+✔ Add "wait" statement, poll and checks for a condition with possible timeout
+✔ Understand the real differences between different browsers' responses in calls
+✔ Run each method, document parameters making constants when necessary
+✔ Add code to run chrome (or whatever) automatically, passing parameters for port and more
+✔ Add browser requirement string spec, and other parameters
+✔ Allow entering a string as sendKeys, add constants if needed
+✔ Maybe create element type, and have call-forwarding for nice chaining.
+✔ Understand the element-6066-11e4-a52e-4f735466cecf and w3c_compliant issue
+✔ Figure out why sessionId is in value in firefox, and in object root in chrome
