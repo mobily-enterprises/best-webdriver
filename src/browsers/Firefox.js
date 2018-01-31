@@ -25,6 +25,9 @@ class Firefox extends Browser {
     // Give it a nice, lowercase name
     this.name = 'firefox'
 
+    // Sets the key for specificKey, used by Browser#setSpecificKey()
+    this.specificKey = 'moz:firefoxOptions'
+
     // Firefox's empty firefoxOptions
     this.setAlwaysMatchKey('moz:firefoxOptions', {}, true)
 

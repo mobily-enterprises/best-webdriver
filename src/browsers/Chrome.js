@@ -26,8 +26,11 @@ class Chrome extends Browser {
     // Give it a nice, lowercase name
     this.name = 'chrome'
 
+    // Sets the key for specificKey, used by Browser#setSpecificKey()
+    this.specificKey = 'chromeOptions'
+
     // This is crucial so that Chrome obeys w3c
-    this.setAlwaysMatchKey('chromeOptions.w3c', true, true)
+    this.setSpecificKey('w3c', true, true)
 
     // The required browser's name
     this.setAlwaysMatchKey('browserName', 'chrome')
