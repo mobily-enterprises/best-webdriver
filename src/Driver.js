@@ -8,6 +8,8 @@ const USING = require('./USING')
 /**
  * The main driver class used to create a driver and actually use this API
  * It will spawn a webdriver process by default.
+ * @mixes FindHelpersMixin
+ * @augments FindHelpersMixin
  *
  * @example
  * // Create a driver using the Chrome browser
@@ -27,8 +29,6 @@ var Driver = class {
   //
   /**
    * Constructor returning a Driver object, which will be used to pilot the passed browser
-   * @mixes FindHelpersMixin
-   * @augments FindHelpersMixin
    *
    * @param {Browser} browser The browser that this API will pilot
    * @param {Object} opt Options to configure the driver
