@@ -4,6 +4,10 @@
 
 Be sure to check out the [API documentation](https://mercmobily.github.io/best-webdriver/index.html)
 
+Yes, the [best webdriver](https://github.com/mercmobily/best-webdriver) is hosted on github
+
+Yes, it's also [available on NPM](https://www.npmjs.com/package/best-webdriver)
+
 ### Intro
 
 * Slim code: **817 lines of code** and **7 active classes**, compared to the selenium-webdriver's **5654 lines of code** and **92 classes**
