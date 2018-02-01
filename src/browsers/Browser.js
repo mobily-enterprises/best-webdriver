@@ -1,5 +1,4 @@
 
-const utils = require('../utils')
 const DO = require('deepobject')
 
 /**
@@ -15,7 +14,6 @@ class Browser {
    *  * Run the corresponding webdriver process (e.g. `geckodriver` for Firefox, `chromedriver` for Chrome, etc.).
    *  * Provide a configuration object that will be used when creating a new session with the webdriver
    *
-   *
    *  A basic (empty) session configuration object looks like this:
    *
    *        {
@@ -25,61 +23,32 @@ class Browser {
    *          }
    *        }
    *
-   * Such configuration object is especially important when you connect to a webdriver proxy, which then
-   * forward your requests to the right webdriver depending on the required capabilities.
-   *
    * When connecting straight to a locally launched webdriver process, the main use of the session configuraiton
-   * object is the setting of browser-specific information (there would be little point in running the Chrome
-   * webdriver and impose `firefox` as the `browserName`...).
+   * object is the setting of browser-specific information.
+   * For example when creating a {@link Chrome} object, the basic configuration looks like this:
    *
-   * For example:
+   *        {
+   *          capabilities: {
+   *            alwaysMatch: {
+   *              chromeOptions: { w3c: true }
+   *            },
+   *            firstMatch: []
+   *          }
+   *        }
    *
-   * * In Chrome, having `specific` set as `{ detach: false }` will set
-   * `capabilities.alwaysMatch.chromeOptions.detach` to `false`.
-   * * In Firefox, having `specific` set as `{ profile: 'tony' }` will set
-   * `capabilities.alwaysMatch.moz:firefoxOptions.profile` to `tony`
+   * This will ensure that Chrome will "speak" the w3c protocol.
    *
-   * @param {Object} alwaysMatch The alwaysMatch object passed to the webdriver
-   * @param {string} alwaysMatch.browserName The user agent
-   * @param {string} alwaysMatch.browserVersion Identifies the version of the user agent
-   * @param {string} alwaysMatch.platformName Identifies the operating system of the endpoint node
-   * @param {boolean} alwaysMatch.acceptInsecureCerts Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session
-   * @param {string} alwaysMatch.pageLoadStrategy Defines the current session’s page load strategy. It can be `none`, `eager` or `normal`
-   * @param {object} alwaysMatch.proxy Defines the current session’s proxy configuration. See the
-                     {@link https://w3c.github.io/webdriver/webdriver-spec.html#dfn-proxy-configuration spec's
-                     proxy options}
-   * @param {boolean} alwaysMatch.setWindowRect Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows
-   * @param {object} alwaysMatch.timeouts Describes the timeouts imposed on certain session operations. Can have keys `implicit`, `pageLoad` or `script`
-   * @param {string} alwaysMatch.unhandledPromptBehavior Describes the current session’s user prompt handler. It
-   *                 can be: `dismiss`, `accept`, `dismiss and notify`, `accept and notify`, `ignore`
-
-   * @param {Array} firstMatch The firstMatch array passed to the webdriver
-   * @param {Object} root The keys of this object will be copied over the webdriver object
-   * @param {Object} specific Specific keys for the browser
+   * Configuration options are set with the methods {@link Browser#setAlwaysMatchKey},
+   * {@link Browser#addFirstMatch}, {@link Browser#setRootKey} and {@link Browser#setSpecificKey}
+   *
    */
-  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
-    // Sanity checks. Things can go pretty bad if these are wrong
-    if (!utils.isObject(alwaysMatch)) {
-      throw new Error('alwaysMatch must be an object')
-    }
-    if (!Array.isArray(firstMatch)) {
-      throw new Error('firstmatch parameter must be an array')
-    }
-    if (!utils.isObject(root)) {
-      throw new Error('root options must be an object')
-    }
-
+  constructor () {
     this.sessionParameters = {
       capabilities: {
-        alwaysMatch: alwaysMatch,
-        firstMatch: firstMatch
+        alwaysMatch: {},
+        firstMatch: []
       }
     }
-    // Copy over whatever is specified in `root`
-    for (var k in root) {
-      if (root.hasOwnProperty(k)) this.sessionParameters[ k ] = root[k]
-    }
-
     // Give it a nice, lowercase name
     this.name = 'browser'
     this.specificKey = null
@@ -91,17 +60,31 @@ class Browser {
    * @param {string} path The name of the property to set. It can be a path; if path is has a `.` (e.g.
    *                      `something.other`), the property
    *                      `sessionParameters.capabilities.alwaysMatch.something.other` will be set
+   * @param {string} path.browserName The user agent
+   * @param {string} path.browserVersion Identifies the version of the user agent
+   * @param {string} path.platformName Identifies the operating system of the endpoint node
+   * @param {boolean} path.acceptInsecureCerts Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session
+   * @param {string} path.pageLoadStrategy Defines the current session’s page load strategy. It can be `none`, `eager` or `normal`
+   * @param {object} path.proxy Defines the current session’s proxy configuration. See the
+                     {@link https://w3c.github.io/webdriver/webdriver-spec.html#dfn-proxy-configuration spec's
+                     proxy options}
+   * @param {boolean} path.setWindowRect Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows
+   * @param {object} path.timeouts Describes the timeouts imposed on certain session operations. Can have keys `implicit`, `pageLoad` or `script`
+   * @param {string} path.unhandledPromptBehavior Describes the current session’s user prompt handler. It
+   *                 can be: `dismiss`, `accept`, `dismiss and notify`, `accept and notify`, `ignore`
    * @param {*} value The value to assign to the property
    * @param {boolean} force It will overwrite keys if already present.
    *
    * @example
-   * this.setAlwaysMatchKey('timeouts.implicit', 10000, true)
+   * this.setAlwaysMatchKey('platformName', 'linux')
+   * this.setAlwaysMatchKey('timeouts.implicit', 10000)
    */
   setAlwaysMatchKey (path, value, force = false) {
     var alwaysMatch = this.sessionParameters.capabilities.alwaysMatch
     if (force || typeof DO.get(alwaysMatch, path) === 'undefined') {
       DO.set(alwaysMatch, path, value)
     }
+    return this
   }
 
   /**
@@ -119,6 +102,7 @@ class Browser {
     if (force || !this.sessionParameters.capabilities.firstMatch.indexOf(name) === -1) {
       this.sessionParameters.capabilities.firstMatch.push({ [name]: value })
     }
+    return this
   }
 
   /**
@@ -139,6 +123,7 @@ class Browser {
     if (force || typeof DO.get(this.sessionParameters, path) === 'undefined') {
       DO.set(this.sessionParameters, path, value)
     }
+    return this
   }
 
   /**
@@ -161,6 +146,7 @@ class Browser {
     if (force || typeof DO.get(this.sessionParameters, this.specificKey + '.' + path) === 'undefined') {
       DO.set(this.sessionParameters, `capabilities.alwaysMatch.${this.specificKey}.${path}`, value)
     }
+    return this
   }
 
   /**

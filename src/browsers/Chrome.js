@@ -20,7 +20,7 @@ const utils = require('../utils')
  * @extends Browser
  */
 class Chrome extends Browser {
-  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
+  constructor () {
     super(...arguments)
 
     // Give it a nice, lowercase name
@@ -34,13 +34,6 @@ class Chrome extends Browser {
 
     // The required browser's name
     this.setAlwaysMatchKey('browserName', 'chrome')
-
-    // Add specific Options
-    for (var k in specific) {
-      if (specific.hasOwnProperty(k)) {
-        this.alwaysMatch.chromeOptions[ k ] = specific[ k ]
-      }
-    }
   }
 
   /**
