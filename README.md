@@ -364,7 +364,44 @@ The {@link Actions} class documentation explains exactly how actions work.
 
 ### Polling
 
-TODO: explain waitfor
+When writing tests for web sites and applications, timing can become an issue. For example while you know that your page will be load after this:
+
+    await driver.navigateTo('https://www.google.com')
+
+What you don't know is this: have _all_ of the AJAX finished fetching data? Has _all_ of the DOM been updated after the event?
+
+The answer is "you don't know". So, the ability to poll is very important.
+
+This API has the simplest, most streamlined approach possible i nterms of polling: there is only one call, `waitFor()`, which is available in {@link Element#waitFor} and {@Driver#waitFor} objects.
+
+The way it works is really simple: `waitFor()` actually acts as a proxy to the real object calls, wit hthe twist that it will retry them until they work out. Each call will also accept one extra parameter (compared to their signature), which is a function that will also return a truly value for the call to be successful.
+
+So, while you would normally do:
+
+    var el = driver.findElementCss('#main')
+
+If you wanted to wait, you would run the following call, which will run `findElementsCss()` every 300ms, until it's finally worked or until the default timeout of 10000ms (10 seconds) has expired:
+
+    var el = await driver.waitFor().findElementCss('#main')
+
+You can set different poll interval and timeout:
+
+    driver.setPollTimeout(15000)
+    driver.setPollInterval(200)
+
+Or, you can set them on a per-call basis:
+
+    driver.waitFor(15000, 300).findElementCss('#main')
+
+Finally, you can add one extra parameter to the call: it will be
+
+    driver.waitFor().findElementsCss('li', (r) => r.length))
+
+In this case, the callback `(r) => r.length` will only return truly when `r` (the result from the call) is a non-empty array.
+
+Behind the scenes, `waitFor()` returns a proxy object which will in turn run the call and check that it didn't return an error; it also checks that the result passes the required checker function, if one was passed.
+
+The result of this is that one simple chained method, {@link Driver#waitFor}/{@link Element#waitFor}, turns every call for {@link Driver} and {@link Element} into a polling function able to check the result.
 
 ### Limitations
 
