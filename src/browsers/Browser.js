@@ -52,6 +52,7 @@ class Browser {
     // Give it a nice, lowercase name
     this.name = 'browser'
     this.specificKey = null
+    this.executable = null
   }
 
   /**
@@ -158,6 +159,15 @@ class Browser {
    */
   getSessionParameters () {
     return this.sessionParameters
+  }
+
+  /**
+   * Set executable for the browser
+   *
+   * @param {string} executable The name of the executable to run
+   */
+  setExecutable (executable) {
+    this._executable = executable
   }
 
   /**

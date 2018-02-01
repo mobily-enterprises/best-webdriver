@@ -33,15 +33,17 @@ class Firefox extends Browser {
 
     // The required browser's name
     this.setAlwaysMatchKey('browserName', 'firefox')
+
+    // Set the default executable
+    this.setExecutable(process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver')
   }
 
   /**
    * @inheritdoc
    */
   run (options) {
-    var executable = process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver'
     options.args.push('--port=' + options.port)
-    return utils.exec(executable, options)
+    return utils.exec(this._executable, options)
   }
 }
 

@@ -34,15 +34,17 @@ class Chrome extends Browser {
 
     // The required browser's name
     this.setAlwaysMatchKey('browserName', 'chrome')
+
+    // Set the default executable
+    this.setExecutable(process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver')
   }
 
   /**
    * @inheritdoc
    */
   run (options) {
-    var executable = process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver'
     options.args.push('--port=' + options.port)
-    return utils.exec(executable, options)
+    return utils.exec(this._executable, options)
   }
 }
 
