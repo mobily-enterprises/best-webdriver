@@ -1,4 +1,4 @@
-const { Driver, browser, Actions } = require('../index')
+const { Driver, browser, Actions } = require('./index')
 
 ;(async () => {
   try {
