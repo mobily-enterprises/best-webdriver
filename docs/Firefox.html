@@ -275,8 +275,6 @@ in terms of implementation of the w3c specs</p>
       
 
       
-        <th>Default</th>
-      
 
       <th class="last">Description</th>
     </tr>
@@ -305,15 +303,300 @@ in terms of implementation of the w3c specs</p>
         
 
         
-          <td class="default">
-            
-          </td>
-        
 
         <td class="description last">
           <p>The name of the property to set. It can be a path; if path is has a <code>.</code> (e.g.
                      <code>something.other</code>), the property
                      <code>sessionParameters.capabilities.alwaysMatch.something.other</code> will be set</p>
+          
+            <h6>Properties</h6>
+            
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>browserName</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The user agent</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>browserVersion</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Identifies the version of the user agent</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>platformName</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Identifies the operating system of the endpoint node</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>acceptInsecureCerts</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>pageLoadStrategy</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Defines the current session’s page load strategy. It can be <code>none</code>, <code>eager</code> or <code>normal</code></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>proxy</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      object
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Defines the current session’s proxy configuration. See the
+                     <a href="https://w3c.github.io/webdriver/webdriver-spec.html#dfn-proxy-configuration">spec's                      proxy options</a></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>setWindowRect</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>timeouts</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      object
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Describes the timeouts imposed on certain session operations. Can have keys <code>implicit</code>, <code>pageLoad</code> or <code>script</code></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>unhandledPromptBehavior</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Describes the current session’s user prompt handler. It
+                can be: <code>dismiss</code>, <code>accept</code>, <code>dismiss and notify</code>, <code>accept and notify</code>, <code>ignore</code></p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
           
         </td>
       </tr>
@@ -339,10 +622,6 @@ in terms of implementation of the w3c specs</p>
 
         
 
-        
-          <td class="default">
-            
-          </td>
         
 
         <td class="description last">
@@ -372,12 +651,6 @@ in terms of implementation of the w3c specs</p>
 
         
 
-        
-          <td class="default">
-            
-              false
-            
-          </td>
         
 
         <td class="description last">
@@ -434,7 +707,7 @@ in terms of implementation of the w3c specs</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line100">line 100</a>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line82">line 82</a>
         </li>
       </ul>
     </dd>
@@ -468,7 +741,8 @@ in terms of implementation of the w3c specs</p>
     <h5 id="setAlwaysMatchKey-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>this.setAlwaysMatchKey('timeouts.implicit', 10000, true)</code></pre>
+  <pre class="prettyprint"><code>this.setAlwaysMatchKey('platformName', 'linux')
+this.setAlwaysMatchKey('timeouts.implicit', 10000)</code></pre>
 
 
   </div>
@@ -677,7 +951,7 @@ in terms of implementation of the w3c specs</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line118">line 118</a>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line101">line 101</a>
         </li>
       </ul>
     </dd>
@@ -924,7 +1198,7 @@ creating a session</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line138">line 138</a>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line122">line 122</a>
         </li>
       </ul>
     </dd>
@@ -1170,7 +1444,7 @@ this.setRootKey('pass', 'blah')</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line157">line 157</a>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line142">line 142</a>
         </li>
       </ul>
     </dd>
@@ -1286,7 +1560,7 @@ to get the parameters to be sent over</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line173">line 173</a>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line159">line 159</a>
         </li>
       </ul>
     </dd>
@@ -1583,7 +1857,7 @@ to get the parameters to be sent over</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line187">line 187</a>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line173">line 173</a>
         </li>
       </ul>
     </dd>

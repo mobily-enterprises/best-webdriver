@@ -122,13 +122,6 @@ class Firefox extends Browser {
 
     // The required browser's name
     this.setAlwaysMatchKey('browserName', 'firefox')
-
-    // Add specific Options
-    for (var k in specific) {
-      if (specific.hasOwnProperty(k)) {
-        this.alwaysMatch['moz:firefoxOptions'][ k ] = specific[ k ]
-      }
-    }
   }
 
   /**

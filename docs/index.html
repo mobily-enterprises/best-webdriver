@@ -96,9 +96,9 @@
 <li>Slim code: <strong>817 lines of code</strong> and <strong>7 active classes</strong>, compared to the selenium-webdriver's <strong>5654 lines of code</strong> and <strong>92 classes</strong></li>
 <li>100% <a href="https://w3c.github.io/webdriver/webdriver-spec.html#compatibility">W3C's webdriver</a> compliant. The code only ever makes pure webdriver calls</li>
 <li><a href="https://mercmobily.github.io/best-webdriver/index.html">Well documented API</a> which comes with a simple quickstart guide</li>
-<li>The API is async/await friendly. Each call returns a promise. Developing is a breeze</li>
+<li>The API is async/await friendly. Each call returns a promise. Development is a breeze</li>
 <li>Easy to debug. There is a 1:1 mapping between calls and the webdriver protocol, without trickery</li>
-<li>Simple system to define sequences of actions</li>
+<li>Simple system to define sequences of webdriver UI actions</li>
 </ul>
 <h4>Get your system ready</h4><p>First of all, install <code>best-webdriver</code> using NPM:</p>
 <pre class="prettyprint source"><code>npm install --save best-webdriver</code></pre><p>Also, make sure you install at least one webdriver on your computer:</p>
@@ -129,13 +129,13 @@
 })()</code></pre><p>If everything goes well, you will see a Chrome window appear. Note that that <code>(async () =&gt; {</code> is there to make sure that you can use <code>await</code>.</p>
 <p><em>Please note that in this guide it will always be assumed that the code is placed in <code>// ...add more code here</code>, and that the async function, require and session creation won't be repeated.</em></p>
 <h3>Understanding session options</h3><p>Understanding how sessions are created is crucial. This section explains the session object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic Remote browser.</p>
-<h4>The session object (and helper methods)</h4><p>Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:</p>
+<h4>The basic session object</h4><p>Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:</p>
 <pre class="prettyprint source"><code>var driver = new Driver(new browser.Chrome())</code></pre><p>At this point, no process is spawned yet. However, when you run:</p>
-<pre class="prettyprint source"><code>await driver.newSession()</code></pre><p>The driver, by default, will use the browser's <code>run()</code> method (in this case Chrome) to spawn a <code>chromedriver</code> process, and will then connect to it and create a new browsing session.</p>
-<p>When creating a session, the driver accepts configuration options provided by the browser. For example if you type:</p>
+<pre class="prettyprint source"><code>await driver.newSession()</code></pre><p>The driver, by default, will use the browser's <code>run()</code> method to spawn a <code>chromedriver</code> process, and will then connect to it and create a new browsing session.</p>
+<p>When creating a session, the driver will use configuration options provided by the browser. For example if you type:</p>
 <pre class="prettyprint source"><code>var chrome = new browser.Chrome()
 var params = chrome.getSessionParameters()
-console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))</code></pre><p>You will see:</p>
+console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))</code></pre><p>This is display the configuration object created by default by the Chrome browser. You will see:</p>
 <pre class="prettyprint source"><code>{
   capabilities: {
     alwaysMatch: {
@@ -144,65 +144,45 @@ console.log('Session parameters:', require('util').inspect(params, { depth: 10 }
     },
    firstMatch: []
   }
-}</code></pre><p>This is the configuration object created by default by the Chrome browser. Note that <code>chromeOptions</code> under <code>alwaysMatch</code>: they are Chrome-specific options. In this case, <code>w3c:true</code> is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).</p>
-<p>The <a href="Browser.html">Browser</a>'s constructor call accepts four parameters: <code>alwaysMatch</code>, <code>firstMatch</code>, <code>root</code>, <code>specific</code> which will define the corresponding values in the session parameter (keep in mind that <code>root</code> keys will be copied onto the object's root).<br>So, you could run:</p>
-<pre class="prettyprint source"><code>var chrome = new browser.Chrome(
-  // This first argument will set alwaysMatch
-  {
-    pageLoadStrategy: 'eager'  
-  },
+}</code></pre><p>It's important that you understand the configuration option:</p>
+<ul>
+<li>It must have a <code>capabilities</code> key</li>
+<li>Under <code>capabilities</code>, it must have the keys <code>alwaysMatch</code> (object) and <code>firstMatch</code> (an array)</li>
+<li>It may have more keys in the object's root namespace</li>
+<li><code>chromeOptions</code> (under <code>alwaysMatch</code>) represents Chrome-specific options. In this case, <code>w3c:true</code> is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).</li>
+</ul>
+<h4>Setting session parameters</h4><p>You can also set the session options using the setting methods:</p>
+<pre class="prettyprint source"><code>var chrome = new browser.Chrome()
+chrome.setAlwaysMatchKey('pageLoadStrategy', 'eager')
+      .addFirstMatch({ platformName: 'linux' })
+      .setRootKey('login', 'merc')
+      .setRootKey('password', 'youwish')
+      .setSpecificKey('detach', true)
 
-  // This second argument will set firstMatch
-  {
-    platformName: 'linux'
-  },
-
-  // This third argument will add keys to be object
-  // Note: shallow copy is performed
-  {
-    login: 'merc',
-    password: 'youwish'
-  },
-
-  // This fourth argument will be placed as browser-specific options
-  {
-    detach: true  
-  }
-)
 var params = chrome.getSessionParameters()
 console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))</code></pre><p>You will see:</p>
 <pre class="prettyprint source"><code>{
+  // set by setRootKey()
   login: 'merc',
   pass: 'youwish',
+
   capabilities: {
     alwaysMatch: {
+
+      // Set by the Chrome constructor
       chromeOptions: { w3c: true, detach: true },
+      browserName: 'chrome'
+
+      // Set my setAlwaysMatchKey()
       pageLoadStrategy: 'eager'
     },
     firstMatch: [
-      {
-        platformName: 'linux'
-      }
+
+      // Added by addFirstmatch()
+      { platformName: 'linux' }
     ]
   }
-}</code></pre><p>Notice that:</p>
-<ul>
-<li>(first argument) the <code>pageLoadStrategy</code> property was added under <code>alwaysMatch</code></li>
-<li>(second argument) the object <code>{platformName: 'linux'}</code> was placed as an element of the <code>firstMatch</code> array</li>
-<li>(third argument) the root options <code>{login: 'merc', password: 'youwish'}</code> ended up in the object's top level keys</li>
-<li>(fourth argument) <code>{ detach: true }</code> ended up under <code>chromeOptions</code></li>
-<li>The default <code>{ w3c: true }</code> option is there so that Chrome &quot;speaks&quot; w3c</li>
-</ul>
-<p>You can also set the session options using the setting methods:</p>
-<pre class="prettyprint source"><code>var chrome = new browser.Chrome()
-chrome.setAlwaysMatchKey('pageLoadStrategy', 'eager')
-chrome.addFirstMatch({ platformName: 'linux' })
-chrome.setRootKey('login', 'merc')
-chrome.setRootKey('password', 'youwish')
-chrome.setSpecificKey('detach', true)
-
-var params = chrome.getSessionParameters()
-console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))</code></pre><p>Remember that in <a href="Browser.html#setAlwaysMatchKey">Browser#setAlwaysMatchKey</a>, <a href="Browser.html#setRootKey">Browser#setRootKey</a> and <a href="Browser.html#setSpecificKey">Browser#setSpecificKey</a>, the key can actually be a path: if it has a <code>.</code> (e.g. <code>chrome.setAlwaysMatchKey('timeouts.implicit</code>), the property <code>capabilities.alwaysMatch.timeouts.implicit</code> will be set.</p>
+}</code></pre><p>Remember that in <a href="Browser.html#setAlwaysMatchKey">Browser#setAlwaysMatchKey</a>, <a href="Browser.html#setRootKey">Browser#setRootKey</a> and <a href="Browser.html#setSpecificKey">Browser#setSpecificKey</a>, the key can actually be a path: if it has a <code>.</code> (e.g. <code>chrome.setAlwaysMatchKey('timeouts.implicit</code>), the property <code>capabilities.alwaysMatch.timeouts.implicit</code> will be set.</p>
 <h4>Running the API without spawning a webdriver</h4><p>You might decide to use this API <em>without</em> spawning a process for the chromedriver.
 This is especially handy if you are using for example an online service, or a webdriver already running on a different machine.</p>
 <p>Here is how you do it:</p>
@@ -218,26 +198,17 @@ var driver = new Driver(chrome, {
 })</code></pre><h4>The generic &quot;Remote&quot; browser</h4><p>Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called <a href="Remote.html">Remote</a>, which is a &quot;blank&quot; browser without the ability to spawn a specific webdriver, and without and specific options.</p>
 <p>Here is how you would run it:</p>
 <pre class="prettyprint source"><code>// Create a new generic browser object, specifying the alwaysMatch parameter
-var remote = new browser.Remote({
-  browserName: 'chrome',
-  platformName: 'linux'
-})
+var remote = new browser.Remote()
+
+remote.setAlwaysMatchKey('browserName', 'chrome')
+      .setAlwaysMatchKey('platformName', 'linux')
 
 // Creating the driver
 var driver = new Driver(remote, {
   host: '10.10.10.45',
   port: 4444
-})</code></pre><p>You could also do:</p>
-<pre class="prettyprint source"><code>// Create a new generic browser object, specifying the alwaysMatch parameter
-var remote = new browser.Remote()
-browser.setAlwaysMatchKey('browserName', 'chrome')
-browser.setAlwaysMatchKey('platformName', 'linux')
-
-// Creating the driver
-var driver = new Driver(chrome, {
-  host: '10.10.10.45',
-  port: 4444
-})</code></pre><h3>Running amok with driver calls</h3><p>If you have the following chunk of code:</p>
+})</code></pre><p>Note that since you used the generic <a href="Remote.html">Remote</a> browser, the session configuration did <em>not</em> include the browser-specific <code>{ w3c: true }</code> value.</p>
+<h3>Running amok with driver calls</h3><p>If you have the following chunk of code:</p>
 <pre class="prettyprint source"><code>// Create a new driver object, using the Chrome browser
 var driver = new Driver(new browser.Chrome())
 
