@@ -2,6 +2,8 @@
 (According to its author. Pinch of salt required.)
 ## Be productive in less than 20 minutes.
 
+Reading this short document is enough to cover _every_ aspect of the API.
+
 Be sure to check out the [API documentation](https://mercmobily.github.io/best-webdriver/index.html)
 
 Yes, the [best webdriver](https://github.com/mercmobily/best-webdriver) is hosted on github
@@ -146,7 +148,7 @@ Remember that in {@link Browser#setAlwaysMatchKey}, {@link Browser#setRootKey} a
 You might decide to use this API _without_ spawning a process for the chromedriver.
 This is especially handy if you are using for example an online service, or a webdriver already running on a different machine.
 
-Here is how you do it:
+Here is how you do it notice the `spawn: false` property:
 
     // Create a new Chrome browser object
     var chrome = new browser.Chrome()
@@ -200,15 +202,165 @@ Finally, all calls can be "polled", which implies re-running the command at inte
 
 ### Non-element driver calls
 
-TODO: Show how some basic non-element commands work
+Once you've created a driver object, you can use it to actually make webdriver calls.
+
+For example:
+
+    var driver = new Driver(new browser.Chrome())
+    await driver.newSession()
+    await driver.navigateTo('https://www.google.com')
+    var screenshotData = await driver.takeScreenshot()
+    var src = await driver.getPageSource()
+    var title = await driver.getTitle()
+    await driver.refresh()
+
+All of these commands are self-explanatory, and fully documented in the {@link Driver} documentation (basically, all of the listed calls under the {@link Driver} object)
+
+Remember that there is a 1:1 mapping between driver calls and Webdriver calls.
 
 ### Returning elements
 
-TODO: Explain how elements are returned, what to do with them
+Some of the driver calls will return an {@link Element} object. For example:
+
+    await driver.navigateTo('https://www.google.com')    
+    var el = await driver.findElementsCss('[name=q]')
+
+The returned element will be an instance of {@link Element}, created with the data returned by the `findElementCss()` call.
+An element object is simply an object with a reference to the `Driver` that created it, and a unique ID returned by the webdriver call.
+
+{@link Element} objects have several element-related methods. For example, you can get the tag name for a found element:
+
+    await driver.navigateTo('https://www.google.com')    
+    var el = await driver.findElementsCss('[name=q]')
+    var tagName = await el.getTagName()
+
+More importantly, {@link Element} objects _also_ offer methods that will return elements. In this case, the search will be limited to elements children of the element being searched.
+For example:
+
+    await driver.navigateTo('https://www.example.com')    
+    // Get the OL tag
+    var ol = await driver.findElementsTagName('ol')
+
+    // Get the LI tags within OL
+    var lis = await ol.findElementsTagName('li')
 
 ### Run Actions
 
-TODO: explain new Actions()... mouse, keyboard, etc. with some copy&paste from API.
+Actions are a rather complex part of the webdriver specs. Actions are important so that you can get the browser to perform a list of timed, complex UI actions.
+
+Actions are always performed by either a keyboard device, or a pointer device (which could be a `MOUSE`, `TOUCH` or `PEN`)
+
+Once the action object is created, you can add "ticks" to it using the
+property `tick` (which is actually a getter). The way you use `tick` depends on the devices you created.
+
+If you call the constructor like this:
+
+    var actions = new Actions()
+
+It's the same as writing:
+
+    var actions = new Actions(
+      new Keyboard('keyboard'),
+      new Pointer('mouse', Pointer.Type.MOUSE)
+    )
+
+This will make two devices, `mouse` and `keyboard`, available.
+
+Such a scenario will allow you to call:
+
+    actions.tick.keyboardDown('r').mouseDown()
+    actions.tick.keyboardUp('r').mouseUp()
+
+Here, `keyboardUp` was available as a combination of the keyboard ID `keyboard`
+and the keyboard action `Up`.
+
+In short:
+
+  * Keyboard devices will have the methods `Up`, `Down`
+  * Pointer devices will have the methors `Move`, `Up`, `Down`, `Cancel`
+  * Both of them have the method `pause`
+
+If you create an actions object like this:
+
+     var actions = new Actions(new Keyboard('cucumber'))
+
+You are then able to run:
+
+    actions.tick.cucumberDown('r')
+    actions.tick.cucumberUp('r')
+
+However running:
+
+    actions.tick.cucumberMove('r')
+
+Will result in an error, since `cucumber` is a keyboard device, and it doesn't
+implement `move` (only pointers do)
+
+If you have two devices set (like the default `keyboard` and `mouse`, which
+is the most common use-case), you can set one action per tick:
+
+    var actions = new Actions() // By default, mouse and keyboard
+    // Only a keyboard action in this tick. Mouse will pause
+    actions.tick.keyboardDown('r')
+    // Only a mouse action in this tick. Keyboard will pause
+    actions.tick.mouseDown()
+    // Both a mouse and a keyboard action this tick
+    actions.tick.keyboardUp('r').mouseUp()
+
+You can only add one action per device in each tick. This will give an error,
+because the `mouse` device is trying to define two different actions in the same
+tick:
+
+    actions.tick.mouseDown().mouseUp()
+
+You are able to chain tick calls if you want to:
+
+    actions
+    .tick.keyboardDown('r').mouseDown()
+    .tick.keyboardUp('r').mouseUp()
+
+Once you have decided your actions, you can submit them:
+
+     await driver.performActions(actions)
+
+You can set multiple touch devices, and use them for multi-touch:
+
+    var actions = new Actions(
+      new Pointer('finger1', Pointer.Type.TOUCH),
+      new Pointer('finger2', Pointer.Type.TOUCH)
+    )
+    // Define actions: Moving two fingers vertically at the same time
+    actions
+    .tick.finger1Move({ x: 40, y: 40 }).finger2Move({ x: 40, y: 60 }
+    .tick.finger2Move({ x: 40, y: 440 }).finger2Move({ x: 40, y: 460 }
+
+    // Actually perform the actions
+    driver.performActions(actions)
+
+You can also move a pointer over a specific element, specifying how long it will take (in milliseconds):
+
+    await driver.navigateTo('https://www.google.com')    
+    var el = await driver.findElementsCss('[name=q]')
+    var actions = new Actions(new Pointer('mouse', Pointer.Type.MOUSE))
+
+    // Moving over `el`, taking 1 second
+    actions.tick.mouseMove({ origin: el, duration: 1000 })
+
+Keyboard devices can perform:
+
+* {@link Keyboard#Up}
+* {@link Keyboard#Down}
+* {@link Keyboard#Pause}
+
+Mouse devices can perform:
+
+* {@link Pointer#Up}
+* {@link Pointer#Down}
+* {@link Pointer#Move}
+* {@link Pointer#Cancel}
+* {@link Pointer#Pause}
+
+The {@link Actions} class documentation explains exactly how actions work.
 
 ### Polling
 
