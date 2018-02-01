@@ -13,45 +13,68 @@ function checkRes (res) {
 function exec (command, commandOptions) {
   var options = commandOptions || {}
 
-  var proc = spawn(command, options.args || [], {
-    env: options.env || process.env,
-    stdio: options.stdio || 'ignore'
-  })
-
-  proc.on('error', (err) => {
-    consolelog(`Could not run ${command}:`, err)
-    throw new Error(`Error running the webdriver '${command}'`)
-  })
-
-  // This process should not wait on the spawned child, however, we do
-  // want to ensure the child is killed when this process exits.
-  proc.unref()
-  process.once('exit', onProcessExit)
-
-  let result = new Promise(resolve => {
-    proc.once('exit', (code, signal) => {
-      consolelog(`Process ${command} has exited! Code and signal:`, code, signal)
-      proc = null
-      process.removeListener('exit', onProcessExit)
-      resolve({ code, signal })
-    })
-  })
-  return { result, killCommand }
-
-  function onProcessExit () {
-    consolelog(`Process closed, killing ${command}`, killCommand)
-    killCommand('SIGTERM')
-  }
-
-  function killCommand (signal) {
-    consolelog(`killCommand() called! sending ${signal} to ${command}`)
-    process.removeListener('exit', onProcessExit)
-    if (proc) {
-      consolelog(`Sending ${signal} to ${command}`)
-      proc.kill(signal)
-      proc = null
+  return new Promise((resolve, reject) => {
+    //
+    // It's unclear whether the try/catch here is necessary,
+    // but better safe than sorry
+    try {
+      var child = spawn(command, options.args || [], {
+        env: options.env || process.env,
+        stdio: options.stdio || 'ignore'
+      })
+    } catch (e) {
+      reject(e)
     }
-  }
+
+    child.on('error', (err) => {
+      // The error event will be emitted immediately if ENOENT is
+      // the cause of the problems
+      if (err.code === 'ENOENT') {
+        consolelog(`Could not run ${command}:`, 'aaa', err.code, 'ppp', err)
+        reject(err)
+
+      // This will only even happen if "The process could not be killed",
+      // or "Sending a message to the child process failed."
+      } else {
+        consolelog('RETHROWING:', err)
+        throw (err)
+      }
+    })
+
+    // A new process was started: bingo!
+    // This actually tells us to resolve this successfully
+    if (child.pid) {
+      //
+      // Unref the child
+      child.unref()
+
+      // This process should not wait on the spawned child, however, we do
+      // want to ensure the child is killed when this process exits.
+      process.once('exit', killChild)
+
+      child.once('exit', (code, signal) => {
+        consolelog(`Process ${command} has exited! Code and signal:`, code, signal)
+        child = null
+        process.removeListener('exit', killChild)
+      })
+
+      return resolve({ killCommand })
+    }
+
+    function killCommand (signal) {
+      process.removeListener('exit', killChild)
+      if (child) {
+        consolelog(`Sending ${signal} to ${command}`)
+        child.kill(signal)
+        child = null
+      }
+    }
+
+    function killChild () {
+      consolelog(`Process closed, killing ${command}`, killCommand)
+      killCommand('SIGTERM')
+    }
+  })
 }
 
 function sleep (ms) {

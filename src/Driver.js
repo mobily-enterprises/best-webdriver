@@ -186,7 +186,6 @@ var Driver = class {
    * Since webdrivers can take a little while to answer, this method also checks
    * that the webdriver process is actively and properly dealing with connections
    * This method is called by {@link Driver#newSession|newSession}
-   * @private
    *
    * @example
    * var driver = new Driver(new Chrome())
@@ -204,14 +203,13 @@ var Driver = class {
       }
 
       // Options: port, args, env, stdio
-      var res = this._browser.run({
+      var res = await this._browser.run({
         port: this._port,
         args: this._args,
         env: this._env,
         stdio: this._stdio }
       )
       this._killCommand = res.killCommand
-      this._commandResult = res.result
     }
 
     // It's still possible that no port has been set, since spawn was false
@@ -226,7 +224,7 @@ var Driver = class {
     var success = false
     for (var i = 0; i < 10; i++) {
       if (i > 5) {
-        consolelog(`Attempt n. ${i} to connect to ${this._hostname}, port ${this._port}... `)
+        console.log(`Attempt n. ${i} to connect to ${this._hostname}, port ${this._port}... `)
       }
       try {
         await this.status()
@@ -247,7 +245,6 @@ var Driver = class {
   /**
     * Stops the webdriver process, if running. It does so by sending it a SIGTERM message.
     * You can specify the message to send the process
-    * @private
     *
     * @param {(string|number)} signal=SIGTERM The signal to send. To know which signals you can send,
     *
@@ -258,11 +255,11 @@ var Driver = class {
     * // ...
     * await driver.stopWebDriver()
    */
-  stopWebDriver (signal = 'SIGTERM') {
+  async stopWebDriver (signal = 'SIGTERM') {
     if (this._killCommand) {
       this._killCommand(signal)
 
-      this.killWebDriver('SIGTERM')
+      // this.killWebDriver('SIGTERM')
       this._webDriverRunning = false
     }
   }
