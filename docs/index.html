@@ -133,6 +133,7 @@
 <h4>The basic session object</h4><p>Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:</p>
 <pre class="prettyprint source"><code>var driver = new Driver(new browser.Chrome())</code></pre><p>At this point, no process is spawned yet. However, when you run:</p>
 <pre class="prettyprint source"><code>await driver.newSession()</code></pre><p>The driver, by default, will use the browser's <code>run()</code> method to spawn a <code>chromedriver</code> process, and will then connect to it and create a new browsing session.</p>
+<p>You can use any one of the chromedrivers available: <a href="Chrome.html">Chrome</a>, </p>
 <p>When creating a session, the driver will use configuration options provided by the browser. For example if you type:</p>
 <pre class="prettyprint source"><code>var chrome = new browser.Chrome()
 var params = chrome.getSessionParameters()
