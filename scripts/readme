@@ -1,3 +1,6 @@
+# A better regexp
+# https://stackoverflow.com/questions/48556759/sed-converting-jsdocs-link-into-markdown-links/48558671#48558671
+
 cat GUIDE.md |\
 sed 's/{@link \([^#]*\)#\([^ ]*\)}/[\1#\2](https:\/\/mercmobily.github.io\/best-webdriver\/\1.html#\2)/g' | \
 sed 's/{@link \([^ ]*\)}/[\1](https:\/\/mercmobily.github.io\/best-webdriver\/\1.html)/g'
