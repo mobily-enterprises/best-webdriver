@@ -77,6 +77,8 @@ At this point, no process is spawned yet. However, when you run:
 
 The driver, by default, will use the browser's `run()` method to spawn a `chromedriver` process, and will then connect to it and create a new browsing session.
 
+You can use any one of the chromedrivers available: [Chrome](https://mercmobily.github.io/best-webdriver/Chrome.html), [Firefox](https://mercmobily.github.io/best-webdriver/Firefox.html), [Safari](https://mercmobily.github.io/best-webdriver/Safari.html), [Edge](https://mercmobily.github.io/best-webdriver/Edge.html), 
+
 When creating a session, the driver will use configuration options provided by the browser. For example if you type:
 
     var chrome = new browser.Chrome()

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      Pointer - Documentation
+      Safari - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -76,7 +76,7 @@
   <div id="main">
     
       <h1 class="page-title">
-        Pointer
+        Safari
       </h1>
     
 
@@ -87,24 +87,16 @@
     
       <h2>
         
-        Pointer
+        Safari
         
       </h2>
 
       
         <div class="class-description">
-          <p>Class for Pointer objects.
-When a Pointer object is passed to the Action constructor:
-    var actions = new Actions(new Pointer('bigMouse'))</p>
-<p>the action's <code>tick</code> will have the following methods (assuming that the Pointer's ID
-is <code>mouse</code>):</p>
-<ul>
-<li><a href="Pointer.html#Up">action.tick.bigMouseUp()</a></li>
-<li><a href="Pointer.html#Down">action.tick.bigMouseDown()</a></li>
-<li><a href="Pointer.html#Move">action.tick.bigMouseMove()</a></li>
-<li><a href="Pointer.html#Cancel">action.tick.bigMouseCancel()</a></li>
-</ul>
-<p>Note: input device objects are only ever used in <a href="Actions.html">Actions</a></p>
+          <p>Class that represents the <a href="https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html#//apple_ref/doc/uid/TP40014305-CH11-DontLinkElementID_28">Safari webdriver</a>.</p>
+<p>It implements the <code>run()</code> method, which will run <code>MicrosoftWebDriver.exe</code>
+Check the <a href="https://webkit.org/blog/6900/webdriver-support-in-safari-10/">Status of Safari</a>
+in terms of implementation of the w3c specs</p>
         </div>
       
     
@@ -121,13 +113,13 @@ is <code>mouse</code>):</p>
   
 
   <span class='name-container'>
-    <a class="link-icon" href="#Pointer">
+    <a class="link-icon" href="#Safari">
       <svg height="20" width="20" style="fill: black;">
         <use xlink:href="#linkIcon"></use>
       </svg>
     </a>
-    <h4 class="name" id="Pointer">
-      <span class="type-signature"></span>new Pointer<span class="signature">(id, pointerType)</span><span class="type-signature"></span>
+    <h4 class="name" id="Safari">
+      <span class="type-signature"></span>new Safari<span class="signature">()</span><span class="type-signature"></span>
     </h4>
   </span>
 
@@ -135,100 +127,10 @@ is <code>mouse</code>):</p>
 
 
 
-  <div class="description">
-    <p>Each device is associated a unique ID
-like <code>mouse</code>, <code>touch</code>, <code>pen</code>.</p>
-  </div>
 
 
 
 
-
-
-
-  <h5>Parameters:</h5>
-  
-
-<table class="params">
-  <thead>
-    <tr>
-      
-        <th>Name</th>
-      
-
-      <th>Type</th>
-
-      
-
-      
-
-      <th class="last">Description</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    
-      <tr>
-        
-          <td class="name"><code>id</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      string
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-
-        <td class="description last">
-          <p>The unique ID of the device</p>
-          
-        </td>
-      </tr>
-
-    
-      <tr>
-        
-          <td class="name"><code>pointerType</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      string
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-
-        <td class="description last">
-          <p>It can be <code>Pointer.Type.MOUSE</code>, <code>Pointer.Type.PEN</code>
-                            or <code>Pointer.Type.TOUCH</code></p>
-          
-        </td>
-      </tr>
-
-    
-  </tbody>
-</table>
 
 
 
@@ -265,7 +167,540 @@ like <code>mouse</code>, <code>touch</code>, <code>pen</code>.</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line27">line 27</a>
+          <a href="browsers_Safari.js.html">browsers/Safari.js</a>, <a href="browsers_Safari.js.html#line14">line 14</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    
+      <h3 class="subsection-title">Extends</h3>
+
+      
+
+
+  <ul>
+    <li><a href="Browser.html">Browser</a></li>
+  </ul>
+
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+      <h3 class="subsection-title">Methods</h3>
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#setAlwaysMatchKey">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="setAlwaysMatchKey">
+      <span class="type-signature"></span>setAlwaysMatchKey<span class="signature">(path, value, force)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Method to set the <code>alwaysMatch</code> property in the browser's capabilities</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>path</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The name of the property to set. It can be a path; if path is has a <code>.</code> (e.g.
+                     <code>something.other</code>), the property
+                     <code>sessionParameters.capabilities.alwaysMatch.something.other</code> will be set</p>
+          
+            <h6>Properties</h6>
+            
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>browserName</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The user agent</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>browserVersion</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Identifies the version of the user agent</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>platformName</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Identifies the operating system of the endpoint node</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>acceptInsecureCerts</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>pageLoadStrategy</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Defines the current session’s page load strategy. It can be <code>none</code>, <code>eager</code> or <code>normal</code></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>proxy</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      object
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Defines the current session’s proxy configuration. See the
+                     <a href="https://w3c.github.io/webdriver/webdriver-spec.html#dfn-proxy-configuration">spec's                      proxy options</a></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>setWindowRect</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>timeouts</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      object
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Describes the timeouts imposed on certain session operations. Can have keys <code>implicit</code>, <code>pageLoad</code> or <code>script</code></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>unhandledPromptBehavior</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Describes the current session’s user prompt handler. It
+                can be: <code>dismiss</code>, <code>accept</code>, <code>dismiss and notify</code>, <code>accept and notify</code>, <code>ignore</code></p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The value to assign to the property</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if already present.</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+      <ul class="dummy">
+        <li>
+          <a href="Browser.html#setAlwaysMatchKey">Browser#setAlwaysMatchKey</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line83">line 83</a>
         </li>
       </ul>
     </dd>
@@ -291,277 +726,20 @@ like <code>mouse</code>, <code>touch</code>, <code>pen</code>.</p>
 
 
   <div class="example-container">
-    <a class="link-icon" href="#Pointer-examples">
+    <a class="link-icon" href="#setAlwaysMatchKey-examples">
       <svg height="20" width="20" style="fill: black;">
         <use xlink:href="#linkIcon"></use>
       </svg>
     </a>
-    <h5 id="Pointer-examples">Example</h5>
+    <h5 id="setAlwaysMatchKey-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>var mouse = new Pointer('mouse', Pointer.Type.MOUSE)
-var touch1 = new Pointer('touch1', Pointer.Type.TOUCH)
-var touch2 = new Pointer('touch2', Pointer.Type.TOUCH)
-var actions = new Actions(mouse, touch1, touch2)
-actions.tick.mouseDown().touch1Down().touch2Down()</code></pre>
+  <pre class="prettyprint"><code>this.setAlwaysMatchKey('platformName', 'linux')
+this.setAlwaysMatchKey('timeouts.implicit', 10000)</code></pre>
 
 
   </div>
 
-
-      
-    </div>
-
-    
-      <h3 class="subsection-title">Extends</h3>
-
-      
-
-
-  <ul>
-    <li><a href="InputDevice.html">InputDevice</a></li>
-  </ul>
-
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-
-<h4 class="name" id=".Type">
-  <span class="type-signature">(static) </span>Type<span class="type-signature"></span>
-</h4>
-
-
-
-
-  <div class="description">
-    <p>The types of pointer types, used to create the right type of pointer.
-E.g. <code>Pointer.Type.MOUSE</code>, <code>Pointer.Type.PEN</code> or <code>Pointer.Type.TOUCH</code>,</p>
-<p>It actually returns:</p>
-<pre class="prettyprint source"><code> {
-   MOUSE: 'mouse',
-   PEN: 'pen',
-   TOUCH: 'touch'
- }</code></pre>
-  </div>
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line54">line 54</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-          
-        
-            
-
-<h4 class="name" id=".Button">
-  <span class="type-signature">(static) </span>Button<span class="type-signature"></span>
-</h4>
-
-
-
-
-  <div class="description">
-    <p>The button types on a pointer.</p>
-<p>It actually returns:</p>
-<p>   {
-     LEFT: 0,
-     MIDDLE: 1,
-     RIGHT: 2
-   }</p>
-  </div>
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line73">line 73</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-          
-        
-            
-
-<h4 class="name" id=".Origin">
-  <span class="type-signature">(static) </span>Origin<span class="type-signature"></span>
-</h4>
-
-
-
-
-  <div class="description">
-    <p>The types of origins, used in <code>Move()</code> commands. See <a href="Actions.html">Actions</a> on how to use
-this constant.
-E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code></p>
-<p>It actually returns:</p>
-<pre class="prettyprint source"><code>{
-  VIEWPORT: 'viewport',
-  POINTER: 'pointer'
-}</code></pre>
-  </div>
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line93">line 93</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-          
-        
-    
-
-    
-      <h3 class="subsection-title">Methods</h3>
 
       
         
@@ -570,13 +748,13 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
   
 
   <span class='name-container'>
-    <a class="link-icon" href="#Move">
+    <a class="link-icon" href="#addFirstMatch">
       <svg height="20" width="20" style="fill: black;">
         <use xlink:href="#linkIcon"></use>
       </svg>
     </a>
-    <h4 class="name" id="Move">
-      <span class="type-signature"></span>Move<span class="signature">(params)</span><span class="type-signature"></span>
+    <h4 class="name" id="addFirstMatch">
+      <span class="type-signature"></span>addFirstMatch<span class="signature">(name, value, force)</span><span class="type-signature"></span>
     </h4>
   </span>
 
@@ -585,8 +763,845 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
 
 
   <div class="description">
-    <p>Move the pointer to a specified <code>origin</code> location, using <code>x</code> and <code>y</code> and offset, and taking <code>duration</code> milliseconds</p>
-<p>This method will be added to the action's <code>tick</code> property. <strong>prefixed</strong> with the Pointer's ID.</p>
+    <p>Adds a property to the <code>firstMatch</code> array in the browser's capabilities.</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+        <th>Default</th>
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>name</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The name of the property to set</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The value to assign</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+              false
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if needed</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+      <ul class="dummy">
+        <li>
+          <a href="Browser.html#addFirstMatch">Browser#addFirstMatch</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line102">line 102</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="example-container">
+    <a class="link-icon" href="#addFirstMatch-examples">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h5 id="addFirstMatch-examples">Example</h5>
+    
+
+  <pre class="prettyprint"><code>this.addFirstMatch('browserName', 'chrome')
+this.addFirstMatch('browserName', 'firefox')</code></pre>
+
+
+  </div>
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#setRootKey">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="setRootKey">
+      <span class="type-signature"></span>setRootKey<span class="signature">(path, value, force)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Sets a key (or a path) on the object which will be sent to the webdriver when
+creating a session</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+        <th>Default</th>
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>path</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The name of the property to set. It can be a path; if path is has a <code>.</code> (e.g.
+                     <code>something.other</code>), the property
+                     <code>sessionParameters.something.other</code> will be set</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The value to assign</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+              true
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if needed</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+      <ul class="dummy">
+        <li>
+          <a href="Browser.html#setRootKey">Browser#setRootKey</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line123">line 123</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="example-container">
+    <a class="link-icon" href="#setRootKey-examples">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h5 id="setRootKey-examples">Example</h5>
+    
+
+  <pre class="prettyprint"><code>this.setRootKey('login', 'blah')
+this.setRootKey('pass', 'blah')</code></pre>
+
+
+  </div>
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#setSpecificKey">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="setSpecificKey">
+      <span class="type-signature"></span>setSpecificKey<span class="signature">(path, value, force)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Sets a configuration option for the specific browser.</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+        <th>Default</th>
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>path</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The name of the property to set. It can be a path; if path is has a <code>.</code> (e.g.
+                     <code>something.other</code>), the property
+                     <code>sessionParameters.something.other</code> will be set</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The value to assign</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+              true
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if needed</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+      <ul class="dummy">
+        <li>
+          <a href="Browser.html#setSpecificKey">Browser#setSpecificKey</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line143">line 143</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="example-container">
+    <a class="link-icon" href="#setSpecificKey-examples">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h5 id="setSpecificKey-examples">Example</h5>
+    
+
+  <pre class="prettyprint"><code>this.setSpecificKey('FIXME1', 'blah')
+this.setSpecificKey('FIXME2', 'blah')</code></pre>
+
+
+  </div>
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#getSessionParameters">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="getSessionParameters">
+      <span class="type-signature"></span>getSessionParameters<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Return the current session parameters. This is used by the <a href="Driver.html#newSession">Driver#newSession</a> call
+to get the parameters to be sent over</p>
+  </div>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+      <ul class="dummy">
+        <li>
+          <a href="Browser.html#getSessionParameters">Browser#getSessionParameters</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line160">line 160</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#setExecutable">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="setExecutable">
+      <span class="type-signature"></span>setExecutable<span class="signature">(executable)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Set executable for the browser</p>
   </div>
 
 
@@ -619,7 +1634,162 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
     
       <tr>
         
-          <td class="name"><code>params</code></td>
+          <td class="name"><code>executable</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The name of the executable to run</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from">
+      <ul class="dummy">
+        <li>
+          <a href="Browser.html#setExecutable">Browser#setExecutable</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line169">line 169</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#run">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="run">
+      <span class="type-signature">(async) </span>run<span class="signature">(opt)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Run the actual webdriver's executable, depending on the browser</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>opt</code></td>
         
 
         <td class="type">
@@ -640,7 +1810,7 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
         
 
         <td class="description last">
-          <p>Instructions on where to move the pointer</p>
+          <p>Options to configure the webdriver executable</p>
           
             <h6>Properties</h6>
             
@@ -657,8 +1827,6 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
       
 
       
-        <th>Default</th>
-      
 
       <th class="last">Description</th>
     </tr>
@@ -668,18 +1836,99 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
     
       <tr>
         
-          <td class="name"><code>origin</code></td>
+          <td class="name"><code>port</code></td>
         
 
         <td class="type">
           
             
     <span class="param-type">
-      <a href="Element.html">Element</a>
+      number
     </span>
 
-    |
+    
 
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The port the webdriver executable will listen to</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>args</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      Array
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The arguments to pass to the webdriver executable</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>env</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      Object
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The environment to pass to the spawn webdriver</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>stdio</code></td>
+        
+
+        <td class="type">
+          
+            
     <span class="param-type">
       string
     </span>
@@ -693,115 +1942,9 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
         
 
         
-          <td class="default">
-            
-              Pointer.Origin.VIEWPORT
-            
-          </td>
-        
 
         <td class="description last">
-          <p>Where to move the pointer to. It can be an <a href="Element.html">Element</a> object,
-                     or Pointer.Origin.VIEWPORT or Pointer.Origin.POINTER</p>
-          
-        </td>
-      </tr>
-
-    
-      <tr>
-        
-          <td class="name"><code>x</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      number
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-          <td class="default">
-            
-          </td>
-        
-
-        <td class="description last">
-          <p>The x offset, from params.origin.</p>
-          
-        </td>
-      </tr>
-
-    
-      <tr>
-        
-          <td class="name"><code>y</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      number
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-          <td class="default">
-            
-          </td>
-        
-
-        <td class="description last">
-          <p>The y offset, from params.origin.</p>
-          
-        </td>
-      </tr>
-
-    
-      <tr>
-        
-          <td class="name"><code>duration</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      number
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-          <td class="default">
-            
-          </td>
-        
-
-        <td class="description last">
-          <p>How long the operation will take, in milliseconds</p>
+          <p>The default parameter to pass to <a href="https://nodejs.org/api/child_process.html#child_process_options_stdio">stdio</a> when spawning new preocess.</p>
           
         </td>
       </tr>
@@ -831,179 +1974,14 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
   
 
   
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides">
       <ul class="dummy">
         <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line125">line 125</a>
+          <a href="Browser.html#run">Browser#run</a>
         </li>
       </ul>
     </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="example-container">
-    <a class="link-icon" href="#Move-examples">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h5 id="Move-examples">Example</h5>
-    
-
-  <pre class="prettyprint"><code>// Defining a pointer device called "cucumber", and passing it
-    // to the actions constructor
-    var actions = new Actions( new Pointer('bigMouse'))
-    // the `cucumberMove` method is now available in the tick property
-    actions.tick.bigMouseMove({ x: 400, y: 400 })</code></pre>
-
-
-  </div>
-
-
-      
-        
-
-
-  
-
-  <span class='name-container'>
-    <a class="link-icon" href="#Down">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h4 class="name" id="Down">
-      <span class="type-signature"></span>Down<span class="signature">(button)</span><span class="type-signature"></span>
-    </h4>
-  </span>
-
-  
-
-
-
-  <div class="description">
-    <p>Press a pointer button</p>
-<p>This method will be added to the action's <code>tick</code> property. <strong>prefixed</strong> with the Pointer's ID.</p>
-  </div>
-
-
-
-
-
-
-
-  <h5>Parameters:</h5>
-  
-
-<table class="params">
-  <thead>
-    <tr>
-      
-        <th>Name</th>
-      
-
-      <th>Type</th>
-
-      
-
-      
-        <th>Default</th>
-      
-
-      <th class="last">Description</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    
-      <tr>
-        
-          <td class="name"><code>button</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      number
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-          <td class="default">
-            
-              Pointer.Button.LEFT
-            
-          </td>
-        
-
-        <td class="description last">
-          <p>The button to press. It can be <code>Pointer.Button.LEFT</code> (0),
-                       <code>Pointer.Button.MIDDLE</code> (1) or <code>Pointer.Button.RIGHT</code> (2)</p>
-          
-        </td>
-      </tr>
-
-    
-  </tbody>
-</table>
-
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
   
 
   
@@ -1027,7 +2005,7 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line172">line 172</a>
+          <a href="browsers_Browser.js.html">browsers/Browser.js</a>, <a href="browsers_Browser.js.html#line183">line 183</a>
         </li>
       </ul>
     </dd>
@@ -1051,477 +2029,6 @@ E.g. <code>Pointer.Origin.VIEWPORT</code> or <code>Pointer.Origin.POINTER</code>
 
 
 
-
-  <div class="example-container">
-    <a class="link-icon" href="#Down-examples">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h5 id="Down-examples">Example</h5>
-    
-
-  <pre class="prettyprint"><code>var actions = new Actions( new Pointer('bigMouse'))
-    actions.tick.bigMouseDown()
-    actions.tick.bigMouseDown(Pointer.Button.RIGHT)</code></pre>
-
-
-  </div>
-
-
-      
-        
-
-
-  
-
-  <span class='name-container'>
-    <a class="link-icon" href="#Up">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h4 class="name" id="Up">
-      <span class="type-signature"></span>Up<span class="signature">(button)</span><span class="type-signature"></span>
-    </h4>
-  </span>
-
-  
-
-
-
-  <div class="description">
-    <p>Release a pointer button</p>
-<p>This method will be added to the action's <code>tick</code> property. <strong>prefixed</strong> with the Pointer's ID.</p>
-  </div>
-
-
-
-
-
-
-
-  <h5>Parameters:</h5>
-  
-
-<table class="params">
-  <thead>
-    <tr>
-      
-        <th>Name</th>
-      
-
-      <th>Type</th>
-
-      
-
-      
-        <th>Default</th>
-      
-
-      <th class="last">Description</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    
-      <tr>
-        
-          <td class="name"><code>button</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      number
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-          <td class="default">
-            
-              Pointer.Button.LEFT
-            
-          </td>
-        
-
-        <td class="description last">
-          <p>The button to let go</p>
-          
-        </td>
-      </tr>
-
-    
-  </tbody>
-</table>
-
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line192">line 192</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="example-container">
-    <a class="link-icon" href="#Up-examples">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h5 id="Up-examples">Example</h5>
-    
-
-  <pre class="prettyprint"><code>var actions = new Actions( new Pointer('bigMouse'))
-    actions.tick.bigMouseUp()
-    actions.tick.bigMouseUp(Pointer.Button.RIGHT)</code></pre>
-
-
-  </div>
-
-
-      
-        
-
-
-  
-
-  <span class='name-container'>
-    <a class="link-icon" href="#Cancel">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h4 class="name" id="Cancel">
-      <span class="type-signature"></span>Cancel<span class="signature">()</span><span class="type-signature"></span>
-    </h4>
-  </span>
-
-  
-
-
-
-  <div class="description">
-    <p>Cancels the pointer</p>
-<p>This method will be added to the action's <code>tick</code> property. <strong>prefixed</strong> with the Pointer's ID.</p>
-  </div>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line212">line 212</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="example-container">
-    <a class="link-icon" href="#Cancel-examples">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h5 id="Cancel-examples">Example</h5>
-    
-
-  <pre class="prettyprint"><code>var bigMouse = new Pointer('bigMouse')
-
-    // This will take 4 seconds. NOTE: there is no await before actions.performActions
-    var actions = new Actions(bigMouse)
-    actions.tick.bigMouseDown().tick.bigMouseUp().tick.bigMouseCancel()</code></pre>
-
-
-  </div>
-
-
-      
-        
-
-
-  
-
-  <span class='name-container'>
-    <a class="link-icon" href="#Pause">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h4 class="name" id="Pause">
-      <span class="type-signature"></span>Pause<span class="signature">(duration)</span><span class="type-signature"></span>
-    </h4>
-  </span>
-
-  
-
-
-
-  <div class="description">
-    <p>Pause the pointer for the specified length of time</p>
-<p>This method will be added to the action's <code>tick</code> property. <strong>prefixed</strong> with the Pointer's ID.</p>
-  </div>
-
-
-
-
-
-
-
-  <h5>Parameters:</h5>
-  
-
-<table class="params">
-  <thead>
-    <tr>
-      
-        <th>Name</th>
-      
-
-      <th>Type</th>
-
-      
-
-      
-        <th>Default</th>
-      
-
-      <th class="last">Description</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    
-      <tr>
-        
-          <td class="name"><code>duration</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      number
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-          <td class="default">
-            
-              0
-            
-          </td>
-        
-
-        <td class="description last">
-          <p>Duration of the pause</p>
-          
-        </td>
-      </tr>
-
-    
-  </tbody>
-</table>
-
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Pointer.js.html">actions/Pointer.js</a>, <a href="actions_Pointer.js.html#line234">line 234</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <div class="example-container">
-    <a class="link-icon" href="#Pause-examples">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h5 id="Pause-examples">Example</h5>
-    
-
-  <pre class="prettyprint"><code>var bigMouse = new Pointer('bigMouse')
-   var bigKeyboard = new Pointer('bigKeyboard')
-
-   var actions = new Actions(bigMouse, bigKeyboard)
-   actions.tick.bigKeyboardDown('a').bigMousePause()
-   actions.performActions(actions)</code></pre>
-
-
-  </div>
 
 
       

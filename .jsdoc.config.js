@@ -18,6 +18,8 @@ module.exports = {
       'src/browsers/Browser.js',
       'src/browsers/Chrome.js',
       'src/browsers/Firefox.js',
+      'src/browsers/Safari.js',
+      'src/browsers/Edge.js',
       'src/browsers/Remote.js',
       'src/actions/Actions.js',
       'src/actions/InputDevice.js',
