@@ -1,6 +1,5 @@
 
 Get it finished to version 1:
-☐ Write a simple test structure, write first few example tests
 ☐ Finish off writing tests
 
 ☐ Check/follow up on these links
@@ -9,13 +8,12 @@ Get it finished to version 1:
   ☐ https://github.com/jsdoc3/jsdoc/issues/1409
   ☐ https://stackoverflow.com/questions/48556759/sed-converting-jsdocs-link-into-markdown-links
 
-
 Beyond version 1:
-☐ Add browser-specific option setters (e.g. addExtension for Chrome)
-☐ Gain more traction
+☐ Add browser-specific option setters (e.g. addExtension for Chrome). MAYBE?
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+  ✔ Write a simple test structure, write first few example tests @done(2018-02-02 01:07)
   ✔ Add IE and Safari as browsers @done(2018-02-01 15:39)
   ✔ Finish off README.md (last 4 TODOs) @done(2018-02-01 14:53)
   ✔ Install JSDoc, check generated documentation
