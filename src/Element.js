@@ -62,60 +62,7 @@ var Element = class {
    * var el = await driver.findElementCss('#input')
    * await e.sendKeys("This is a search" + Element.Key.ENTER)
    */
-  static get KEY () { return KEY }
-
-  /**
-   * Find an element within this element
-   *
-   * Note that you are encouraged to use one of the helper functions:
-   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
-   * `findElementTagName()`, `findElementXpath()`
-   *
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return {Promise<Element>} An object representing the element.
-   *
-   * @example
-   * // Find the element using the driver's `findElement()` call
-   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
-   * // Find the first LI element within the found UL
-   * var items = await ul.findElement({ Driver.Using.CSS, value: 'li')
-   *
-   */
-  async findElement (using, value) {
-    var el = await this._execute('post', `/element/${this.id}/element`, {using, value})
-    return new Element(this.driver, el)
-  }
-
-  /**
-   * Find several elements within this element
-   *
-   * Note that you are encouraged to use one of the helper functions:
-   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
-   * `findElementTagName()`, `findElementXpath()`
-   *
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return {Promise<Array<Element>>} An array of elements
-   *
-   * @example
-   * // Find the element using the driver's `findElement()` call
-   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
-   * // Find ALL LI sub-elements within the found UL element
-   * var items = await ul.findElements({ Driver.Using.CSS, value: 'li')
-   *
-   */
-  async findElements (using, value) {
-    var els = await this._execute('post', `/element/${this.id}/elements`, {using, value})
-    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
-    return els.map((v) => new Element(this.driver, v))
-  }
+  static get Key () { return KEY }
 
   /**
    * Check that the element is selected
@@ -294,6 +241,59 @@ var Element = class {
    */
   async _execute (method, command, params) {
     return this.driver._execute(method, command, params)
+  }
+
+  /**
+   * Find an element within this element
+   *
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return {Promise<Element>} An object representing the element.
+   *
+   * @example
+   * // Find the element using the driver's `findElement()` call
+   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
+   * // Find the first LI element within the found UL
+   * var items = await ul.findElement({ Driver.Using.CSS, value: 'li')
+   *
+   */
+  async findElement (using, value) {
+    var el = await this._execute('post', `/element/${this.id}/element`, {using, value})
+    return new Element(this.driver, el)
+  }
+
+  /**
+   * Find several elements within this element
+   *
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return {Promise<Array<Element>>} An array of elements
+   *
+   * @example
+   * // Find the element using the driver's `findElement()` call
+   * var ul = await driver.findElement({ Driver.Using.CSS, value: 'ul' )
+   * // Find ALL LI sub-elements within the found UL element
+   * var items = await ul.findElements({ Driver.Using.CSS, value: 'li')
+   *
+   */
+  async findElements (using, value) {
+    var els = await this._execute('post', `/element/${this.id}/elements`, {using, value})
+    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
+    return els.map((v) => new Element(this.driver, v))
   }
 }
 

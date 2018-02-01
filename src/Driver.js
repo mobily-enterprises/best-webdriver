@@ -159,6 +159,7 @@ var Driver = class {
    * Since webdrivers can take a little while to answer, this method also checks
    * that the webdriver process is actively and properly dealing with connections
    * This method is called by {@link Driver#newSession|newSession}
+   * @private
    *
    * @example
    * var driver = new Driver(new Chrome())
@@ -219,6 +220,7 @@ var Driver = class {
   /**
     * Stops the webdriver process, if running. It does so by sending it a SIGTERM message.
     * You can specify the message to send the process
+    * @private
     *
     * @param {(string|number)} signal=SIGTERM The signal to send. To know which signals you can send,
     *
@@ -236,6 +238,21 @@ var Driver = class {
       this.killWebDriver('SIGTERM')
       this._webDriverRunning = false
     }
+  }
+
+  /**
+   * Sleep for ms milliseconds
+   * NOTE: you shouldn't use this as a quick means to wait for AJAX calls to finish.
+   * If you need to poll-wait, use {@link Driver#waitFor waitFor}
+   *
+   * @param {number} ms The number of milliseconds to wait for
+   *   *
+   * @example
+   *   await driver.sleep(1000)
+   *
+  */
+  async sleep (ms) {
+    return utils.sleep(ms)
   }
 
   /**
@@ -323,50 +340,6 @@ var Driver = class {
   }
 
   /**
-   * Find an element.
-   * Note that you are encouraged to use one of the helper functions:
-   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
-   * `findElementTagName()`, `findElementXpath()`
-   *
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return {Element} An object representing the element.
-   * @example
-   *   var el = await driver.findElement({ Driver.Using.CSS, value: '[name=q]' )
-   *
-  */
-  async findElement (using, value) {
-    var el = await this._execute('post', '/element', {using, value})
-    return new Element(this, el)
-  }
-
-  /**
-   * Find several elements
-   * Note that you are encouraged to use one of the helper functions:
-   * `findElementsCss()`, `findElemenstLinkText()`, `findElementsPartialLinkText()`,
-   * `findElementsTagName()`, `findElementsXpath()`
-   *
-   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
-   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
-   *                `Driver.Using.XPATH`
-   * @param {string} value The parameter to the `using` method
-   *
-   * @return [{Element},{Element},...] An array of elements
-   *
-   * @example
-   *   var el = await driver.findElements({ Driver.Using.CSS, value: '.item' )
-   *
-  */
-  async findElements (using, value) {
-    var els = await this._execute('post', '/elements', {using, value})
-    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
-    return els.map((v) => new Element(this, v))
-  }
-
-  /**
    * Perform actions as specified in the passed actions object
    * To see how to create an actions object, check the
    * {@link Actions Actions class}
@@ -395,21 +368,6 @@ var Driver = class {
   async releaseActions () {
     await this._execute('delete', '/actions')
     return this
-  }
-
-  /**
-   * Sleep for ms milliseconds
-   * NOTE: you shouldn't use this as a quick means to wait for AJAX calls to finish.
-   * If you need to poll-wait, use {@link Driver#waitFor waitFor}
-   *
-   * @param {number} ms The number of milliseconds to wait for
-   *   *
-   * @example
-   *   await driver.sleep(1000)
-   *
-  */
-  async sleep (ms) {
-    return utils.sleep(ms)
   }
 
   /**
@@ -906,6 +864,50 @@ var Driver = class {
   async getActiveElement () {
     var value = await this._execute('get', '/element/active')
     return new Element(this, value)
+  }
+
+  /**
+   * Find an element.
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementCss()`, `findElementLinkText()`, `findElementPartialLinkText()`,
+   * `findElementTagName()`, `findElementXpath()`
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return {Element} An object representing the element.
+   * @example
+   *   var el = await driver.findElement({ Driver.Using.CSS, value: '[name=q]' )
+   *
+  */
+  async findElement (using, value) {
+    var el = await this._execute('post', '/element', {using, value})
+    return new Element(this, el)
+  }
+
+  /**
+   * Find several elements
+   * Note that you are encouraged to use one of the helper functions:
+   * `findElementsCss()`, `findElemenstLinkText()`, `findElementsPartialLinkText()`,
+   * `findElementsTagName()`, `findElementsXpath()`
+   *
+   * @param {string} using It can be `Driver.Using.CSS`, `Driver.Using.LINK_TEXT`,
+   *                `Driver.Using.PARTIAL_LINK_TEXT`, `Driver.Using.TAG_NAME`,
+   *                `Driver.Using.XPATH`
+   * @param {string} value The parameter to the `using` method
+   *
+   * @return [{Element},{Element},...] An array of elements
+   *
+   * @example
+   *   var el = await driver.findElements({ Driver.Using.CSS, value: '.item' )
+   *
+  */
+  async findElements (using, value) {
+    var els = await this._execute('post', '/elements', {using, value})
+    if (!Array.isArray(els)) throw new Error('Result from findElements must be an array')
+    return els.map((v) => new Element(this, v))
   }
 }
 
