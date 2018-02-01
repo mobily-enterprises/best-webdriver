@@ -3,7 +3,7 @@ const Keyboard = require('./Keyboard')
 const KEY = require('../KEY')
 
 /**
- * Thee class responsible of creating action objects, which are a list
+ * The class responsible of creating action objects, which are a list
  * of UI actions to be carried out.
  *
  * Once the action object is created, you can add "ticks" to it using the
@@ -61,7 +61,7 @@ const KEY = require('../KEY')
  *      // Only a mouse action in this tick. Keyboard will pause
  *      actions.tick.mouseDown()
  *      // Both a mouse and a keyboard action this tick
- *      // actions.tick.keyboardUp('r').mouseUp()
+ *      actions.tick.keyboardUp('r').mouseUp()
  *
  * You can only add one action per device in each tick. This will give an error,
  * because the `mouse` device is trying to define two different actions in the same
@@ -145,10 +145,10 @@ class Actions {
           self._currentAction[device.id] = res
           return self._tickSetters
         }
-        this._tickSetters['pause'] = function (duration = 0) {
-          self._currentAction[device.id] = { type: 'pause', duration }
-          return self._tickSetters
-        }
+        // this._tickSetters['pause'] = function (duration = 0) {
+        //   self._currentAction[device.id] = { type: 'pause', duration }
+        //   return self._tickSetters
+        // }
       })
     })
   }

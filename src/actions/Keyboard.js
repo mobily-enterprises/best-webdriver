@@ -23,6 +23,24 @@ class Keyboard extends InputDevice {
 
   _tickMethods () {
     return {
+
+      /** Unpress the specified key on the keyboard
+       *
+       * This method will be added to the action's `tick` property. **prefixed** with the Keyboard's ID.
+       *
+       * @param {string} key The key to unpress. You can use special keys defined in {@link Actions#Keys}
+       *
+       * @example
+       *     var actions = new Actions( new Pointer('bigKeyboard'))
+       *
+       *     actions.tick.bigKeyboardDown('a').
+       *             tick.bigKeyboardUp('a')
+       *
+       *     actions.tick.bigKeyboardDown(Actions.Keys.ENTER)
+       *            .tick.bigKeyboardUp(Actions.Keys.ENTER)
+       *
+       * @memberof Keyboard#
+      */
       Up: (value) => {
         return {
           type: 'keyUp',
@@ -30,12 +48,51 @@ class Keyboard extends InputDevice {
         }
       },
 
+      /** Press the specified key on the keyboard
+       *
+       * This method will be added to the action's `tick` property. **prefixed** with the Keyboard's ID.
+       *
+       * @param {string} key The key to press. You can use special keys defined in {@link Actions#Keys}
+       *
+       * @example
+       *     var actions = new Actions( new Pointer('bigKeyboard'))
+       *
+       *     actions.tick.bigKeyboardDown('a').
+       *             tick.bigKeyboardUp('a')
+       *
+       *     actions.tick.bigKeyboardDown(Actions.Keys.ENTER)
+       *            .tick.bigKeyboardUp(Actions.Keys.ENTER)
+       *
+       * @memberof Keyboard#
+      */
       Down: (value) => {
         return {
           type: 'keyDown',
           value
         }
+      },
+
+      /**
+       * Pause the keyboard for the specified length of time
+       *
+       * This method will be added to the action's `tick` property. **prefixed** with the Keyboard's ID.
+       *
+       * @param {number} duration=0 Duration of the pause
+       *
+       * @example
+       *    var bigMouse = new Pointer('bigMouse')
+       *    var bigKeyboard = new Pointer('bigKeyboard')
+       *
+       *    var actions = new Actions(bigMouse, bigKeyboard)
+       *    actions.tick.bigKeyboardPause().bigMouseMove({ x: 100, y: 200, duration: 4000 })
+       *    actions.performActions(actions)
+       *
+       * @memberof Keyboard#
+      */
+      Pause: (duration) => {
+        return { type: 'pause', duration }
       }
+
     }
   }
 }

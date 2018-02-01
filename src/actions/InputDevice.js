@@ -1,7 +1,7 @@
 
 /**
  * The base class for input devices. Each device is associated a unique ID
- * like `mouse`, or `keyboard`
+ * like `mouse`, `oldMouse`, or `keyboard`
  * Note: input device objects are only ever used in {@link Actions}.
 */
 class InputDevice {
