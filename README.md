@@ -32,8 +32,6 @@ Also, make sure you install at least one webdriver on your computer:
 * [Firefox](https://github.com/mozilla/geckodriver/releases/)
 * [Safari](https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html#//apple_ref/doc/uid/TP40014305-CH11-DontLinkElementID_28)
 
-NOTE: at this stage, this library will only work with Chrome and Firefox. Safari and IE support is coming soon.
-
 Once you are done, you are pretty much ready to go.
 
 ### Create a session on a locally spawn webdriver
