@@ -56,8 +56,35 @@ var Driver = class {
     this._commandResult = null
 
     this._pollInterval = 300
-    this._defaultPollTimeout = 10000
+    this._pollTimeout = 10000
     this._urlBase = null
+  }
+
+  /**
+    * Set the default poll interval
+    *
+    * @param {number} interval How many milliseconds between each polling attempt
+    *
+    * @example
+    * // Create a driver using the Chrome browser
+    * var driver = new Driver(new Chrome())
+    * driver.setPollInterval(200)
+    */
+  setPollInterval (ms) {
+    this._pollInterval = ms
+  }
+
+  /**
+    * Set the default waitFor timeout
+    *
+    * @param {number} timeout How many milliseconds between failing the call
+    *
+    * @example
+    * var driver = new Driver(new Chrome())
+    * driver.setPollTimeout(200)
+    */
+  setPollTimeout (ms) {
+    this._pollTimeout = ms
   }
 
   /**
@@ -84,7 +111,7 @@ var Driver = class {
     * await el.waitFor(10000).findElementsCss('.listItem', (r) => r.length))
    */
   waitFor (timeout = 0, pollInterval = 0) {
-    timeout = timeout || this._defaultPollTimeout
+    timeout = timeout || this._pollTimeout
     pollInterval = pollInterval || this._pollInterval
     var self = this
     return new Proxy({}, {
