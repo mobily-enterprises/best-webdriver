@@ -13,9 +13,9 @@ Yes, it's also [available on NPM](https://www.npmjs.com/package/best-webdriver)
 * Slim code: **817 lines of code** and **7 active classes**, compared to the selenium-webdriver's **5654 lines of code** and **92 classes**
 * 100% [W3C's webdriver](https://w3c.github.io/webdriver/webdriver-spec.html#compatibility) compliant. The code only ever makes pure webdriver calls
 * [Well documented API](https://mercmobily.github.io/best-webdriver/index.html) which comes with a simple quickstart guide
-* The API is async/await friendly. Each call returns a promise. Developing is a breeze
+* The API is async/await friendly. Each call returns a promise. Development is a breeze
 * Easy to debug. There is a 1:1 mapping between calls and the webdriver protocol, without trickery
-* Simple system to define sequences of actions
+* Simple system to define sequences of webdriver UI actions
 
 #### Get your system ready
 
@@ -63,7 +63,7 @@ _Please note that in this guide it will always be assumed that the code is place
 
 Understanding how sessions are created is crucial. This section explains the session object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic Remote browser.
 
-#### The session object (and helper methods)
+#### The basic session object
 
 Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:
 
@@ -73,15 +73,15 @@ At this point, no process is spawned yet. However, when you run:
 
     await driver.newSession()
 
-The driver, by default, will use the browser's `run()` method (in this case Chrome) to spawn a `chromedriver` process, and will then connect to it and create a new browsing session.
+The driver, by default, will use the browser's `run()` method to spawn a `chromedriver` process, and will then connect to it and create a new browsing session.
 
-When creating a session, the driver accepts configuration options provided by the browser. For example if you type:
+When creating a session, the driver will use configuration options provided by the browser. For example if you type:
 
     var chrome = new browser.Chrome()
     var params = chrome.getSessionParameters()
     console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))
 
-You will see:
+This is display the configuration object created by default by the Chrome browser. You will see:
 
     {
       capabilities: {
@@ -93,75 +93,51 @@ You will see:
       }
     }
 
-This is the configuration object created by default by the Chrome browser. Note that `chromeOptions` under `alwaysMatch`: they are Chrome-specific options. In this case, `w3c:true` is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).
+It's important that you understand the configuration option:
 
-The {@link Browser}'s constructor call accepts four parameters: `alwaysMatch`, `firstMatch`, `root`, `specific` which will define the corresponding values in the session parameter (keep in mind that `root` keys will be copied onto the object's root).  
-So, you could run:
+* It must have a `capabilities` key
+* Under `capabilities`, it must have the keys `alwaysMatch` (object) and `firstMatch` (an array)
+* It may have more keys in the object's root namespace
+* `chromeOptions` (under `alwaysMatch`) represents Chrome-specific options. In this case, `w3c:true` is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).
 
-    var chrome = new browser.Chrome(
-      // This first argument will set alwaysMatch
-      {
-        pageLoadStrategy: 'eager'  
-      },
+#### Setting session parameters
 
-      // This second argument will set firstMatch
-      {
-        platformName: 'linux'
-      },
+You can also set the session options using the setting methods:
 
-      // This third argument will add keys to be object
-      // Note: shallow copy is performed
-      {
-        login: 'merc',
-        password: 'youwish'
-      },
+    var chrome = new browser.Chrome()
+    chrome.setAlwaysMatchKey('pageLoadStrategy', 'eager')
+          .addFirstMatch({ platformName: 'linux' })
+          .setRootKey('login', 'merc')
+          .setRootKey('password', 'youwish')
+          .setSpecificKey('detach', true)
 
-      // This fourth argument will be placed as browser-specific options
-      {
-        detach: true  
-      }
-    )
     var params = chrome.getSessionParameters()
     console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))
 
 You will see:
 
     {
+      // set by setRootKey()
       login: 'merc',
       pass: 'youwish',
+
       capabilities: {
         alwaysMatch: {
+
+          // Set by the Chrome constructor
           chromeOptions: { w3c: true, detach: true },
+          browserName: 'chrome'
+
+          // Set my setAlwaysMatchKey()
           pageLoadStrategy: 'eager'
         },
         firstMatch: [
-          {
-            platformName: 'linux'
-          }
+
+          // Added by addFirstmatch()
+          { platformName: 'linux' }
         ]
       }
     }
-
-Notice that:
-
-* (first argument) the `pageLoadStrategy` property was added under `alwaysMatch`
-* (second argument) the object `{platformName: 'linux'}` was placed as an element of the `firstMatch` array
-* (third argument) the root options `{login: 'merc', password: 'youwish'}` ended up in the object's top level keys
-* (fourth argument) `{ detach: true }` ended up under `chromeOptions`
-* The default `{ w3c: true }` option is there so that Chrome "speaks" w3c
-
-You can also set the session options using the setting methods:
-
-    var chrome = new browser.Chrome()
-    chrome.setAlwaysMatchKey('pageLoadStrategy', 'eager')
-    chrome.addFirstMatch({ platformName: 'linux' })
-    chrome.setRootKey('login', 'merc')
-    chrome.setRootKey('password', 'youwish')
-    chrome.setSpecificKey('detach', true)
-
-    var params = chrome.getSessionParameters()
-    console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))
-
 
 Remember that in {@link Browser#setAlwaysMatchKey}, {@link Browser#setRootKey} and {@link Browser#setSpecificKey}, the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatchKey('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
 
@@ -190,10 +166,10 @@ Lastly (and more commonly), you might want to connect to a generic webdriver pro
 Here is how you would run it:
 
     // Create a new generic browser object, specifying the alwaysMatch parameter
-    var remote = new browser.Remote({
-      browserName: 'chrome',
-      platformName: 'linux'
-    })
+    var remote = new browser.Remote()
+
+    remote.setAlwaysMatchKey('browserName', 'chrome')
+          .setAlwaysMatchKey('platformName', 'linux')
 
     // Creating the driver
     var driver = new Driver(remote, {
@@ -201,18 +177,7 @@ Here is how you would run it:
       port: 4444
     })
 
-You could also do:
-
-    // Create a new generic browser object, specifying the alwaysMatch parameter
-    var remote = new browser.Remote()
-    browser.setAlwaysMatchKey('browserName', 'chrome')
-    browser.setAlwaysMatchKey('platformName', 'linux')
-
-    // Creating the driver
-    var driver = new Driver(chrome, {
-      host: '10.10.10.45',
-      port: 4444
-    })
+Note that since you used the generic {@link Remote} browser, the session configuration did _not_ include the browser-specific `{ w3c: true }` value.
 
 ### Running amok with driver calls
 
