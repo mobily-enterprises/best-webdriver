@@ -141,7 +141,7 @@ You will see:
       }
     }
 
-Remember that in [Browser#setAlwaysMatchKey](https://mercmobily.github.io/best-webdriver/Browser.html#setAlwaysMatchKey), [Browser#setRootKey](https://mercmobily.github.io/best-webdriver/Browser.html#setRootKey) and [Browser#setSpecificKey](https://mercmobily.github.io/best-webdriver/Browser.html#setSpecificKey), the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatchKey('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
+Remember that in {@link Browser#setAlwaysMatchKey}, {@link Browser#setRootKey} and {@link Browser#setSpecificKey}, the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatchKey('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
 
 #### Running the API without spawning a webdriver
 
@@ -163,7 +163,7 @@ Here is how you do it notice the `spawn: false` property:
 
 #### The generic "Remote" browser
 
-Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called [Remote](https://mercmobily.github.io/best-webdriver/Remote.html), which is a "blank" browser without the ability to spawn a specific webdriver, and without and specific options.
+Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called {@link Remote}, which is a "blank" browser without the ability to spawn a specific webdriver, and without and specific options.
 
 Here is how you would run it:
 
@@ -179,7 +179,7 @@ Here is how you would run it:
       port: 4444
     })
 
-Note that since you used the generic [Remote](https://mercmobily.github.io/best-webdriver/Remote.html) browser, the session configuration did _not_ include the browser-specific `{ w3c: true }` value.
+Note that since you used the generic {@link Remote} browser, the session configuration did _not_ include the browser-specific `{ w3c: true }` value.
 
 ### Running amok with driver calls
 
@@ -195,8 +195,8 @@ You can then run commands using the webdriver.
 There are three types of call:
 
 * Calls that will deal with parameters and values on the currently opened page
-* Calls that will return objects [Driver#findElement](https://mercmobily.github.io/best-webdriver/Driver.html#findElement) and [Driver#findElement](https://mercmobily.github.io/best-webdriver/Driver.html#findElement)
-* Call to run user [Actions](https://mercmobily.github.io/best-webdriver/Actions.html)
+* Calls that will return objects {@link Driver#findElement} and {@link Driver#findElement}
+* Call to run user {@link Actions}
 
 Finally, all calls can be "polled", which implies re-running the command at intervals until it succeeds, or until it fails (after it reaches a timeout).
 
@@ -214,27 +214,27 @@ For example:
     var title = await driver.getTitle()
     await driver.refresh()
 
-All of these commands are self-explanatory, and fully documented in the [Driver](https://mercmobily.github.io/best-webdriver/Driver.html) documentation (basically, all of the listed calls under the [Driver](https://mercmobily.github.io/best-webdriver/Driver.html) object)
+All of these commands are self-explanatory, and fully documented in the {@link Driver} documentation (basically, all of the listed calls under the {@link Driver} object)
 
 Remember that there is a 1:1 mapping between driver calls and Webdriver calls.
 
 ### Returning elements
 
-Some of the driver calls will return an [Element](https://mercmobily.github.io/best-webdriver/Element.html) object. For example:
+Some of the driver calls will return an {@link Element} object. For example:
 
     await driver.navigateTo('https://www.google.com')    
     var el = await driver.findElementsCss('[name=q]')
 
-The returned element will be an instance of [Element](https://mercmobily.github.io/best-webdriver/Element.html), created with the data returned by the `findElementCss()` call.
+The returned element will be an instance of {@link Element}, created with the data returned by the `findElementCss()` call.
 An element object is simply an object with a reference to the `Driver` that created it, and a unique ID returned by the webdriver call.
 
-[Element](https://mercmobily.github.io/best-webdriver/Element.html) objects have several element-related methods. For example, you can get the tag name for a found element:
+{@link Element} objects have several element-related methods. For example, you can get the tag name for a found element:
 
     await driver.navigateTo('https://www.google.com')    
     var el = await driver.findElementsCss('[name=q]')
     var tagName = await el.getTagName()
 
-More importantly, [Element](https://mercmobily.github.io/best-webdriver/Element.html) objects _also_ offer methods that will return elements. In this case, the search will be limited to elements children of the element being searched.
+More importantly, {@link Element} objects _also_ offer methods that will return elements. In this case, the search will be limited to elements children of the element being searched.
 For example:
 
     await driver.navigateTo('https://www.example.com')    
@@ -348,19 +348,19 @@ You can also move a pointer over a specific element, specifying how long it will
 
 Keyboard devices can perform:
 
-* [Keyboard#Up](https://mercmobily.github.io/best-webdriver/Keyboard.html#Up)
-* [Keyboard#Down](https://mercmobily.github.io/best-webdriver/Keyboard.html#Down)
-* [Keyboard#Pause](https://mercmobily.github.io/best-webdriver/Keyboard.html#Pause)
+* {@link Keyboard#Up}
+* {@link Keyboard#Down}
+* {@link Keyboard#Pause}
 
 Mouse devices can perform:
 
-* [Pointer#Up](https://mercmobily.github.io/best-webdriver/Pointer.html#Up)
-* [Pointer#Down](https://mercmobily.github.io/best-webdriver/Pointer.html#Down)
-* [Pointer#Move](https://mercmobily.github.io/best-webdriver/Pointer.html#Move)
-* [Pointer#Cancel](https://mercmobily.github.io/best-webdriver/Pointer.html#Cancel)
-* [Pointer#Pause](https://mercmobily.github.io/best-webdriver/Pointer.html#Pause)
+* {@link Pointer#Up}
+* {@link Pointer#Down}
+* {@link Pointer#Move}
+* {@link Pointer#Cancel}
+* {@link Pointer#Pause}
 
-The [Actions](https://mercmobily.github.io/best-webdriver/Actions.html) class documentation explains exactly how actions work.
+The {@link Actions} class documentation explains exactly how actions work.
 
 ### Polling
 
@@ -372,7 +372,7 @@ What you don't know is this: have _all_ of the AJAX finished fetching data? Has 
 
 The answer is "you don't know". So, the ability to poll is very important.
 
-This API has the simplest, most streamlined approach possible i nterms of polling: there is only one call, `waitFor()`, which is available in [Element#waitFor](https://mercmobily.github.io/best-webdriver/Element.html#waitFor) and {@Driver#waitFor} objects.
+This API has the simplest, most streamlined approach possible i nterms of polling: there is only one call, `waitFor()`, which is available in {@link Element#waitFor} and {@Driver#waitFor} objects.
 
 The way it works is really simple: `waitFor()` actually acts as a proxy to the real object calls, wit hthe twist that it will retry them until they work out. Each call will also accept one extra parameter (compared to their signature), which is a function that will also return a truly value for the call to be successful.
 
@@ -401,11 +401,11 @@ In this case, the callback `(r) => r.length` will only return truly when `r` (th
 
 Behind the scenes, `waitFor()` returns a proxy object which will in turn run the call and check that it didn't return an error; it also checks that the result passes the required checker function, if one was passed.
 
-The result of this is that one simple chained method, [Driver#waitFor](https://mercmobily.github.io/best-webdriver/Driver.html#waitFor)/[Element#waitFor](https://mercmobily.github.io/best-webdriver/Element.html#waitFor), turns every call for [Driver](https://mercmobily.github.io/best-webdriver/Driver.html) and [Element](https://mercmobily.github.io/best-webdriver/Element.html) into a polling function able to check the result.
+The result of this is that one simple chained method, {@link Driver#waitFor}/{@link Element#waitFor}, turns every call for {@link Driver} and {@link Element} into a polling function able to check the result.
 
 ### Limitations
 
-The main limitation of this API is that _it will only ever speak in w3c webdriver protocol_. For example, as of today Chrome doesn't yet implement [Actions](https://mercmobily.github.io/best-webdriver/Actions.html). While other APIs try to "emulate" actions (with crippling limitatins) by calling non-standard endpoints, this SPI will simply submit the actions to the chrome webdriver and surely receive an error in response.
+The main limitation of this API is that _it will only ever speak in w3c webdriver protocol_. For example, as of today Chrome doesn't yet implement {@link Actions}. While other APIs try to "emulate" actions (with crippling limitatins) by calling non-standard endpoints, this SPI will simply submit the actions to the chrome webdriver and surely receive an error in response.
 
 Another limitation is that it's an API that is very close to the metal: you are supposed to understand how the session configuration works, for example; so, while you do have helper methods such as `setAlwaysMatchKey()`, `addFirstMatch()` etc., you are still expected to _understand_ what these calls do. Also, browser-specific parameters are added via `setSpecificKey()`; however, there are no helpers methods to get these parameters right. For example, if you want to add plugins to Chrome using the `extensions` option, you will need to create an array of packed extensions loaded from the disk and converted to base64. This _may_ change in the future, as this API matures; however, it won't add more classes and any enhancement will always be close enough to the API to be easy to understand.
 
