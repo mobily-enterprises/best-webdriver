@@ -7,6 +7,7 @@ Get it finished to version 1:
   ☐ https://github.com/w3c/webdriver/issues/1215
   ☐ https://github.com/jsdoc3/jsdoc/issues/1409
   ☐ https://stackoverflow.com/questions/48556759/sed-converting-jsdocs-link-into-markdown-links
+  ☐ https://github.com/w3c/webdriver/issues/1217
 
 Beyond version 1:
 ☐ Add browser-specific option setters (e.g. addExtension for Chrome). MAYBE?
