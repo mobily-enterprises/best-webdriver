@@ -214,15 +214,17 @@ var Driver = class {
 
     // It's still possible that no port has been set, since spawn was false
     // and no port was defined. In such a case, use the default 4444
-    if (!this.port) this.port = '4444'
+    if (!this._port) this._port = '4444'
 
     // `_hostname` and `_port` are finally set: make up the first `urlBase`
     this._urlBase = `http://${this._hostname}:${this._port}/session`
 
+    await this.sleep(200)
+
     // Check that the server is up, by asking for the status
     // It might take a little while for the
     var success = false
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 40; i++) {
       if (i > 5) {
         console.log(`Attempt n. ${i} to connect to ${this._hostname}, port ${this._port}... `)
       }
@@ -231,7 +233,7 @@ var Driver = class {
         success = true
         break
       } catch (e) {
-        await this.sleep(1000)
+        await this.sleep(300)
       }
     }
     if (!success) {
@@ -261,6 +263,8 @@ var Driver = class {
 
       // this.killWebDriver('SIGTERM')
       this._webDriverRunning = false
+
+      this._port = 0;
     }
   }
 
