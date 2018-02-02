@@ -25,6 +25,7 @@
     "debug": "^3.1.0",
     "deepobject": "^0.3.9",
     "get-port": "^3.2.0",
+    "p-iteration": "^1.1.5",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5"
   },
