@@ -264,7 +264,7 @@ var Driver = class {
       // this.killWebDriver('SIGTERM')
       this._webDriverRunning = false
 
-      this._port = 0;
+      this._port = 0
     }
   }
 
