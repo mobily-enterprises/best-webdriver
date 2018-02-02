@@ -4,7 +4,7 @@
   "description": "Down to metal webdriver; you will be testing in 20 minutes, not 20 hours",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha tests/index.js",
+    "test": "node_modules/mocha/bin/mocha --delay tests/index.js",
     "docs": "rm -rf docs/*;node_modules/jsdoc/jsdoc.js --template node_modules/jsdoc-template -c .jsdoc.config.js -R GUIDE.md -P package.json; mv _out/*/*/** docs;rm -rf _out;touch docs/.nojekyll;scripts/readme > README.md"
   },
   "repository": {
