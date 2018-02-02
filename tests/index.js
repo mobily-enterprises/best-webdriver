@@ -16,6 +16,7 @@ const chai = require('chai')
 const express = require('express')
 const http = require('http')
 const path = require('path')
+const { forEach } = require('p-iteration')
 
 // chai.should()
 const expect = chai.expect
@@ -82,6 +83,15 @@ describe('start all tests', async function () {
 
   describe('basic non-element calls', async function () {
     it('status', async function () {
+      forEach(browsers, async (Browser) => {
+        var driver = new Driver(new Browser())
+        await driver.newSession()
+        var status = await driver.status()
+        expect(status).to.be.a('object')
+        await driver.deleteSession()
+        await driver.stopWebDriver()
+        console.log('Status:', status)
+      })
       expect(true).to.be.true
     })
     it('timeouts', async function () {
