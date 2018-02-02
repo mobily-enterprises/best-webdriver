@@ -7,21 +7,6 @@ const path = require('path')
 // chai.should()
 const expect = chai.expect
 
-async function browserThere (Browser) {
-  var browser = new Browser()
-  var driver = new Driver(browser)
-  console.log('Checking:', browser.name)
-  try {
-    await driver.startWebDriver()
-  } catch (e) {
-    console.log(`${browser.name} not found.`)
-    return false
-  }
-  await driver.stopWebDriver()
-  console.log(`${browser.name} found!`)
-  return true
-}
-
 function startServer () {
   return new Promise((resolve) => {
     // Serve static files in `public` (the whole client-side app)
@@ -40,6 +25,21 @@ function sleep (ms) { // eslint-disable-line no-unused-vars
 }
 
 async function getActiveBrowsers (allBrowsers) {
+  //
+  async function browserThere (Browser) {
+    var browser = new Browser()
+    var driver = new Driver(browser)
+    try {
+      await driver.startWebDriver()
+    } catch (e) {
+      console.log(`${browser.name} not found.`)
+      return false
+    }
+    await driver.stopWebDriver()
+    console.log(`${browser.name} found!`)
+    return true
+  }
+
   var browsers = []
   for (var i = 0, l = allBrowsers.length; i < l; i++) {
     var Browser = allBrowsers[i]
@@ -146,6 +146,10 @@ async function getActiveBrowsers (allBrowsers) {
         })
       })
 
+      // ***********************************************
+      // ************ ACTIONS                 **********
+      // ***********************************************
+
       describe(`[${browserName}] actions`, async function () {
         it('mouse actions', async function () {
           expect(true).to.be.true
@@ -161,6 +165,10 @@ async function getActiveBrowsers (allBrowsers) {
         })
       })
 
+      // ***********************************************
+      // ************ WAITFOR                 **********
+      // ***********************************************
+
       describe(`[${browserName}] waitFor`, async function () {
         it('wait for an element', async function () {
           expect(true).to.be.true
@@ -169,6 +177,10 @@ async function getActiveBrowsers (allBrowsers) {
           expect(true).to.be.true
         })
       })
+
+      // ***********************************************
+      // ************ ELEMENTS                 **********
+      // ***********************************************
 
       describe(`[${browserName}] elements`, async function () {
         it('driver\'s findElement', async function () {
