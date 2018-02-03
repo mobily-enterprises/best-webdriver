@@ -92,7 +92,7 @@ var Driver = class {
     *
     * @example
     * // Create a driver using the Chrome browser
-    * var driver = new Driver(new Chrome())
+    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
     * driver.setPollInterval(200)
     */
   setPollInterval (ms) {
@@ -105,7 +105,7 @@ var Driver = class {
     * @param {number} timeout How many milliseconds between failing the call
     *
     * @example
-    * var driver = new Driver(new Chrome())
+    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
     * driver.setPollTimeout(200)
     */
   setPollTimeout (ms) {
@@ -124,7 +124,7 @@ var Driver = class {
     *
     * @example
     * // Create a driver using the Chrome browser
-    * var driver = new Driver(new Chrome())
+    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
     * await driver.navigateTo('http://www.google.com')
     *
     * // The findElementCss has 5 seconds to work
@@ -213,7 +213,7 @@ var Driver = class {
    * This method is called by {@link Driver#newSession|newSession}
    *
    * @example
-   * var driver = new Driver(new Chrome())
+   * var driver = new drivers.ChromeDriver(new browsers.Chrome())
    * await driver.startWebDriver()
    */
   async startWebDriver () {
@@ -277,7 +277,7 @@ var Driver = class {
     *
     * @example
     * // Create a driver using the Chrome browser
-    * var driver = new Driver(new Chrome())
+    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
     * // ...
     * // ...
     * await driver.stopWebDriver()
@@ -321,7 +321,7 @@ var Driver = class {
    * @return {Promise<object>} An object containing the keys `sessionId` and `capabilities`
    *
    * @example
-   * var driver = new Driver(new Chrome())
+   * var driver = new drivers.ChromeDriver(new browsers.Chrome())
    * var session = await driver.newSession()
    */
   async newSession () {
