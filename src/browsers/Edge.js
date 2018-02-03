@@ -1,8 +1,9 @@
 const Browser = require('./Browser')
 const utils = require('../utils')
+const EdgeDriver = require('../drivers/EdgeDriver')
 
 /**
- * Class that represents the {@link https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ Edge webdriver}.
+ * Class that represents the {@link https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ Edge browser}.
  *
  *
  * It implements the `run()` method, which will run `MicrosoftWebDriver.exe`
@@ -34,6 +35,10 @@ class Edge extends Browser {
   run (options) {
     options.args.push('--port=' + options.port)
     return utils.exec(this._executable, options)
+  }
+
+  static get Driver () {
+    return EdgeDriver
   }
 }
 

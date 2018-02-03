@@ -1,8 +1,9 @@
 const Browser = require('./Browser')
 const utils = require('../utils')
+const ChromeDriver = require('../drivers/ChromeDriver')
 
 /**
- * Class that represents the {@link https://sites.google.com/a/chromium.org/chromedriver/ Chrome webdriver}.
+ * Class that represents the {@link https://sites.google.com/a/chromium.org/chromedriver/ Chrome browser}.
  *
  *
  * It implements the `run()` method, which will run `chromewebdriver` or `chromewebdriver.exe`
@@ -45,6 +46,10 @@ class Chrome extends Browser {
   run (options) {
     options.args.push('--port=' + options.port)
     return utils.exec(this._executable, options)
+  }
+
+  static get Driver () {
+    return ChromeDriver
   }
 }
 

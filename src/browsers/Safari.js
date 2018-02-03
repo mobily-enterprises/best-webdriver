@@ -1,8 +1,9 @@
 const Browser = require('./Browser')
 const utils = require('../utils')
+const SafariDriver = require('../drivers/SafariDriver')
 
 /**
- * Class that represents the {@link https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html#//apple_ref/doc/uid/TP40014305-CH11-DontLinkElementID_28 Safari webdriver}.
+ * Class that represents the {@link https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html#//apple_ref/doc/uid/TP40014305-CH11-DontLinkElementID_28 Safari browser}.
  *
  *
  * It implements the `run()` method, which will run `safariDrive`
@@ -34,6 +35,10 @@ class Safari extends Browser {
   run (options) {
     options.args.push('--port=' + options.port)
     return utils.exec(this._executable, options)
+  }
+
+  static get Driver () {
+    return SafariDriver
   }
 }
 

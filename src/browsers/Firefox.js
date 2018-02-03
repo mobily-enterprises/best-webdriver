@@ -1,8 +1,9 @@
 const Browser = require('./Browser')
 const utils = require('../utils')
+const FirefoxDriver = require('../drivers/FirefoxDriver')
 
 /**
- * Class that represents the {@link https://github.com/mozilla/geckodriver Firefox webdriver}.
+ * Class that represents the {@link https://github.com/mozilla/geckodriver Firefox browser}.
  *
  *
  * It implements the `run()` method, which will run `geckodriver` or `geckodriver.exe`
@@ -44,6 +45,10 @@ class Firefox extends Browser {
   run (options) {
     options.args.push('--port=' + options.port)
     return utils.exec(this._executable, options)
+  }
+
+  static get Driver () {
+    return FirefoxDriver
   }
 }
 
