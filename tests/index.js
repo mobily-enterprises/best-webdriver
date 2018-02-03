@@ -1,4 +1,4 @@
-const { Driver, browser, Actions } = require('best-webdriver') // eslint-disable-line no-unused-vars
+const { drivers, browsers, Actions } = require('best-webdriver') // eslint-disable-line no-unused-vars
 const chai = require('chai')
 const express = require('express')
 const http = require('http')
@@ -28,7 +28,7 @@ async function getActiveBrowsers (allBrowsers) {
   //
   async function browserThere (Browser) {
     var browser = new Browser()
-    var driver = new Driver(browser)
+    var driver = new Browser.Driver(browser)
     try {
       await driver.startWebDriver()
     } catch (e) {
@@ -54,12 +54,12 @@ async function getActiveBrowsers (allBrowsers) {
 }
 
 (async () => {
-  var browsers = await getActiveBrowsers([ browser.Chrome, browser.Firefox, browser.Edge, browser.Safari ])
+  var allBrowsers = await getActiveBrowsers([ browsers.Chrome, browsers.Firefox, browsers.Edge, browsers.Safari ])
   var server = await startServer()
   var port = server.address().port
   console.log(`Started local server: http://127.0.0.1:${port}/`)
 
-  browsers.forEach((Browser) => {
+  allBrowsers.forEach((Browser) => {
     var browser = new Browser()
     var browserName = browser.name
 
@@ -80,7 +80,7 @@ async function getActiveBrowsers (allBrowsers) {
 
         // Close things up
         before(async function () {
-          driver = new Driver(new Browser())
+          driver = new Browser.Driver(new Browser())
           await driver.startWebDriver()
         })
 
@@ -90,7 +90,7 @@ async function getActiveBrowsers (allBrowsers) {
           await driver.stopWebDriver()
         })
 
-        it('check the status', async function () {
+        it('checks the status', async function () {
           var status = await driver.status()
           expect(status).to.be.an('object')
           expect(status).to.have.property('ready')
@@ -103,6 +103,15 @@ async function getActiveBrowsers (allBrowsers) {
         })
 
         it('timeouts', async function () {
+          var timeouts = await driver.getTimeouts()
+          expect(timeouts).to.have.all.keys('script', 'pageLoad', 'implicit')
+          await driver.setTimeouts({ implicit: 30001, pageLoad: 30002, script: 30003 })
+          var newTimeouts = await driver.getTimeouts()
+          expect(newTimeouts).to.have.property('implicit', 30001)
+          expect(newTimeouts).to.have.property('pageLoad', 30002)
+          expect(newTimeouts).to.have.property('script', 30003)
+
+          console.log('timeouts:', timeouts)
           expect(true).to.be.true
         })
         it('navigateTo/getCurrentUrl', async function () {
@@ -238,4 +247,4 @@ async function getActiveBrowsers (allBrowsers) {
     })
   })
   run()
-})()
+})().catch( (e) => {console.log(e, e.stack)})

@@ -1,6 +1,6 @@
 {
   "name": "best-webdriver",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Down to metal webdriver; you will be testing in 20 minutes, not 20 hours",
   "main": "index.js",
   "scripts": {

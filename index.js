@@ -1,5 +1,5 @@
-const Driver = require('./src/Driver')
+const drivers = require('./src/drivers/index')
+const browsers = require('./src/browsers/index')
 const Actions = require('./src/actions/Actions')
-const browser = require('./src/browsers/index')
 
-exports = module.exports = { Driver, browser, Actions }
+exports = module.exports = { drivers, browsers, Actions }

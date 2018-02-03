@@ -1,12 +1,19 @@
-const Driver = require('../Driver')
+const Driver = require('./Driver')
 
 /**
- * Class that adds a compatibility layer to the w3c Driver to work around Firefox's
- * lack of full s3c support
- * It inherits from Driver, but tries to make the unsupported w3c calls actually work
+ * Browser-specific class, which knows how to run() the executable by overriding
+ * the {@link Driver}'s {@link Driver#run} method.
  *
- * @extends Driver
+ * This class also  adds a compatibility layer to the w3c Driver to work around Chrome's
+ * lack of full s3c support
+ * It inherits from {@link Driver}, but tries to make the unsupported w3c calls actually work
  */
+
 class FirefoxDriver extends Driver {
+  constructor (...args) {
+    super(...args)
+    // Set the default executable
+    this.setExecutable(process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver')
+  }
 }
 exports = module.exports = FirefoxDriver

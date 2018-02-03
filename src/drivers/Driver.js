@@ -1,10 +1,10 @@
 const consolelog = require('debug')('webdriver:Driver')
 const getPort = require('get-port')
 const request = require('request-promise-native')
-const utils = require('./utils')
-const Element = require('./Element.js')
-const FindHelpersMixin = require('./FindHelpersMixin')
-const USING = require('./USING')
+const utils = require('../utils')
+const Element = require('../Element.js')
+const FindHelpersMixin = require('../FindHelpersMixin')
+const USING = require('../USING')
 /**
  * The main driver class used to create a driver and actually use this API
  * It will spawn a webdriver process by default.
@@ -44,6 +44,7 @@ var Driver = class {
     this._browser = browser
     this._hostname = options.hostname || '127.0.0.1'
     this._spawn = typeof options.spawn !== 'undefined' ? !!options.spawn : true
+    this._executable = null
     this._webDriverRunning = !this._spawn
 
     // Parameters passed onto child process
@@ -58,6 +59,30 @@ var Driver = class {
     this._pollInterval = 300
     this._pollTimeout = 10000
     this._urlBase = null
+  }
+
+  /**
+   * Set executable for the browser
+   *
+   * @param {string} executable The name of the executable to run
+   */
+  setExecutable (executable) {
+    this._executable = executable
+  }
+
+  /**
+   * Run the actual webdriver's executable, depending on the browser
+   *
+   * @param {Object} opt Options to configure the webdriver executable
+   * @param {number} opt.port The port the webdriver executable will listen to
+   * @param {Array} opt.args The arguments to pass to the webdriver executable
+   * @param {Object} opt.env The environment to pass to the spawn webdriver
+   * @param {string} opt.stdio The default parameter to pass to {@link https://nodejs.org/api/child_process.html#child_process_options_stdio stdio} when spawning new preocess.
+   *
+   */
+  async run (options) {
+    options.args.push('--port=' + options.port)
+    return utils.exec(this._executable, options)
   }
 
   /**
@@ -196,14 +221,14 @@ var Driver = class {
     if (this._webDriverRunning) return
 
     // If spawning is required, do so
-    if (this._spawn) {
+    if (this._spawn && this._executable) {
       // No port: find a free port
       if (!this._port) {
         this._port = await getPort({ host: this._hostname })
       }
 
       // Options: port, args, env, stdio
-      var res = await this._browser.run({
+      var res = await this.run({
         port: this._port,
         args: this._args,
         env: this._env,

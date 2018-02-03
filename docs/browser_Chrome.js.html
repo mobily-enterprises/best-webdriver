@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      InputDevice - Documentation
+      browser/Chrome.js - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -76,201 +78,86 @@
   <div id="main">
     
       <h1 class="page-title">
-        InputDevice
+        browser/Chrome.js
       </h1>
     
 
     
+      
 
 <section>
-  <header>
-    
-      <h2>
-        
-        InputDevice
-        
-      </h2>
-
-      
-        <div class="class-description">
-          <p>The base class for input devices. Each device is associated a unique ID
-like <code>mouse</code>, <code>oldMouse</code>, or <code>keyboard</code>
-Note: input device objects are only ever used in <a href="Actions.html">Actions</a>.</p>
-        </div>
-      
-    
-  </header>
-
   <article>
-    <div class="container-overview">
-      
-        
-
-
-  
-    <h2>Constructor</h2>
-  
-
-  <span class='name-container'>
-    <a class="link-icon" href="#InputDevice">
-      <svg height="20" width="20" style="fill: black;">
-        <use xlink:href="#linkIcon"></use>
-      </svg>
-    </a>
-    <h4 class="name" id="InputDevice">
-      <span class="type-signature"></span>new InputDevice<span class="signature">(id)</span><span class="type-signature"></span>
-    </h4>
-  </span>
-
-  
-
-
-
-
-
-
-
-
-
-  <h5>Parameters:</h5>
-  
-
-<table class="params">
-  <thead>
-    <tr>
-      
-        <th>Name</th>
-      
-
-      <th>Type</th>
-
-      
-
-      
-
-      <th class="last">Description</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    
-      <tr>
-        
-          <td class="name"><code>id</code></td>
-        
-
-        <td class="type">
-          
-            
-    <span class="param-type">
-      string
-    </span>
-
-    
-
-
-          
-        </td>
-
-        
-
-        
-
-        <td class="description last">
-          <p>The unique ID of the device</p>
-          
-        </td>
-      </tr>
-
-    
-  </tbody>
-</table>
-
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_InputDevice.js.html">actions/InputDevice.js</a>, <a href="actions_InputDevice.js.html#line7">line 7</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
+    <pre class="prettyprint source linenums"><code>const Browser = require('./Browser')
+const ChromeDriver = require('../driver/ChromeDriver')
+
+/**
+ * Class that represents the {@link https://sites.google.com/a/chromium.org/chromedriver/ Chrome browser}.
+ *
+ *
+ * It implements the `run()` method, which will run `chromewebdriver` or `chromewebdriver.exe`
+ * (depending on the platform).
+ * It also:
+ *  * makes absolute sure that `chromeOptions.w3c` is set to `true`. This is crucial so that chrome
+ *    is compliant with the w3c webdriver standard, which is what this API expects.
+ *  * passed the `specific` properties onto the `alwaysMatch.chromeOptions`. Check
+ *    {@link https://sites.google.com/a/chromium.org/chromedriver/capabilities#TOC-chromeOptions-object Chrome's specific options}
+ *    to see what you can pass as keys to the `specific` parameter
+ *
+ * Check the {@link https://chromium.googlesource.com/chromium/src/+/lkcr/docs/chromedriver_status.md Status of Chrome}
+ * in terms of implementation of the w3c specs
+ *
+ * @extends Browser
+ */
+class Chrome extends Browser {
+  constructor () {
+    super(...arguments)
+
+    // Give it a nice, lowercase name
+    this.name = 'chrome'
+
+    // Sets the key for specificKey, used by Browser#setSpecificKey()
+    this.specificKey = 'chromeOptions'
+
+    // This is crucial so that Chrome obeys w3c
+    this.setSpecificKey('w3c', true, true)
+
+    // The required browser's name
+    this.setAlwaysMatchKey('browserName', 'chrome')
+  }
+
+  /**
+   * Returns the specific driver for this browser.
+   * Specific drivers will ensure that implementation problems
+   * are fixed, by fixing return values or implementing features
+   * manually.
+   *
+   * This example is for {@link Chrome}, but will apply to
+   * {@link Firefox}, {@link Edge}, {@link Safari} and {@link Remote} too.
+   *
+   * @example
+   * const browsers = require('best-chromedriver').browsers
+   *
+   * // Get the constructors for the Chrome configurator/runner and for
+   * // the specific driver
+   * var Chrome = browsers.Chrome
+   * var ChromeDriver = Chrome.Driver
+   *
+   * // Make up the driver
+   * var chrome = new Chrome()
+   * var driver = new ChromeDriver(chrome)
+   * await driver.newSession()
+   */
+  static get Driver () {
+    return ChromeDriver
+  }
+}
+
+exports = module.exports = Chrome
+</code></pre>
   </article>
 </section>
 
-
+    
 
 
   </div>

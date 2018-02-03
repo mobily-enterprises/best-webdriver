@@ -1,28 +1,37 @@
-const Driver = require('../Driver')
-
+const Driver = require('./Driver')
 /**
- * Class that adds a compatibility layer to the w3c Driver to work around Chrome's
- * lack of full s3c support
- * It inherits from Driver, but tries to make the unsupported w3c calls actually work
+ * Browser-specific class, which knows how to run() the executable by overriding
+ * the {@link Driver}'s {@link Driver#run} method.
  *
- * @extends Driver
+ * This class also  adds a compatibility layer to the w3c Driver to work around Chrome's
+ * lack of full s3c support
+ * It inherits from {@link Driver}, but tries to make the unsupported w3c calls actually work
  */
 class ChromeDriver extends Driver {
+  constructor (...args) {
+    super(...args)
+    // Set the default executable
+    this.setExecutable(process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver')
+  }
   /**
-   * Set timeouts
-   * @async
-   *
-   * @param {Object} param The object with the timeouts
-   * @param {number} param.implicit Implicit timeout
-   * @param {number} param.pageLoad Timeout for page loads
-   * @param {number} param.script Timeout for scripts
-   *
-   * @example
-   * var timeouts = await driver.setTimeouts({ implicit: 7000 })
+   * w3c: Fixes Chrome's setTimeouts implementation, which will require three different
+   * calls rather than the one call
    */
-  setTimeouts (parameters) {
-    return { implicit: 30001, pageLoad: 30002, script: 30003 }
-    // return this._execute('post', '/timeouts', parameters)
+  async setTimeouts (p) {
+    if (p.pageLoad) await this._execute('post', '/timeouts', { type: 'page load', ms: p.pageLoad })
+    if (p.implicit) await this._execute('post', '/timeouts', { type: 'implicit', ms: p.implicit })
+    if (p.script) await this._execute('post', '/timeouts', { type: 'script', ms: p.script })
+  }
+
+  /**
+   * w3c: Fixes Chrome's status object, which otherwise won;t include
+   * the `ready` and `message` properties, as required
+   */
+  async status () {
+    var res = await super.status()
+    res.ready = true
+    res.message = ''
+    return res
   }
 }
 

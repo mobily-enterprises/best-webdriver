@@ -1,5 +1,5 @@
-
 const DO = require('deepobject')
+const Driver = require('../drivers/Driver')
 
 /**
  * A base class that represents a generic browser. All browsers ({@link Chrome},
@@ -163,25 +163,29 @@ class Browser {
   }
 
   /**
-   * Set executable for the browser
+   * Returns the specific driver for this browser.
+   * Specific drivers will ensure that implementation problems
+   * are fixed, by fixing return values or implementing features
+   * manually.
    *
-   * @param {string} executable The name of the executable to run
+   * This example is for {@link Chrome}, but will apply to
+   * {@link Firefox}, {@link Edge}, {@link Safari} and {@link Remote} too.
+   *
+   * @example
+   * const browsers = require('best-chromedriver').browsers
+   *
+   * // Get the constructors for the Chrome configurator/runner and for
+   * // the specific driver
+   * var Chrome = browsers.Chrome
+   * var ChromeDriver = Chrome.Driver
+   *
+   * // Make up the driver
+   * var chrome = new Chrome()
+   * var driver = new ChromeDriver(chrome)
+   * await driver.newSession()
    */
-  setExecutable (executable) {
-    this._executable = executable
-  }
-
-  /**
-   * Run the actual webdriver's executable, depending on the browser
-   *
-   * @param {Object} opt Options to configure the webdriver executable
-   * @param {number} opt.port The port the webdriver executable will listen to
-   * @param {Array} opt.args The arguments to pass to the webdriver executable
-   * @param {Object} opt.env The environment to pass to the spawn webdriver
-   * @param {string} opt.stdio The default parameter to pass to {@link https://nodejs.org/api/child_process.html#child_process_options_stdio stdio} when spawning new preocess.
-   *
-   */
-  async run (options) {
+  static get Driver () {
+    return Driver
   }
 }
 exports = module.exports = Browser

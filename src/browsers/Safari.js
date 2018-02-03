@@ -1,5 +1,4 @@
 const Browser = require('./Browser')
-const utils = require('../utils')
 const SafariDriver = require('../drivers/SafariDriver')
 
 /**
@@ -24,19 +23,30 @@ class Safari extends Browser {
 
     // The required browser's name
     this.setAlwaysMatchKey('browserName', 'safari')
-
-    // Set the default executable
-    this.setExecutable('safariDriver')
   }
 
   /**
-   * @inheritdoc
+   * Returns the specific driver for this browser.
+   * Specific drivers will ensure that implementation problems
+   * are fixed, by fixing return values or implementing features
+   * manually.
+   *
+   * This example is for {@link Chrome}, but will apply to
+   * {@link Firefox}, {@link Edge}, {@link Safari} and {@link Remote} too.
+   *
+   * @example
+   * const browsers = require('best-chromedriver').browsers
+   *
+   * // Get the constructors for the Chrome configurator/runner and for
+   * // the specific driver
+   * var Chrome = browsers.Chrome
+   * var ChromeDriver = Chrome.Driver
+   *
+   * // Make up the driver
+   * var chrome = new Chrome()
+   * var driver = new ChromeDriver(chrome)
+   * await driver.newSession()
    */
-  run (options) {
-    options.args.push('--port=' + options.port)
-    return utils.exec(this._executable, options)
-  }
-
   static get Driver () {
     return SafariDriver
   }
