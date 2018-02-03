@@ -55,9 +55,8 @@ async function getActiveBrowsers (allBrowsers) {
 
 (async () => {
   var allBrowsers = await getActiveBrowsers([ browsers.Chrome, browsers.Firefox, browsers.Edge, browsers.Safari ])
-  var server = await startServer()
-  var port = server.address().port
-  console.log(`Started local server: http://127.0.0.1:${port}/`)
+  // console.log(`Started local server: http://127.0.0.1:${port}/`)
+  // await sleep(10000)
 
   allBrowsers.forEach((Browser) => {
     var browser = new Browser()
@@ -66,9 +65,26 @@ async function getActiveBrowsers (allBrowsers) {
     /* eslint-disable no-unused-expressions */
     /* globals describe,it,before,after,run */
     describe(`[${browserName}] start all tests`, async function () {
+      var server
+      var port
+      var url
+      var driver
+
+      before(async function () {
+        server = await startServer()
+        port = server.address().port
+        url = `http://127.0.0.1:${port}/`
+
+        driver = new Browser.Driver(new Browser())
+        await driver.startWebDriver()
+      })
+
       // Close things up
       after(async function () {
-        server.close()
+        await server.close()
+
+        await driver.deleteSession()
+        await driver.stopWebDriver()
       })
 
       // ***********************************************
@@ -76,20 +92,6 @@ async function getActiveBrowsers (allBrowsers) {
       // ***********************************************
 
       describe(`[${browserName}] basic non-element calls`, async function () {
-        var driver
-
-        // Close things up
-        before(async function () {
-          driver = new Browser.Driver(new Browser())
-          await driver.startWebDriver()
-        })
-
-        // Close things up
-        after(async function () {
-          await driver.deleteSession()
-          await driver.stopWebDriver()
-        })
-
         it('checks the status', async function () {
           var status = await driver.status()
           expect(status).to.be.an('object')
@@ -110,18 +112,28 @@ async function getActiveBrowsers (allBrowsers) {
           expect(newTimeouts).to.have.property('implicit', 30001)
           expect(newTimeouts).to.have.property('pageLoad', 30002)
           expect(newTimeouts).to.have.property('script', 30003)
-
-          console.log('timeouts:', timeouts)
-          expect(true).to.be.true
         })
         it('navigateTo/getCurrentUrl', async function () {
-          expect(true).to.be.true
+          await driver.navigateTo(url)
+          var currentUrl = await driver.getCurrentUrl()
+          expect(currentUrl).to.equal(url)
         })
         it('back/forward/refresh', async function () {
-          expect(true).to.be.true
+          var currentUrl
+          await driver.refresh(url)
+          await driver.navigateTo(url + 'index.html')
+          currentUrl = await driver.getCurrentUrl()
+          expect(currentUrl).to.equal(url + 'index.html')
+          await driver.back()
+          currentUrl = await driver.getCurrentUrl()
+          expect(currentUrl).to.equal(url)
+          await driver.forward()
+          currentUrl = await driver.getCurrentUrl()
+          expect(currentUrl).to.equal(url + 'index.html')
         })
         it('getTitle', async function () {
-          expect(true).to.be.true
+          var title = await driver.getTitle()
+          expect(title).to.equal('The best-webdriver testing page')
         })
         it('getWindowHandles/switchToWindow', async function () {
           expect(true).to.be.true
@@ -161,7 +173,19 @@ async function getActiveBrowsers (allBrowsers) {
 
       describe(`[${browserName}] actions`, async function () {
         it('mouse actions', async function () {
-          expect(true).to.be.true
+          this.timeout(10000)
+          // var actions = new Actions()
+          // actions.tick.mouseMove({ x: 0, y: 0 })
+          // actions.tick.mouseDown()
+          // actions.tick.mouseMove({ x: 300, y: 200, duration: 4000 })
+          // actions.tick.mouseUp()
+
+          var actions = new Actions(new Actions.Keyboard('keyboard'))
+          actions.tick.keyboardDown('a')
+          actions.tick.keyboardPause(2000)
+          actions.tick.keyboardUp('a')
+
+          await driver.performActions(actions)
         })
         it('keyboard actions', async function () {
           expect(true).to.be.true
@@ -199,14 +223,12 @@ async function getActiveBrowsers (allBrowsers) {
         it('driver\'s findElementS', async function () {
           expect(true).to.be.true
         })
-
         it('element\'s isSelected', async function () {
           expect(true).to.be.true
         })
         it('element\'s getAttribute', async function () {
           expect(true).to.be.true
         })
-
         it('element\'s getProperty', async function () {
           expect(true).to.be.true
         })
@@ -247,4 +269,4 @@ async function getActiveBrowsers (allBrowsers) {
     })
   })
   run()
-})().catch( (e) => {console.log(e, e.stack)})
+})().catch((e) => { console.log('ERROR:', e, e.stack) })
