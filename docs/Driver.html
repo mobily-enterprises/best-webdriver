@@ -1275,7 +1275,7 @@ filter will be applied</p>
     
 
   <pre class="prettyprint"><code>// Create a driver using the Chrome browser
-var driver = new Driver(new Chrome())
+var driver = new drivers.ChromeDriver(new browsers.Chrome())
 driver.setPollInterval(200)</code></pre>
 
 
@@ -1436,7 +1436,7 @@ driver.setPollInterval(200)</code></pre>
     <h5 id="setPollTimeout-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>var driver = new Driver(new Chrome())
+  <pre class="prettyprint"><code>var driver = new drivers.ChromeDriver(new browsers.Chrome())
 driver.setPollTimeout(200)</code></pre>
 
 
@@ -1610,7 +1610,7 @@ which represents a checker function that will need to return truly for success</
     
 
   <pre class="prettyprint"><code>// Create a driver using the Chrome browser
-var driver = new Driver(new Chrome())
+var driver = new drivers.ChromeDriver(new browsers.Chrome())
 await driver.navigateTo('http://www.google.com')
 
 // The findElementCss has 5 seconds to work
@@ -1727,7 +1727,7 @@ This method is called by <a href="Driver.html#newSession">newSession</a></p>
     <h5 id="startWebDriver-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>var driver = new Driver(new Chrome())
+  <pre class="prettyprint"><code>var driver = new drivers.ChromeDriver(new browsers.Chrome())
 await driver.startWebDriver()</code></pre>
 
 
@@ -1904,7 +1904,7 @@ You can specify the message to send the process</p>
     
 
   <pre class="prettyprint"><code>// Create a driver using the Chrome browser
-var driver = new Driver(new Chrome())
+var driver = new drivers.ChromeDriver(new browsers.Chrome())
 // ...
 // ...
 await driver.stopWebDriver()</code></pre>
@@ -2176,7 +2176,7 @@ run the webdriver for the associated browser before asking for the session</p>
     <h5 id="newSession-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>var driver = new Driver(new Chrome())
+  <pre class="prettyprint"><code>var driver = new drivers.ChromeDriver(new browsers.Chrome())
 var session = await driver.newSession()</code></pre>
 
 
