@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      browser/Firefox.js - Documentation
+      drivers/EdgeDriver.js - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -78,7 +78,7 @@
   <div id="main">
     
       <h1 class="page-title">
-        browser/Firefox.js
+        drivers/EdgeDriver.js
       </h1>
     
 
@@ -87,71 +87,26 @@
 
 <section>
   <article>
-    <pre class="prettyprint source linenums"><code>const Browser = require('./Browser')
-const FirefoxDriver = require('../driver/FirefoxDriver')
+    <pre class="prettyprint source linenums"><code>const Driver = require('./Driver')
 
 /**
- * Class that represents the {@link https://github.com/mozilla/geckodriver Firefox browser}.
+ * Browser-specific class, which knows how to run() the executable by overriding
+ * the {@link Driver}'s {@link Driver#run} method.
  *
- *
- * It implements the `run()` method, which will run `geckodriver` or `geckodriver.exe`
- * (depending on the platform).
- * It also:
- *  * passed the `specific` properties onto the `alwaysMatch.moz:firefoxOptions`. Check
- *    {@link https://github.com/mozilla/geckodriver#mozfirefoxoptions Firefox's specific options}
- *    to see what you can pass as keys to the `specific` parameter
- *
- * Check the {@link https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status Status of Firefox}
- * in terms of implementation of the w3c specs
- *
- * @extends Browser
+ * This class also  adds a compatibility layer to the w3c Driver to work around Chrome's
+ * lack of full s3c support
+ * It inherits from {@link Driver}, but tries to make the unsupported w3c calls actually work
  */
 
-class Firefox extends Browser {
-  constructor (alwaysMatch = {}, firstMatch = [], root = {}, specific = {}) {
-    super(...arguments)
-
-    // Give it a nice, lowercase name
-    this.name = 'firefox'
-
-    // Sets the key for specificKey, used by Browser#setSpecificKey()
-    this.specificKey = 'moz:firefoxOptions'
-
-    // Firefox's empty firefoxOptions
-    this.setAlwaysMatchKey('moz:firefoxOptions', {}, true)
-
-    // The required browser's name
-    this.setAlwaysMatchKey('browserName', 'firefox')
-  }
-
-  /**
-   * Returns the specific driver for this browser.
-   * Specific drivers will ensure that implementation problems
-   * are fixed, by fixing return values or implementing features
-   * manually.
-   *
-   * This example is for {@link Chrome}, but will apply to
-   * {@link Firefox}, {@link Edge}, {@link Safari} and {@link Remote} too.
-   *
-   * @example
-   * const browsers = require('best-chromedriver').browsers
-   *
-   * // Get the constructors for the Chrome configurator/runner and for
-   * // the specific driver
-   * var Chrome = browsers.Chrome
-   * var ChromeDriver = Chrome.Driver
-   *
-   * // Make up the driver
-   * var chrome = new Chrome()
-   * var driver = new ChromeDriver(chrome)
-   * await driver.newSession()
-   */
-  static get Driver () {
-    return FirefoxDriver
+class EdgeDriver extends Driver {
+  constructor (...args) {
+    super(...args)
+    // Set the default executable
+    this.setExecutable('MicrosoftWebDriver.exe')
   }
 }
 
-exports = module.exports = Firefox
+exports = module.exports = EdgeDriver
 </code></pre>
   </article>
 </section>

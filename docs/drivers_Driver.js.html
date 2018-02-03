@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      driver/Driver.js - Documentation
+      drivers/Driver.js - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -78,7 +78,7 @@
   <div id="main">
     
       <h1 class="page-title">
-        driver/Driver.js
+        drivers/Driver.js
       </h1>
     
 
@@ -130,10 +130,10 @@ var Driver = class {
    * @param {Array} opt.args (If spawn === true) The arguments to pass to the webdriver command
    */
   constructor (browser, options = {}) {
-    console.log('PASSED BROWSER:', browser)
     this._browser = browser
     this._hostname = options.hostname || '127.0.0.1'
     this._spawn = typeof options.spawn !== 'undefined' ? !!options.spawn : true
+    this._executable = null
     this._webDriverRunning = !this._spawn
 
     // Parameters passed onto child process
@@ -310,7 +310,7 @@ var Driver = class {
     if (this._webDriverRunning) return
 
     // If spawning is required, do so
-    if (this._spawn) {
+    if (this._spawn &amp;&amp; this._executable) {
       // No port: find a free port
       if (!this._port) {
         this._port = await getPort({ host: this._hostname })
@@ -420,8 +420,6 @@ var Driver = class {
       }
       // First of all, try and run the webdriver, if it's not running already
       await this.startWebDriver()
-
-      console.log('THIS BROWSER:', this._browser)
 
       var value = await this._execute('post', '', this._browser.getSessionParameters())
 

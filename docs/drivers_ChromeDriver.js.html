@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      driver/SafariDriver.js - Documentation
+      drivers/ChromeDriver.js - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -78,7 +78,7 @@
   <div id="main">
     
       <h1 class="page-title">
-        driver/SafariDriver.js
+        drivers/ChromeDriver.js
       </h1>
     
 
@@ -88,7 +88,6 @@
 <section>
   <article>
     <pre class="prettyprint source linenums"><code>const Driver = require('./Driver')
-
 /**
  * Browser-specific class, which knows how to run() the executable by overriding
  * the {@link Driver}'s {@link Driver#run} method.
@@ -97,16 +96,35 @@
  * lack of full s3c support
  * It inherits from {@link Driver}, but tries to make the unsupported w3c calls actually work
  */
-
-class SafariDriver extends Driver {
+class ChromeDriver extends Driver {
   constructor (...args) {
     super(...args)
     // Set the default executable
-    this.setExecutable(process.platform === 'win32' ? 'safariDriver.exe' : 'safariDriver')
+    this.setExecutable(process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver')
+  }
+  /**
+   * w3c: Fixes Chrome's setTimeouts implementation, which will require three different
+   * calls rather than the one call
+   */
+  async setTimeouts (p) {
+    if (p.pageLoad) await this._execute('post', '/timeouts', { type: 'page load', ms: p.pageLoad })
+    if (p.implicit) await this._execute('post', '/timeouts', { type: 'implicit', ms: p.implicit })
+    if (p.script) await this._execute('post', '/timeouts', { type: 'script', ms: p.script })
+  }
+
+  /**
+   * w3c: Fixes Chrome's status object, which otherwise won;t include
+   * the `ready` and `message` properties, as required
+   */
+  async status () {
+    var res = await super.status()
+    res.ready = true
+    res.message = ''
+    return res
   }
 }
 
-exports = module.exports = SafariDriver
+exports = module.exports = ChromeDriver
 </code></pre>
   </article>
 </section>

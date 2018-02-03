@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      driver/EdgeDriver.js - Documentation
+      browsers/Safari.js - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -78,7 +78,7 @@
   <div id="main">
     
       <h1 class="page-title">
-        driver/EdgeDriver.js
+        browsers/Safari.js
       </h1>
     
 
@@ -87,26 +87,61 @@
 
 <section>
   <article>
-    <pre class="prettyprint source linenums"><code>const Driver = require('./Driver')
+    <pre class="prettyprint source linenums"><code>const Browser = require('./Browser')
+const SafariDriver = require('../drivers/SafariDriver')
 
 /**
- * Browser-specific class, which knows how to run() the executable by overriding
- * the {@link Driver}'s {@link Driver#run} method.
+ * Class that represents the {@link https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html#//apple_ref/doc/uid/TP40014305-CH11-DontLinkElementID_28 Safari browser}.
  *
- * This class also  adds a compatibility layer to the w3c Driver to work around Chrome's
- * lack of full s3c support
- * It inherits from {@link Driver}, but tries to make the unsupported w3c calls actually work
+ *
+ * It implements the `run()` method, which will run `safariDrive`
+ * Check the {@link https://webkit.org/blog/6900/webdriver-support-in-safari-10/ Status of Safari}
+ * in terms of implementation of the w3c specs
+ *
+ * @extends Browser
  */
+class Safari extends Browser {
+  constructor () {
+    super(...arguments)
 
-class EdgeDriver extends Driver {
-  constructor (...args) {
-    super(...args)
-    // Set the default executable
-    this.setExecutable('MicrosoftWebDriver.exe')
+    // Give it a nice, lowercase name
+    this.name = 'safari'
+
+    // Sets the key for specificKey, used by Browser#setSpecificKey()
+    this.specificKey = 'safari.options'
+
+    // The required browser's name
+    this.setAlwaysMatchKey('browserName', 'safari')
+  }
+
+  /**
+   * Returns the specific driver for this browser.
+   * Specific drivers will ensure that implementation problems
+   * are fixed, by fixing return values or implementing features
+   * manually.
+   *
+   * This example is for {@link Chrome}, but will apply to
+   * {@link Firefox}, {@link Edge}, {@link Safari} and {@link Remote} too.
+   *
+   * @example
+   * const browsers = require('best-chromedriver').browsers
+   *
+   * // Get the constructors for the Chrome configurator/runner and for
+   * // the specific driver
+   * var Chrome = browsers.Chrome
+   * var ChromeDriver = Chrome.Driver
+   *
+   * // Make up the driver
+   * var chrome = new Chrome()
+   * var driver = new ChromeDriver(chrome)
+   * await driver.newSession()
+   */
+  static get Driver () {
+    return SafariDriver
   }
 }
 
-exports = module.exports = EdgeDriver
+exports = module.exports = Safari
 </code></pre>
   </article>
 </section>

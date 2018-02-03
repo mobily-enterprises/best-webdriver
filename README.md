@@ -40,10 +40,10 @@ To open up a driver, simply run:
 
     ;(async () => {
       try {
-        const { Driver, browser, Actions } = require('best-webdriver')
+        const { drivers, browsers, Actions } = require('best-webdriver')
 
         // Create a new driver object, using the Chrome browser
-        var driver = new Driver(new browser.Chrome())
+        var driver = new drivers.ChromeDriver(new browsers.Chrome())
 
         // Create a new session. This will also run `chromewebdriver` for you
         await driver.newSession()
@@ -57,29 +57,34 @@ To open up a driver, simply run:
 
 If everything goes well, you will see a Chrome window appear. Note that that `(async () => {` is there to make sure that you can use `await`.
 
+The role of the Chrome-specific Driver here is:
+
+* To provide a way to execute Chrome's webdriver command
+* To provide a software layer around Chrome's own limitations or mistakes in implementing the W3c protocol
+
 _Please note that in this guide it will always be assumed that the code is placed in `// ...add more code here`, and that the async function, require and session creation won't be repeated._
 
 ### Understanding session options
 
-Understanding how sessions are created is crucial. This section explains the session object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic Remote browser.
+Understanding how sessions are created is crucial. This section explains the session object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic [Browser](https://mercmobily.github.io/best-webdriver/Browser.html) browser.
 
 #### The basic session object
 
 Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:
 
-    var driver = new Driver(new browser.Chrome())
+    var driver = new drivers.ChromeDriver(new browsers.Chrome())
 
 At this point, no process is spawned yet. However, when you run:
 
     await driver.newSession()
 
-The driver, by default, will use the browser's `run()` method to spawn a `chromedriver` process, and will then connect to it and create a new browsing session.
+The driver, by default, will use the browser's driver's`run()` method to spawn a `chromedriver` process, and will then connect to it and create a new browsing session.
 
-You can use any one of the chromedrivers available: [Chrome](https://mercmobily.github.io/best-webdriver/Chrome.html), [Firefox](https://mercmobily.github.io/best-webdriver/Firefox.html), [Safari](https://mercmobily.github.io/best-webdriver/Safari.html), [Edge](https://mercmobily.github.io/best-webdriver/Edge.html).
+You can use any one of the chromedrivers available: [ChromeDriver](https://mercmobily.github.io/best-webdriver/ChromeDriver.html), [FirefoxDriver](https://mercmobily.github.io/best-webdriver/FirefoxDriver.html), [SafariDriver](https://mercmobily.github.io/best-webdriver/SafariDriver.html), [EdgeDriver](https://mercmobily.github.io/best-webdriver/EdgeDriver.html).
 
 When creating a session, the driver will use configuration options provided by the browser. For example if you type:
 
-    var chrome = new browser.Chrome()
+    var chrome = new browsers.Chrome()
     var params = chrome.getSessionParameters()
     console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))
 
@@ -106,7 +111,7 @@ It's important that you understand the configuration option:
 
 You can also set the session options using the setting methods:
 
-    var chrome = new browser.Chrome()
+    var chrome = new browsers.Chrome()
     chrome.setAlwaysMatchKey('pageLoadStrategy', 'eager')
           .addFirstMatch({ platformName: 'linux' })
           .setRootKey('login', 'merc')
@@ -151,42 +156,48 @@ This is especially handy if you are using for example an online service, or a we
 Here is how you do it notice the `spawn: false` property:
 
     // Create a new Chrome browser object
-    var chrome = new browser.Chrome()
+    var chrome = new browsers.Chrome()
 
     // Create the driver, using that browser's
     // configuration WITHOUT spawning a chromedriver process
-    var driver = new Driver(chrome, {
+    var driver = new drivers.ChromeDriver(chrome, {
       spawn: false,
       host: '10.10.10.45',
       port: 4444
     })
 
-#### The generic "Remote" browser
+Note that since you are using the [ChromeDriver](https://mercmobily.github.io/best-webdriver/ChromeDriver.html) driver, the remote end will be assumed to be a Chrome webdriver: it will fix any mistakes and partial implementations of the W3C protocol.
 
-Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called [Remote](https://mercmobily.github.io/best-webdriver/Remote.html), which is a "blank" browser without the ability to spawn a specific webdriver, and without and specific options.
+#### The generic "Browser" browser
+
+Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called [Browser](https://mercmobily.github.io/best-webdriver/Browser.html), which is a "blank" browser without any pre-pared browser-specific options.
 
 Here is how you would run it:
 
     // Create a new generic browser object, specifying the alwaysMatch parameter
-    var remote = new browser.Remote()
+    var remote = new browsers.Browser()
 
     remote.setAlwaysMatchKey('browserName', 'chrome')
           .setAlwaysMatchKey('platformName', 'linux')
 
     // Creating the driver
-    var driver = new Driver(remote, {
+    var driver = new drivers.Driver(remote, {
       host: '10.10.10.45',
       port: 4444
     })
 
-Note that since you used the generic [Remote](https://mercmobily.github.io/best-webdriver/Remote.html) browser, the session configuration did _not_ include the browser-specific `{ w3c: true }` value.
+Note that since you used the generic [Browser](https://mercmobily.github.io/best-webdriver/Browser.html) browser, the session configuration did _not_ include the browser-specific `{ w3c: true }` value.
+
+Also note that you used the generic [Driver](https://mercmobily.github.io/best-webdriver/Driver.html), which means that no browser-specific workarounds for W3C compliance will be applied. If you did want that to happen, you would simply run:
+
+    var driver = new drivers.ChromeDriver(remote, {
 
 ### Running amok with driver calls
 
 If you have the following chunk of code:
 
     // Create a new driver object, using the Chrome browser
-    var driver = new Driver(new browser.Chrome())
+    var driver = new drivers.ChromeDriver(new browsers.Chrome())
 
     // Create a new session. This will also run `chromewebdriver` for you
     await driver.newSession()
@@ -206,7 +217,7 @@ Once you've created a driver object, you can use it to actually make webdriver c
 
 For example:
 
-    var driver = new Driver(new browser.Chrome())
+    var driver = new drivers.ChromeDriver(new browsers.Chrome())
     await driver.newSession()
     await driver.navigateTo('https://www.google.com')
     var screenshotData = await driver.takeScreenshot()
