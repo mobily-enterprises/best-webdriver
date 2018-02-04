@@ -44,7 +44,7 @@ class Keyboard extends InputDevice {
       Up: (value) => {
         return {
           type: 'keyUp',
-          value
+          value: value.normalize()
         }
       },
 
@@ -68,7 +68,7 @@ class Keyboard extends InputDevice {
       Down: (value) => {
         return {
           type: 'keyDown',
-          value
+          value: value.normalize()
         }
       },
 
