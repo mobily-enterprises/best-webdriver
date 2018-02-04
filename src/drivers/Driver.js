@@ -217,11 +217,8 @@ var Driver = class {
    * await driver.startWebDriver()
    */
   async startWebDriver () {
-    // If it's already connected, nothing to do
-    if (this._webDriverRunning) return
-
     // If spawning is required, do so
-    if (this._spawn && this._executable) {
+    if (!this._webDriverRunning && this._spawn && this._executable) {
       // No port: find a free port
       if (!this._port) {
         this._port = await getPort({ host: this._hostname })
