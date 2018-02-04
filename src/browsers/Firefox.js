@@ -13,7 +13,7 @@ const FirefoxDriver = require('../drivers/FirefoxDriver')
  *    to see what you can pass as keys to the `specific` parameter
  *
  * Check the {@link https://developer.mozilla.org/en-US/docs/Mozilla/QA/Marionette/WebDriver/status Status of Firefox}
- * in terms of implementation of the w3c specs
+ * in terms of implementation of the webdriver specs
  *
  * @extends Browser
  */

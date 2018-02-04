@@ -5,7 +5,7 @@ const Driver = require('./Driver')
  *
  * This class also  adds a compatibility layer to the w3c Driver to work around Chrome's
  * lack of full s3c support
- * It inherits from {@link Driver}, but tries to make the unsupported w3c calls actually work
+ * It inherits from {@link Driver}, but tries to make the unsupported webdriver calls actually work
  */
 class ChromeDriver extends Driver {
   constructor (...args) {
@@ -24,7 +24,7 @@ class ChromeDriver extends Driver {
   }
 
   /**
-   * w3c: Fixes Chrome's status object, which otherwise won;t include
+   * w3c: Fixes Chrome's status object, which otherwise won't include
    * the `ready` and `message` properties, as required
    */
   async status () {

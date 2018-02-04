@@ -124,7 +124,8 @@ class Pointer extends InputDevice {
       */
       Move: (args) => {
         // Work out origin, defaulting to VIEWPORT.
-        // If it's an element, it will be seriaslised to please W3c AND Chrome
+        // If it's an element, it will be seriaslised as a webdriver object
+        // w3c: for Chrome, we still have the ELEMENT key
         // In any case, it MUST be an element, VIEWPORT or POINTER
         var origin
         if (!args.origin) {

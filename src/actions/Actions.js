@@ -186,7 +186,7 @@ class Actions {
 
   /**
    * Compiles the stored actions into a `compiledActions` object, which is
-   * an object compatible with the w3c webdriver protocol for actions
+   * an object compatible with the webdriver protocol for actions
    *
    * There is no need to call this method directly, since the driver always tries
    * to `compile()` actions before sending them over.
