@@ -16,8 +16,8 @@ const KEY = require('../KEY')
  * It's the same as typing:
  *
  *     var actions = new Actions(
- *       new Keyboard('keyboard'),
- *       new Pointer('mouse', Pointer.Type.MOUSE)
+ *       new Actions.Keyboard('keyboard'),
+ *       new Actions.Pointer('mouse', Pointer.Type.MOUSE)
  *     )
  *
  * This will make two devices, `mouse` and `keyboard`, available.
@@ -38,7 +38,7 @@ const KEY = require('../KEY')
  *
  * If you create an actions object like this:
  *
- *      var actions = new Actions(new Keyboard('cucumber'))
+ *      var actions = new Actions(new Actions.Keyboard('cucumber'))
  *
  * You are then able to run:
  *
@@ -88,10 +88,10 @@ const KEY = require('../KEY')
  * // Is the same as:
  * var Pointer = Actions.Pointer
  * var Keyboard = Actions.Keyboard
- * var actions = new Actions( new Keyboard('keyboard'), new Pointer('mouse', Pointer.Type.MOUSE))
+ * var actions = new Actions( new Actions.Keyboard('keyboard'), new Actions.Pointer('mouse', Pointer.Type.MOUSE))
  *
  * // You can also be creative with names
- * var actions = new Pointer('da_mouse', Pointer.Type.MOUSE)
+ * var actions = new Actions.Pointer('da_mouse', Pointer.Type.MOUSE)
  *
  *
  */
@@ -122,7 +122,7 @@ class Actions {
     // `actions.tick.mouseDown().tick.mouseUp()`
     // The other keys will depend on the devices passed to the
     // `Actions` constructor.
-    // With `Actions(new Pointer('fancyMouse'))` will establish
+    // With `Actions(new Actions.Pointer('fancyMouse'))` will establish
     // `tick.fancyMouseUp()`, `tick.fancyMouseDown()` etc.
     // By default, `new Actions()` will create two devices, called
     // `mouse` and `keyboard`
@@ -213,7 +213,7 @@ class Actions {
    * what devices were passed when constructing the object.
    * For example running:
    *
-   *      var actions = new Actions(new Keyboard('cucumber'))
+   *      var actions = new Actions(new Actions.Keyboard('cucumber'))
    *
    * Will ensure that `tick` will return an object with the properties
    * `cucumberUp`, `cucumberDown` and `pause`
