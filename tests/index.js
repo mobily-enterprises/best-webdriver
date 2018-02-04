@@ -54,9 +54,8 @@ async function getActiveBrowsers (allBrowsers) {
 }
 
 (async () => {
-  var allBrowsers = await getActiveBrowsers([ browsers.Chrome, browsers.Firefox, browsers.Edge, browsers.Safari ])
-  // console.log(`Started local server: http://127.0.0.1:${port}/`)
-  // await sleep(10000)
+  // var allBrowsers = await getActiveBrowsers([ browsers.Chrome, browsers.Firefox, browsers.Edge, browsers.Safari ])
+  var allBrowsers = await getActiveBrowsers([ browsers.Firefox ])
 
   allBrowsers.forEach((Browser) => {
     var browser = new Browser()
@@ -75,8 +74,9 @@ async function getActiveBrowsers (allBrowsers) {
         port = server.address().port
         url = `http://127.0.0.1:${port}/`
 
-        driver = new Browser.Driver(new Browser())
-        await driver.startWebDriver()
+        // driver = new Browser.Driver(new Browser())
+        // await driver.startWebDriver()
+        driver = new Browser.Driver(new Browser(), {spawn: false, hostname: '127.0.0.1', port: 4444})
       })
 
       // Close things up
@@ -135,8 +135,20 @@ async function getActiveBrowsers (allBrowsers) {
           var title = await driver.getTitle()
           expect(title).to.equal('The best-webdriver testing page')
         })
-        it('getWindowHandles/switchToWindow', async function () {
-          expect(true).to.be.true
+        it('getWindowHandle/getWindowHandles/closeWindow/switchToWindow', async function () {
+          this.timeout(10000)
+          var win1 = await driver.getWindowHandle()
+          await driver.executeScript('window.open()')
+          var handles = await driver.getWindowHandles()
+          var win2 = handles[0] === win1 ? handles[1] : handles[0]
+          expect(handles).to.be.an('array')
+          expect(handles).to.have.lengthOf(2)
+          expect(handles).to.include(win1)
+          expect(handles).to.include(win2)
+          await driver.switchToWindow(win2)
+          await driver.closeWindow()
+          var handlesAfterwards = await driver.getWindowHandles()
+          expect(handlesAfterwards).to.have.lengthOf(1)
         })
         it('switchToFrame/switchToParentFrame', async function () {
           expect(true).to.be.true
@@ -180,12 +192,20 @@ async function getActiveBrowsers (allBrowsers) {
           // actions.tick.mouseMove({ x: 300, y: 200, duration: 4000 })
           // actions.tick.mouseUp()
 
-          var actions = new Actions(new Actions.Keyboard('keyboard'))
-          actions.tick.keyboardDown('a')
-          actions.tick.keyboardPause(2000)
+          /*
+          var actions = new Actions()
+          actions.tick.mouseMove({x :0, y: 0})
+          .tick.mouseDown()
+          .tick.mouseMove({x:100, y: 300, duration: 500})
+          .tick.keyboardDown('a')
+          actions.tick.keyboardPause(10)
           actions.tick.keyboardUp('a')
+          actions.compile()
+          console.log('COMPILED ACTIONS:', require('util').inspect(actions.compiledActions, {depth: 10}))
 
           await driver.performActions(actions)
+          */
+
         })
         it('keyboard actions', async function () {
           expect(true).to.be.true
