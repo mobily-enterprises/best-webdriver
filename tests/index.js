@@ -74,9 +74,8 @@ async function getActiveBrowsers (allBrowsers) {
         port = server.address().port
         url = `http://127.0.0.1:${port}/`
 
-        // driver = new Browser.Driver(new Browser())
-        // await driver.startWebDriver()
-        driver = new Browser.Driver(new Browser(), {spawn: false, hostname: '127.0.0.1', port: 4444})
+        driver = new Browser.Driver(new Browser())
+        await driver.startWebDriver()
       })
 
       // Close things up
