@@ -634,8 +634,16 @@ var Driver = class {
    */
   switchToFrame (id) {
     // W3c: Chrome is not compliant, so we have to do its job
-    if (id instanceof Element || typeof id === 'object') id = id.id
-    return this._execute('post', '/frame', { id })
+    var param = id
+
+    // If it's an Element, then make up an object that represents
+    // a w3c element
+    // The same logic is applied to objects passed
+    if (id instanceof Element || typeof id === 'object') {
+      param = { 'element-6066-11e4-a52e-4f735466cecf': id.id }
+    }
+    console.log('PASSING:', id)
+    return this._execute('post', '/frame', { id: param })
   }
 
   /**
