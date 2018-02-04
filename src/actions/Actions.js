@@ -176,6 +176,14 @@ class Actions {
     return Pointer
   }
 
+  _takeVirginOutOfCurrentAction () {
+    if (this._currentAction) {
+      Object.keys(this._currentAction).forEach((k) => {
+        if (this._currentAction[k].virgin) delete this._currentAction[k].virgin
+      })
+    }
+  }
+
   /**
    * Compiles the stored actions into a `compiledActions` object, which is
    * an object compatible with the w3c webdriver protocol for actions
@@ -186,6 +194,8 @@ class Actions {
   compile () {
     if (this._compiled) return
     this.compiledActions = []
+
+    this._takeVirginOutOfCurrentAction()
 
     this.devices.forEach((device) => {
       var deviceActions = { actions: [] }
@@ -228,6 +238,10 @@ class Actions {
   get tick () {
     // The tick you add a tick, this is no longer compiled
     this._compiled = false
+
+    // The current action (about not to be current anymore) still has
+    // that "virgin" on for every device. Take it out.
+    this._takeVirginOutOfCurrentAction()
 
     // Make up the action object. It will be an object where
     // each key is a device ID.
