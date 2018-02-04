@@ -149,8 +149,8 @@ class Pointer extends InputDevice {
           type: 'pointerMove',
           duration: args.duration || 0,
           origin,
-          x: args.x,
-          y: args.y
+          x: args.x || 0,
+          y: args.y || 0
         }
       },
 
