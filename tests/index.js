@@ -157,7 +157,16 @@ async function getActiveBrowsers (allBrowsers) {
           expect(el).to.be.an('object')
         })
         it('getWindowRect/setWindowRect', async function () {
-          expect(true).to.be.true
+          var rect = await driver.getWindowRect()
+          console.log('RECT:', rect)
+          expect(rect).to.be.an('object')
+          expect(rect).to.have.all.keys('height', 'width', 'x', 'y')
+          var newRect1 = await driver.setWindowRect({ x: 100, y: 100 })
+          expect(newRect1).to.be.an('object')
+          var newRect2 = await driver.setWindowRect({ width: 800, height: 600 })
+          expect(newRect2).to.be.an('object')
+          var newRect3 = await driver.setWindowRect({ x: 50, y: 50, width: 800, height: 600 })
+          expect(newRect3).to.be.an('object')
         })
         it('maximizeWindow/minimizeWindow/fullScreenWindow', async function () {
           expect(true).to.be.true
