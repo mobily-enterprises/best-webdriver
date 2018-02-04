@@ -154,7 +154,7 @@ Remember that in {@link Browser#setAlwaysMatchKey}, {@link Browser#setRootKey} a
 You might decide to use this API _without_ spawning a process for the chromedriver.
 This is especially handy if you are using for example an online service, or a webdriver already running on a different machine.
 
-Here is how you do it notice the `spawn: false` property:
+Here is how you do it. Notice the `spawn: false` property:
 
     // Create a new Chrome browser object
     var chrome = new browsers.Chrome()
