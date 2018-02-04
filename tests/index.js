@@ -54,8 +54,8 @@ async function getActiveBrowsers (allBrowsers) {
 }
 
 (async () => {
-  // var allBrowsers = await getActiveBrowsers([ browsers.Chrome, browsers.Firefox, browsers.Edge, browsers.Safari ])
-  var allBrowsers = await getActiveBrowsers([ browsers.Firefox ])
+  var allBrowsers = await getActiveBrowsers([ browsers.Chrome, browsers.Firefox, browsers.Edge, browsers.Safari ])
+  // var allBrowsers = await getActiveBrowsers([ browsers.Firefox ])
 
   allBrowsers.forEach((Browser) => {
     var browser = new Browser()
@@ -147,11 +147,19 @@ async function getActiveBrowsers (allBrowsers) {
           expect(handles).to.include(win2)
           await driver.switchToWindow(win2)
           await driver.closeWindow()
+          await driver.switchToWindow(win1)
           var handlesAfterwards = await driver.getWindowHandles()
           expect(handlesAfterwards).to.have.lengthOf(1)
         })
         it('switchToFrame/switchToParentFrame', async function () {
-          expect(true).to.be.true
+          var frame = await driver.findElementCss('#frame')
+          console.log("eh?", await frame.getTagName())
+          console.log('FRAME:', frame)
+          await driver.switchToFrame(frame)
+          var el = driver.findElementTagName('h1')
+          console.log('EL:',el)
+          // await driver.switchToParentFrame()
+          // var frameAgain = driver.findElementCss('#frame')
         })
         it('getWindowRect/setWindowRect', async function () {
           expect(true).to.be.true
@@ -205,7 +213,6 @@ async function getActiveBrowsers (allBrowsers) {
 
           await driver.performActions(actions)
           */
-
         })
         it('keyboard actions', async function () {
           expect(true).to.be.true
