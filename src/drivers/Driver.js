@@ -642,7 +642,6 @@ var Driver = class {
     if (id instanceof Element || typeof id === 'object') {
       param = { 'element-6066-11e4-a52e-4f735466cecf': id.id, ELEMENT: id.id }
     }
-    console.log('PASSING:', id)
     return this._execute('post', '/frame', { id: param })
   }
 
