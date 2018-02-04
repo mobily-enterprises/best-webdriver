@@ -152,13 +152,9 @@ async function getActiveBrowsers (allBrowsers) {
         })
         it('switchToFrame/switchToParentFrame', async function () {
           var frame = await driver.findElementCss('#frame')
-          console.log("eh?", await frame.getTagName())
-          console.log('FRAME:', frame)
           await driver.switchToFrame(frame)
-          var el = driver.findElementTagName('h1')
-          console.log('EL:',el)
-          // await driver.switchToParentFrame()
-          // var frameAgain = driver.findElementCss('#frame')
+          var el = await driver.findElementTagName('h1')
+          expect(el).to.be.an('object')
         })
         it('getWindowRect/setWindowRect', async function () {
           expect(true).to.be.true
