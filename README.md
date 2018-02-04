@@ -163,7 +163,7 @@ Here is how you do it notice the `spawn: false` property:
     // configuration WITHOUT spawning a chromedriver process
     var driver = new drivers.ChromeDriver(chrome, {
       spawn: false,
-      host: '10.10.10.45',
+      hostname: '10.10.10.45',
       port: 4444
     })
 
@@ -183,7 +183,7 @@ Here is how you would run it:
 
     // Creating the driver
     var driver = new drivers.Driver(remote, {
-      host: '10.10.10.45',
+      hostname: '10.10.10.45',
       port: 4444
     })
 

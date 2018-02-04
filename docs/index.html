@@ -200,7 +200,7 @@ var chrome = new browsers.Chrome()
 // configuration WITHOUT spawning a chromedriver process
 var driver = new drivers.ChromeDriver(chrome, {
   spawn: false,
-  host: '10.10.10.45',
+  hostname: '10.10.10.45',
   port: 4444
 })</code></pre><p>Note that since you are using the <a href="ChromeDriver.html">ChromeDriver</a> driver, the remote end will be assumed to be a Chrome webdriver: it will fix any mistakes and partial implementations of the W3C protocol.</p>
 <h4>The generic &quot;Browser&quot; browser</h4><p>Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called <a href="Browser.html">Browser</a>, which is a &quot;blank&quot; browser without any pre-pared browser-specific options.</p>
@@ -213,7 +213,7 @@ remote.setAlwaysMatchKey('browserName', 'chrome')
 
 // Creating the driver
 var driver = new drivers.Driver(remote, {
-  host: '10.10.10.45',
+  hostname: '10.10.10.45',
   port: 4444
 })</code></pre><p>Note that since you used the generic <a href="Browser.html">Browser</a> browser, the session configuration did <em>not</em> include the browser-specific <code>{ w3c: true }</code> value.</p>
 <p>Also note that you used the generic <a href="Driver.html">Driver</a>, which means that no browser-specific workarounds for W3C compliance will be applied. If you did want that to happen, you would simply run:</p>

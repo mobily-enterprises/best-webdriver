@@ -100,8 +100,8 @@ property <code>tick</code> (which is actually a getter). The way you use <code>t
 <p>If you call the constructor lile this:</p>
 <pre class="prettyprint source"><code>var actions = new Actions()</code></pre><p>It's the same as typing:</p>
 <pre class="prettyprint source"><code>var actions = new Actions(
-  new Keyboard('keyboard'),
-  new Pointer('mouse', Pointer.Type.MOUSE)
+  new Actions.Keyboard('keyboard'),
+  new Actions.Pointer('mouse', Pointer.Type.MOUSE)
 )</code></pre><p>This will make two devices, <code>mouse</code> and <code>keyboard</code>, available.</p>
 <p>Such a scenario will allow you to call:</p>
 <pre class="prettyprint source"><code>actions.tick.keyboardDown('r').mouseDown()
@@ -123,7 +123,7 @@ and the keyboard action <code>Up</code>.</p>
 </li>
 </ul>
 <p>If you create an actions object like this:</p>
-<pre class="prettyprint source"><code> var actions = new Actions(new Keyboard('cucumber'))</code></pre><p>You are then able to run:</p>
+<pre class="prettyprint source"><code> var actions = new Actions(new Actions.Keyboard('cucumber'))</code></pre><p>You are then able to run:</p>
 <pre class="prettyprint source"><code> actions.tick.cucumberDown('r')
  actions.tick.cucumberUp('r')</code></pre><p>However running:</p>
 <pre class="prettyprint source"><code> actions.tick.cucumberMove('r')</code></pre><p>Will result in an error, since <code>cucumber</code> is a keyboard device, and it doesn't
@@ -326,10 +326,10 @@ var actions = new Actions()
 // Is the same as:
 var Pointer = Actions.Pointer
 var Keyboard = Actions.Keyboard
-var actions = new Actions( new Keyboard('keyboard'), new Pointer('mouse', Pointer.Type.MOUSE))
+var actions = new Actions( new Actions.Keyboard('keyboard'), new Actions.Pointer('mouse', Pointer.Type.MOUSE))
 
 // You can also be creative with names
-var actions = new Pointer('da_mouse', Pointer.Type.MOUSE)</code></pre>
+var actions = new Actions.Pointer('da_mouse', Pointer.Type.MOUSE)</code></pre>
 
 
   </div>
@@ -575,7 +575,7 @@ actions.tick.keyboardDown(Actions.Key.ENTER).keyboardUp(Actions.Key.ENTER)</code
     <p>As a getter, it will return an object with the right methods depending on
 what devices were passed when constructing the object.
 For example running:</p>
-<pre class="prettyprint source"><code> var actions = new Actions(new Keyboard('cucumber'))</code></pre><p>Will ensure that <code>tick</code> will return an object with the properties
+<pre class="prettyprint source"><code> var actions = new Actions(new Actions.Keyboard('cucumber'))</code></pre><p>Will ensure that <code>tick</code> will return an object with the properties
 <code>cucumberUp</code>, <code>cucumberDown</code> and <code>pause</code>
 More conventionally, creating the action object like this:</p>
 <pre class="prettyprint source"><code> var actions = new Actions()</code></pre><p>Will default to two devices, <code>mouse</code> and <code>keyboard</code>. So, the object returned
@@ -617,7 +617,7 @@ by the <code>tick</code> getter will return an object with the methods <code>key
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line228">line 228</a>
+          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line238">line 238</a>
         </li>
       </ul>
     </dd>
@@ -665,7 +665,7 @@ by the <code>tick</code> getter will return an object with the methods <code>key
 
   <div class="description">
     <p>Compiles the stored actions into a <code>compiledActions</code> object, which is
-an object compatible with the w3c webdriver protocol for actions</p>
+an object compatible with the webdriver protocol for actions</p>
 <p>There is no need to call this method directly, since the driver always tries
 to <code>compile()</code> actions before sending them over.</p>
   </div>
@@ -710,7 +710,7 @@ to <code>compile()</code> actions before sending them over.</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line186">line 186</a>
+          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line194">line 194</a>
         </li>
       </ul>
     </dd>

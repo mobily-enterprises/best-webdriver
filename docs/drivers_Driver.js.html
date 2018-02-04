@@ -94,6 +94,7 @@ const utils = require('../utils')
 const Element = require('../Element.js')
 const FindHelpersMixin = require('../FindHelpersMixin')
 const USING = require('../USING')
+const KEY = require('../KEY')
 /**
  * The main driver class used to create a driver and actually use this API
  * It will spawn a webdriver process by default.
@@ -306,11 +307,8 @@ var Driver = class {
    * await driver.startWebDriver()
    */
   async startWebDriver () {
-    // If it's already connected, nothing to do
-    if (this._webDriverRunning) return
-
     // If spawning is required, do so
-    if (this._spawn &amp;&amp; this._executable) {
+    if (!this._webDriverRunning &amp;&amp; this._spawn &amp;&amp; this._executable) {
       // No port: find a free port
       if (!this._port) {
         this._port = await getPort({ host: this._hostname })
@@ -541,6 +539,15 @@ var Driver = class {
     return USING
   }
 
+  /** Constant returning special KEY characters (enter, etc.)
+   *  Constant are from the global variable {@link KEY}
+   *
+   * @example
+   * var body = await driver.findElementTagName('body')
+   * body.sendKeys(driver.Key.ENTER + 'n')
+   */
+  static get Key () { return KEY }
+
 /**
  * Get timeout settings in the page
  * @async
@@ -715,9 +722,16 @@ var Driver = class {
    * await driver.switchToFrame(frame)
    */
   switchToFrame (id) {
-    // W3c: Chrome is not compliant, so we have to do its job
-    if (id instanceof Element || typeof id === 'object') id = id.id
-    return this._execute('post', '/frame', { id })
+    var param = id
+
+    // If it's an Element, then make up an object that represents
+    // a webdriver element
+    // The same logic is applied if it was an object
+    // w3c: Chrome still needs the ELEMENT key
+    if (id instanceof Element || typeof id === 'object') {
+      param = { 'element-6066-11e4-a52e-4f735466cecf': id.id, ELEMENT: id.id }
+    }
+    return this._execute('post', '/frame', { id: param })
   }
 
   /**
