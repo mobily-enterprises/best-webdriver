@@ -5,6 +5,7 @@ const utils = require('../utils')
 const Element = require('../Element.js')
 const FindHelpersMixin = require('../FindHelpersMixin')
 const USING = require('../USING')
+const KEY = require('../KEY')
 /**
  * The main driver class used to create a driver and actually use this API
  * It will spawn a webdriver process by default.
@@ -448,6 +449,15 @@ var Driver = class {
   static get Using () {
     return USING
   }
+
+  /** Constant returning special KEY characters (enter, etc.)
+   *  Constant are from the global variable {@link KEY}
+   *
+   * @example
+   * var body = await driver.findElementTagName('body')
+   * body.sendKeys(driver.Key.ENTER + 'n')
+   */
+  static get Key () { return KEY }
 
 /**
  * Get timeout settings in the page
