@@ -94,7 +94,7 @@ const Element = require('../Element')
  * Class for Pointer objects.
  * When a Pointer object is passed to the {@link Action} constructor:
 
- *     var actions = new Actions(new Pointer('bigMouse'))
+ *     var actions = new Actions(new Actions.Pointer('bigMouse'))
  *
  * the action's `tick` will have the following methods (assuming that the Pointer's ID
  * is `mouse`):
@@ -107,9 +107,9 @@ const Element = require('../Element')
  * Note: input device objects are only ever used in {@link Actions}
  * @extends InputDevice
  * @example
- * var mouse = new Pointer('mouse', Pointer.Type.MOUSE)
- * var touch1 = new Pointer('touch1', Pointer.Type.TOUCH)
- * var touch2 = new Pointer('touch2', Pointer.Type.TOUCH)
+ * var mouse = new Actions.Pointer('mouse', Pointer.Type.MOUSE)
+ * var touch1 = new Actions.Pointer('touch1', Pointer.Type.TOUCH)
+ * var touch2 = new Actions.Pointer('touch2', Pointer.Type.TOUCH)
  * var actions = new Actions(mouse, touch1, touch2)
  * actions.tick.mouseDown().touch1Down().touch2Down()
  */
@@ -205,7 +205,7 @@ class Pointer extends InputDevice {
        *
        *     // Defining a pointer device called "cucumber", and passing it
        *     // to the actions constructor
-       *     var actions = new Actions( new Pointer('bigMouse'))
+       *     var actions = new Actions( new Actions.Pointer('bigMouse'))
        *     // the `cucumberMove` method is now available in the tick property
        *     actions.tick.bigMouseMove({ x: 400, y: 400 })
        *
@@ -253,7 +253,7 @@ class Pointer extends InputDevice {
        *                        `Pointer.Button.MIDDLE` (1) or `Pointer.Button.RIGHT` (2)
        *
        * @example
-       *     var actions = new Actions( new Pointer('bigMouse'))
+       *     var actions = new Actions( new Actions.Pointer('bigMouse'))
        *     actions.tick.bigMouseDown()
        *     actions.tick.bigMouseDown(Pointer.Button.RIGHT)
        *
@@ -273,7 +273,7 @@ class Pointer extends InputDevice {
        * @param {number} button=Pointer.Button.LEFT The button to let go
        *
        * @example
-       *     var actions = new Actions( new Pointer('bigMouse'))
+       *     var actions = new Actions( new Actions.Pointer('bigMouse'))
        *     actions.tick.bigMouseUp()
        *     actions.tick.bigMouseUp(Pointer.Button.RIGHT)
        *
@@ -291,7 +291,7 @@ class Pointer extends InputDevice {
        *
        * This method will be added to the action's `tick` property. **prefixed** with the Pointer's ID.
        * @example
-       *     var bigMouse = new Pointer('bigMouse')
+       *     var bigMouse = new Actions.Pointer('bigMouse')
        *
        *     // This will take 4 seconds. NOTE: there is no await before actions.performActions
        *     var actions = new Actions(bigMouse)
@@ -312,8 +312,8 @@ class Pointer extends InputDevice {
        * @param {number} duration=0 Duration of the pause
        *
        * @example
-       *    var bigMouse = new Pointer('bigMouse')
-       *    var bigKeyboard = new Pointer('bigKeyboard')
+       *    var bigMouse = new Actions.Pointer('bigMouse')
+       *    var bigKeyboard = new Actions.Keyboard('bigKeyboard')
        *
        *    var actions = new Actions(bigMouse, bigKeyboard)
        *    actions.tick.bigKeyboardDown('a').bigMousePause()

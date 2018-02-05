@@ -192,7 +192,7 @@ console.log('Session parameters:', require('util').inspect(params, { depth: 10 }
 }</code></pre><p>Remember that in <a href="Browser.html#setAlwaysMatchKey">Browser#setAlwaysMatchKey</a>, <a href="Browser.html#setRootKey">Browser#setRootKey</a> and <a href="Browser.html#setSpecificKey">Browser#setSpecificKey</a>, the key can actually be a path: if it has a <code>.</code> (e.g. <code>chrome.setAlwaysMatchKey('timeouts.implicit</code>), the property <code>capabilities.alwaysMatch.timeouts.implicit</code> will be set.</p>
 <h4>Running the API without spawning a webdriver</h4><p>You might decide to use this API <em>without</em> spawning a process for the chromedriver.
 This is especially handy if you are using for example an online service, or a webdriver already running on a different machine.</p>
-<p>Here is how you do it notice the <code>spawn: false</code> property:</p>
+<p>Here is how you do it. Notice the <code>spawn: false</code> property:</p>
 <pre class="prettyprint source"><code>// Create a new Chrome browser object
 var chrome = new browsers.Chrome()
 
@@ -261,8 +261,8 @@ property <code>tick</code> (which is actually a getter). The way you use <code>t
 <p>If you call the constructor like this:</p>
 <pre class="prettyprint source"><code>var actions = new Actions()</code></pre><p>It's the same as writing:</p>
 <pre class="prettyprint source"><code>var actions = new Actions(
-  new Keyboard('keyboard'),
-  new Pointer('mouse', Pointer.Type.MOUSE)
+  new Actions.Keyboard('keyboard'),
+  new Actions.Pointer('mouse', Pointer.Type.MOUSE)
 )</code></pre><p>This will make two devices, <code>mouse</code> and <code>keyboard</code>, available.</p>
 <p>Such a scenario will allow you to call:</p>
 <pre class="prettyprint source"><code>actions.tick.keyboardDown('r').mouseDown()
@@ -275,7 +275,7 @@ and the keyboard action <code>Up</code>.</p>
 <li>Both of them have the method <code>pause</code></li>
 </ul>
 <p>If you create an actions object like this:</p>
-<pre class="prettyprint source"><code> var actions = new Actions(new Keyboard('cucumber'))</code></pre><p>You are then able to run:</p>
+<pre class="prettyprint source"><code> var actions = new Actions(new Actions.Keyboard('cucumber'))</code></pre><p>You are then able to run:</p>
 <pre class="prettyprint source"><code>actions.tick.cucumberDown('r')
 actions.tick.cucumberUp('r')</code></pre><p>However running:</p>
 <pre class="prettyprint source"><code>actions.tick.cucumberMove('r')</code></pre><p>Will result in an error, since <code>cucumber</code> is a keyboard device, and it doesn't
@@ -297,8 +297,8 @@ tick:</p>
 .tick.keyboardUp('r').mouseUp()</code></pre><p>Once you have decided your actions, you can submit them:</p>
 <pre class="prettyprint source"><code> await driver.performActions(actions)</code></pre><p>You can set multiple touch devices, and use them for multi-touch:</p>
 <pre class="prettyprint source"><code>var actions = new Actions(
-  new Pointer('finger1', Pointer.Type.TOUCH),
-  new Pointer('finger2', Pointer.Type.TOUCH)
+  new Actions.Pointer('finger1', Pointer.Type.TOUCH),
+  new Actions.Pointer('finger2', Pointer.Type.TOUCH)
 )
 // Define actions: Moving two fingers vertically at the same time
 actions
@@ -309,7 +309,7 @@ actions
 driver.performActions(actions)</code></pre><p>You can also move a pointer over a specific element, specifying how long it will take (in milliseconds):</p>
 <pre class="prettyprint source"><code>await driver.navigateTo('https://www.google.com')    
 var el = await driver.findElementsCss('[name=q]')
-var actions = new Actions(new Pointer('mouse', Pointer.Type.MOUSE))
+var actions = new Actions(new Actions.Pointer('mouse', Pointer.Type.MOUSE))
 
 // Moving over `el`, taking 1 second
 actions.tick.mouseMove({ origin: el, duration: 1000 })</code></pre><p>Keyboard devices can perform:</p>
@@ -341,7 +341,7 @@ driver.setPollInterval(200)</code></pre><p>Or, you can set them on a per-call ba
 <pre class="prettyprint source"><code>driver.waitFor().findElementsCss('li', (r) => r.length))</code></pre><p>In this case, the callback <code>(r) =&gt; r.length</code> will only return truly when <code>r</code> (the result from the call) is a non-empty array.</p>
 <p>Behind the scenes, <code>waitFor()</code> returns a proxy object which will in turn run the call and check that it didn't return an error; it also checks that the result passes the required checker function, if one was passed.</p>
 <p>The result of this is that one simple chained method, <a href="Driver.html#waitFor">Driver#waitFor</a>/<a href="Element.html#waitFor">Element#waitFor</a>, turns every call for <a href="Driver.html">Driver</a> and <a href="Element.html">Element</a> into a polling function able to check the result.</p>
-<h3>Limitations</h3><p>The main limitation of this API is that <em>it will only ever speak in w3c webdriver protocol</em>. For example, as of today Chrome doesn't yet implement <a href="Actions.html">Actions</a>. While other APIs try to &quot;emulate&quot; actions (with crippling limitatins) by calling non-standard endpoints, this SPI will simply submit the actions to the chrome webdriver and surely receive an error in response.</p>
+<h3>Limitations</h3><p>The main limitation of this API is that <em>it will only ever speak in w3c webdriver protocol</em>. For example, as of today Chrome doesn't yet implement <a href="Actions.html">Actions</a>. While other APIs try to &quot;emulate&quot; actions (with crippling limitations) by calling non-standard endpoints, this API will simply submit the actions to the chrome webdriver and surely receive an error in response.</p>
 <p>Another limitation is that it's an API that is very close to the metal: you are supposed to understand how the session configuration works, for example; so, while you do have helper methods such as <code>setAlwaysMatchKey()</code>, <code>addFirstMatch()</code> etc., you are still expected to <em>understand</em> what these calls do. Also, browser-specific parameters are added via <code>setSpecificKey()</code>; however, there are no helpers methods to get these parameters right. For example, if you want to add plugins to Chrome using the <code>extensions</code> option, you will need to create an array of packed extensions loaded from the disk and converted to base64. This <em>may</em> change in the future, as this API matures; however, it won't add more classes and any enhancement will always be close enough to the API to be easy to understand.</p>
 <h3>Go test!</h3><p>That's all you need -- time to get testing!</p>
     </article>
