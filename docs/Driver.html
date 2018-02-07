@@ -126,7 +126,13 @@ It will spawn a webdriver process by default.</p>
 
 
   <div class="description">
-    <p>Constructor returning a Driver object, which will be used to pilot the passed browser</p>
+    <p>Constructor returning a Driver object, which will be used to interface
+with a Webdriver.</p>
+<p>It's used as a base class for specific drivers (<a href="ChromeDriver.html">ChromeDriver</a>,
+<a href="FirefoxDriver.html">FirefoxDriver</a>, <a href="EdgeDriver.html">EdgeDriver</a>, <a href="SafariDriver.html">SafariDriver</a>).</p>
+<p>Specific drivers know how to run a local webdriver command (if present)
+and are able to adjust calls and return values so that they follow the
+w3c webdriver Protocol</p>
   </div>
 
 
@@ -661,7 +667,7 @@ filter will be applied</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line449">line 449</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line457">line 457</a>
         </li>
       </ul>
     </dd>
@@ -729,7 +735,7 @@ filter will be applied</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line460">line 460</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line468">line 468</a>
         </li>
       </ul>
     </dd>
@@ -882,7 +888,7 @@ body.sendKeys(driver.Key.ENTER + 'n')</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line70">line 70</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line78">line 78</a>
         </li>
       </ul>
     </dd>
@@ -1170,7 +1176,7 @@ body.sendKeys(driver.Key.ENTER + 'n')</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line84">line 84</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line92">line 92</a>
         </li>
       </ul>
     </dd>
@@ -1316,7 +1322,7 @@ body.sendKeys(driver.Key.ENTER + 'n')</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line99">line 99</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line107">line 107</a>
         </li>
       </ul>
     </dd>
@@ -1478,7 +1484,7 @@ driver.setPollInterval(200)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line112">line 112</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line120">line 120</a>
         </li>
       </ul>
     </dd>
@@ -1651,7 +1657,7 @@ which represents a checker function that will need to return truly for success</
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line139">line 139</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line147">line 147</a>
         </li>
       </ul>
     </dd>
@@ -1769,7 +1775,7 @@ This method is called by <a href="Driver.html#newSession">newSession</a></p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line220">line 220</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line228">line 228</a>
         </li>
       </ul>
     </dd>
@@ -1945,7 +1951,7 @@ You can specify the message to send the process</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line283">line 283</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line291">line 291</a>
         </li>
       </ul>
     </dd>
@@ -2112,7 +2118,7 @@ If you need to poll-wait, use <a href="Driver.html#waitFor">waitFor</a></p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line305">line 305</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line313">line 313</a>
         </li>
       </ul>
     </dd>
@@ -2218,7 +2224,7 @@ run the webdriver for the associated browser before asking for the session</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line325">line 325</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line333">line 333</a>
         </li>
       </ul>
     </dd>
@@ -2325,7 +2331,7 @@ was spawned). You can create a new session with <a href="Driver.html#newSession"
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line366">line 366</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line374">line 374</a>
         </li>
       </ul>
     </dd>
@@ -2430,7 +2436,7 @@ was spawned). You can create a new session with <a href="Driver.html#newSession"
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line387">line 387</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line395">line 395</a>
         </li>
       </ul>
     </dd>
@@ -2592,7 +2598,7 @@ To see how to create an actions object, check the
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line407">line 407</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line415">line 415</a>
         </li>
       </ul>
     </dd>
@@ -2699,7 +2705,7 @@ await driver.performActions(actions)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line419">line 419</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line427">line 427</a>
         </li>
       </ul>
     </dd>
@@ -2804,7 +2810,7 @@ await driver.performActions(actions)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line473">line 473</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line481">line 481</a>
         </li>
       </ul>
     </dd>
@@ -3077,7 +3083,7 @@ await driver.performActions(actions)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line489">line 489</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line497">line 497</a>
         </li>
       </ul>
     </dd>
@@ -3182,7 +3188,7 @@ await driver.performActions(actions)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line501">line 501</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line509">line 509</a>
         </li>
       </ul>
     </dd>
@@ -3288,7 +3294,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line515">line 515</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line523">line 523</a>
         </li>
       </ul>
     </dd>
@@ -3393,7 +3399,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line527">line 527</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line535">line 535</a>
         </li>
       </ul>
     </dd>
@@ -3498,7 +3504,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line540">line 540</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line548">line 548</a>
         </li>
       </ul>
     </dd>
@@ -3603,7 +3609,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line553">line 553</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line561">line 561</a>
         </li>
       </ul>
     </dd>
@@ -3708,7 +3714,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line567">line 567</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line575">line 575</a>
         </li>
       </ul>
     </dd>
@@ -3813,7 +3819,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line580">line 580</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line588">line 588</a>
         </li>
       </ul>
     </dd>
@@ -3918,7 +3924,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line592">line 592</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line600">line 600</a>
         </li>
       </ul>
     </dd>
@@ -4023,7 +4029,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line605">line 605</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line613">line 613</a>
         </li>
       </ul>
     </dd>
@@ -4183,7 +4189,7 @@ Also, get the current URL</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line619">line 619</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line627">line 627</a>
         </li>
       </ul>
     </dd>
@@ -4356,7 +4362,7 @@ if (wins[1]) await switchToWindow (wins[1])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line635">line 635</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line643">line 643</a>
         </li>
       </ul>
     </dd>
@@ -4462,7 +4468,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line658">line 658</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line666">line 666</a>
         </li>
       </ul>
     </dd>
@@ -4569,7 +4575,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line672">line 672</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line680">line 680</a>
         </li>
       </ul>
     </dd>
@@ -4871,7 +4877,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line691">line 691</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line699">line 699</a>
         </li>
       </ul>
     </dd>
@@ -4976,7 +4982,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line703">line 703</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line711">line 711</a>
         </li>
       </ul>
     </dd>
@@ -5081,7 +5087,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line716">line 716</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line724">line 724</a>
         </li>
       </ul>
     </dd>
@@ -5186,7 +5192,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line729">line 729</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line737">line 737</a>
         </li>
       </ul>
     </dd>
@@ -5291,7 +5297,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line742">line 742</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line750">line 750</a>
         </li>
       </ul>
     </dd>
@@ -5480,7 +5486,7 @@ await driver.switchToFrame(frame)</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line758">line 758</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line766">line 766</a>
         </li>
       </ul>
     </dd>
@@ -5673,7 +5679,7 @@ NOTE: An extra argument is passed to the script, in addition to the arguments
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line779">line 779</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line787">line 787</a>
         </li>
       </ul>
     </dd>
@@ -5779,7 +5785,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line792">line 792</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line800">line 800</a>
         </li>
       </ul>
     </dd>
@@ -5884,7 +5890,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line805">line 805</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line813">line 813</a>
         </li>
       </ul>
     </dd>
@@ -6044,7 +6050,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line825">line 825</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line833">line 833</a>
         </li>
       </ul>
     </dd>
@@ -6156,7 +6162,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line838">line 838</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line846">line 846</a>
         </li>
       </ul>
     </dd>
@@ -6261,7 +6267,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line851">line 851</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line859">line 859</a>
         </li>
       </ul>
     </dd>
@@ -6366,7 +6372,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line864">line 864</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line872">line 872</a>
         </li>
       </ul>
     </dd>
@@ -6471,7 +6477,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line877">line 877</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line885">line 885</a>
         </li>
       </ul>
     </dd>
@@ -6576,7 +6582,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line891">line 891</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line899">line 899</a>
         </li>
       </ul>
     </dd>
@@ -6736,7 +6742,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line905">line 905</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line913">line 913</a>
         </li>
       </ul>
     </dd>
@@ -6842,7 +6848,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line918">line 918</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line926">line 926</a>
         </li>
       </ul>
     </dd>
@@ -6947,7 +6953,7 @@ await driver.executeAsyncScript(script, ['tony'])</code></pre>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line931">line 931</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line939">line 939</a>
         </li>
       </ul>
     </dd>
@@ -7141,7 +7147,7 @@ Note that you are encouraged to use one of the helper functions:
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line952">line 952</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line960">line 960</a>
         </li>
       </ul>
     </dd>
@@ -7335,7 +7341,7 @@ Note that you are encouraged to use one of the helper functions:
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line974">line 974</a>
+          <a href="drivers_Driver.js.html">drivers/Driver.js</a>, <a href="drivers_Driver.js.html#line982">line 982</a>
         </li>
       </ul>
     </dd>

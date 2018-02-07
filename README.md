@@ -154,7 +154,7 @@ Remember that in [Browser#setAlwaysMatchKey](https://mercmobily.github.io/best-w
 You might decide to use this API _without_ spawning a process for the chromedriver.
 This is especially handy if you are using for example an online service, or a webdriver already running on a different machine.
 
-Here is how you do it notice the `spawn: false` property:
+Here is how you do it. Notice the `spawn: false` property:
 
     // Create a new Chrome browser object
     var chrome = new browsers.Chrome()
@@ -417,7 +417,7 @@ The result of this is that one simple chained method, [Driver#waitFor](https://m
 
 ### Limitations
 
-The main limitation of this API is that _it will only ever speak in w3c webdriver protocol_. For example, as of today Chrome doesn't yet implement [Actions](https://mercmobily.github.io/best-webdriver/Actions.html). While other APIs try to "emulate" actions (with crippling limitatins) by calling non-standard endpoints, this SPI will simply submit the actions to the chrome webdriver and surely receive an error in response.
+The main limitation of this API is that _it will only ever speak in w3c webdriver protocol_. For example, as of today Chrome doesn't yet implement [Actions](https://mercmobily.github.io/best-webdriver/Actions.html). While other APIs try to "emulate" actions (with crippling limitations) by calling non-standard endpoints, this API will simply submit the actions to the chrome webdriver and surely receive an error in response.
 
 Another limitation is that it's an API that is very close to the metal: you are supposed to understand how the session configuration works, for example; so, while you do have helper methods such as `setAlwaysMatchKey()`, `addFirstMatch()` etc., you are still expected to _understand_ what these calls do. Also, browser-specific parameters are added via `setSpecificKey()`; however, there are no helpers methods to get these parameters right. For example, if you want to add plugins to Chrome using the `extensions` option, you will need to create an array of packed extensions loaded from the disk and converted to base64. This _may_ change in the future, as this API matures; however, it won't add more classes and any enhancement will always be close enough to the API to be easy to understand.
 

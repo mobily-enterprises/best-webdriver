@@ -130,8 +130,8 @@
 <a href="Safari.html">Safari</a>, <a href="Edge.html">Edge</a>, and Remote</p>
 <p>The main aim of Browser objects is to:</p>
 <ul>
-<li>Run the corresponding webdriver process (e.g. <code>geckodriver</code> for Firefox, <code>chromedriver</code> for Chrome, etc.).</li>
-<li><p>Provide a configuration object that will be used when creating a new session with the webdriver</p>
+<li>Provide a configuration object that will be used when creating a new session with the webdriver</li>
+<li><p>Provide a static <a href="Browser.html#.Driver">Browser.Driver</a> property that points to the right specific <a href="Driver.html">Driver</a>.</p>
 <p>A basic (empty) session configuration object looks like this:</p>
 <pre class="prettyprint source"><code>{
   capabilities: {
