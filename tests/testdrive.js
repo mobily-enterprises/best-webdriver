@@ -3,8 +3,8 @@ const { Driver, browser, Actions } = require('../index')
 ;(async () => {
   try {
   /*
-    // var actions = new Actions(new Pointer('mouse'), new Keyboard('keyboard'))
-    var actions = new Actions(new Keyboard('keyboard'))
+    // var actions = new Actions(new Actions.Pointer('mouse'), new Actions.Keyboard('keyboard'))
+    var actions = new Actions(new Actions.Keyboard('keyboard'))
 
     console.log('BEFORE:', actions, '\n\nAND:', actions.actions, '\n\n')
     actions.tick.keyboardUp('r')

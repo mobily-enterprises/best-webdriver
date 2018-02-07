@@ -261,8 +261,8 @@ property <code>tick</code> (which is actually a getter). The way you use <code>t
 <p>If you call the constructor like this:</p>
 <pre class="prettyprint source"><code>var actions = new Actions()</code></pre><p>It's the same as writing:</p>
 <pre class="prettyprint source"><code>var actions = new Actions(
-  new Keyboard('keyboard'),
-  new Pointer('mouse', Pointer.Type.MOUSE)
+  new Actions.Keyboard('keyboard'),
+  new Actions.Pointer('mouse', Pointer.Type.MOUSE)
 )</code></pre><p>This will make two devices, <code>mouse</code> and <code>keyboard</code>, available.</p>
 <p>Such a scenario will allow you to call:</p>
 <pre class="prettyprint source"><code>actions.tick.keyboardDown('r').mouseDown()
@@ -275,7 +275,7 @@ and the keyboard action <code>Up</code>.</p>
 <li>Both of them have the method <code>pause</code></li>
 </ul>
 <p>If you create an actions object like this:</p>
-<pre class="prettyprint source"><code> var actions = new Actions(new Keyboard('cucumber'))</code></pre><p>You are then able to run:</p>
+<pre class="prettyprint source"><code> var actions = new Actions(new Actions.Keyboard('cucumber'))</code></pre><p>You are then able to run:</p>
 <pre class="prettyprint source"><code>actions.tick.cucumberDown('r')
 actions.tick.cucumberUp('r')</code></pre><p>However running:</p>
 <pre class="prettyprint source"><code>actions.tick.cucumberMove('r')</code></pre><p>Will result in an error, since <code>cucumber</code> is a keyboard device, and it doesn't
@@ -297,8 +297,8 @@ tick:</p>
 .tick.keyboardUp('r').mouseUp()</code></pre><p>Once you have decided your actions, you can submit them:</p>
 <pre class="prettyprint source"><code> await driver.performActions(actions)</code></pre><p>You can set multiple touch devices, and use them for multi-touch:</p>
 <pre class="prettyprint source"><code>var actions = new Actions(
-  new Pointer('finger1', Pointer.Type.TOUCH),
-  new Pointer('finger2', Pointer.Type.TOUCH)
+  new Actions.Pointer('finger1', Pointer.Type.TOUCH),
+  new Actions.Pointer('finger2', Pointer.Type.TOUCH)
 )
 // Define actions: Moving two fingers vertically at the same time
 actions
@@ -309,7 +309,7 @@ actions
 driver.performActions(actions)</code></pre><p>You can also move a pointer over a specific element, specifying how long it will take (in milliseconds):</p>
 <pre class="prettyprint source"><code>await driver.navigateTo('https://www.google.com')    
 var el = await driver.findElementsCss('[name=q]')
-var actions = new Actions(new Pointer('mouse', Pointer.Type.MOUSE))
+var actions = new Actions(new Actions.Pointer('mouse', Pointer.Type.MOUSE))
 
 // Moving over `el`, taking 1 second
 actions.tick.mouseMove({ origin: el, duration: 1000 })</code></pre><p>Keyboard devices can perform:</p>

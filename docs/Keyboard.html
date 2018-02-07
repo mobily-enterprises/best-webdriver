@@ -259,7 +259,7 @@ like <code>keyboard1</code>, <code>keyboard2</code>.</p>
     <h5 id="Keyboard-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>var keyboard = new Keyboard('keyboard')
+  <pre class="prettyprint"><code>var keyboard = new Actions.Keyboard('keyboard')
 var actions = new Actions(keyboard)</code></pre>
 
 
@@ -792,8 +792,8 @@ var actions = new Actions(keyboard)</code></pre>
     <h5 id="Pause-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>var bigMouse = new Pointer('bigMouse')
-   var bigKeyboard = new Pointer('bigKeyboard')
+  <pre class="prettyprint"><code>var bigMouse = new Actions.Pointer('bigMouse')
+   var bigKeyboard = new Actions.Keyboard('bigKeyboard')
 
    var actions = new Actions(bigMouse, bigKeyboard)
    actions.tick.bigKeyboardPause().bigMouseMove({ x: 100, y: 200, duration: 4000 })

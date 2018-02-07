@@ -272,8 +272,8 @@ If you call the constructor like this:
 It's the same as writing:
 
     var actions = new Actions(
-      new Keyboard('keyboard'),
-      new Pointer('mouse', Pointer.Type.MOUSE)
+      new Actions.Keyboard('keyboard'),
+      new Actions.Pointer('mouse', Pointer.Type.MOUSE)
     )
 
 This will make two devices, `mouse` and `keyboard`, available.
@@ -294,7 +294,7 @@ In short:
 
 If you create an actions object like this:
 
-     var actions = new Actions(new Keyboard('cucumber'))
+     var actions = new Actions(new Actions.Keyboard('cucumber'))
 
 You are then able to run:
 
@@ -338,8 +338,8 @@ Once you have decided your actions, you can submit them:
 You can set multiple touch devices, and use them for multi-touch:
 
     var actions = new Actions(
-      new Pointer('finger1', Pointer.Type.TOUCH),
-      new Pointer('finger2', Pointer.Type.TOUCH)
+      new Actions.Pointer('finger1', Pointer.Type.TOUCH),
+      new Actions.Pointer('finger2', Pointer.Type.TOUCH)
     )
     // Define actions: Moving two fingers vertically at the same time
     actions
@@ -353,7 +353,7 @@ You can also move a pointer over a specific element, specifying how long it will
 
     await driver.navigateTo('https://www.google.com')    
     var el = await driver.findElementsCss('[name=q]')
-    var actions = new Actions(new Pointer('mouse', Pointer.Type.MOUSE))
+    var actions = new Actions(new Actions.Pointer('mouse', Pointer.Type.MOUSE))
 
     // Moving over `el`, taking 1 second
     actions.tick.mouseMove({ origin: el, duration: 1000 })

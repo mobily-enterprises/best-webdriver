@@ -6,7 +6,7 @@ const InputDevice = require('./InputDevice')
  * Note: input device objects are only ever used in {@link Actions}
  * @extends InputDevice
  * @example
- * var keyboard = new Keyboard('keyboard')
+ * var keyboard = new Actions.Keyboard('keyboard')
  * var actions = new Actions(keyboard)
  */
 class Keyboard extends InputDevice {
@@ -80,8 +80,8 @@ class Keyboard extends InputDevice {
        * @param {number} duration=0 Duration of the pause
        *
        * @example
-       *    var bigMouse = new Pointer('bigMouse')
-       *    var bigKeyboard = new Pointer('bigKeyboard')
+       *    var bigMouse = new Actions.Pointer('bigMouse')
+       *    var bigKeyboard = new Actions.Keyboard('bigKeyboard')
        *
        *    var actions = new Actions(bigMouse, bigKeyboard)
        *    actions.tick.bigKeyboardPause().bigMouseMove({ x: 100, y: 200, duration: 4000 })
