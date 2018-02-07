@@ -4,7 +4,8 @@ const Driver = require('./Driver')
  * the {@link Driver}'s {@link Driver#run} method.
  *
  * This class also  adds a compatibility layer to the w3c Driver to work around Chrome's
- * lack of full s3c support
+ * lack of full w3c support.
+ *
  * It inherits from {@link Driver}, but tries to make the unsupported webdriver calls actually work
  */
 class ChromeDriver extends Driver {

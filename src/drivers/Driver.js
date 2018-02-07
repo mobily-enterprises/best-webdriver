@@ -29,7 +29,15 @@ const KEY = require('../KEY')
 var Driver = class {
   //
   /**
-   * Constructor returning a Driver object, which will be used to pilot the passed browser
+   * Constructor returning a Driver object, which will be used to interface
+   * with a Webdriver.
+   *
+   * It's used as a base class for specific drivers ({@link ChromeDriver},
+   * {@link FirefoxDriver}, {@link EdgeDriver}, {@link SafariDriver}).
+   *
+   * Specific drivers know how to run a local webdriver command (if present)
+   * and are able to adjust calls and return values so that they follow the
+   * w3c webdriver Protocol
    *
    * @param {Browser} browser The browser that this API will pilot
    * @param {Object} opt Options to configure the driver

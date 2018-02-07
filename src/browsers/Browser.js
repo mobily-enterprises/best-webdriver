@@ -12,8 +12,8 @@ class Browser {
    *
    * The main aim of Browser objects is to:
    *
-   *  * Run the corresponding webdriver process (e.g. `geckodriver` for Firefox, `chromedriver` for Chrome, etc.).
    *  * Provide a configuration object that will be used when creating a new session with the webdriver
+   *  * Provide a static {@link Browser.Driver} property that points to the right specific {@link Driver}.
    *
    *  A basic (empty) session configuration object looks like this:
    *
