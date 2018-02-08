@@ -1,4 +1,4 @@
-# The best Webdriver API to date
+# The best Webdriver API for node to date
 (According to its author. Pinch of salt required.)
 ## Be productive in less than 20 minutes.
 
@@ -132,11 +132,17 @@ You will see:
       capabilities: {
         alwaysMatch: {
 
-          // Set by the Chrome constructor
-          goog:chromeOptions: { w3c: true, detach: true },
-          browserName: 'chrome'
+          goog:chromeOptions: {
+
+            // Always here, to make Chrome compliant
+            w3c: true,
+
+            // Set by setSpecific()
+            detach: true
+          },
 
           // Set my setAlwaysMatch()
+          browserName: 'chrome',
           pageLoadStrategy: 'eager'
         },
         firstMatch: [

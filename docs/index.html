@@ -176,9 +176,12 @@ console.log('Session parameters:', require('util').inspect(params, { depth: 10 }
   capabilities: {
     alwaysMatch: {
 
-      // Set by the Chrome constructor
       goog:chromeOptions: {
+
+        // Always here, to make Chrome compliant
         w3c: true,
+
+        // Set by setSpecific()
         detach: true
       },
 

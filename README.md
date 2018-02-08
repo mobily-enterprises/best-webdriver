@@ -132,9 +132,12 @@ You will see:
       capabilities: {
         alwaysMatch: {
 
-          // Set by the Chrome constructor
           goog:chromeOptions: {
+
+            // Always here, to make Chrome compliant
             w3c: true,
+
+            // Set by setSpecific()
             detach: true
           },
 
