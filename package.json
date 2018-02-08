@@ -1,7 +1,7 @@
 {
   "name": "best-webdriver",
   "version": "1.0.8",
-  "description": "Down to metal webdriver; you will be testing in 20 minutes, not 20 hours",
+  "description": "Best webdriver around using async/await, simplified down-to-earth API, easy to debug, 1:1 matching with the webdriver API. You will be testing in 20 minutes, not 20 hours",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha --delay tests/index.js",
