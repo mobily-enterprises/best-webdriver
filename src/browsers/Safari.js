@@ -4,8 +4,6 @@ const SafariDriver = require('../drivers/SafariDriver')
 /**
  * Class that represents the {@link https://developer.apple.com/library/content/releasenotes/General/WhatsNewInSafari/Articles/Safari_10_0.html#//apple_ref/doc/uid/TP40014305-CH11-DontLinkElementID_28 Safari browser}.
  *
- *
- * It implements the `run()` method, which will run `safariDrive`
  * Check the {@link https://webkit.org/blog/6900/webdriver-support-in-safari-10/ Status of Safari}
  * in terms of implementation of the webdriver specs
  *

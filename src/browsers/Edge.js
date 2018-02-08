@@ -3,9 +3,6 @@ const EdgeDriver = require('../drivers/EdgeDriver')
 
 /**
  * Class that represents the {@link https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ Edge browser}.
- *
- *
- * It implements the `run()` method, which will run `MicrosoftWebDriver.exe`
  * Check the {@link https://docs.microsoft.com/en-us/microsoft-edge/webdriver Status of Edge}
  * in terms of implementation of the webdriver specs
  *

@@ -5,9 +5,7 @@ const ChromeDriver = require('../drivers/ChromeDriver')
  * Class that represents the {@link https://sites.google.com/a/chromium.org/chromedriver/ Chrome browser}.
  *
  *
- * It implements the `run()` method, which will run `chromewebdriver` or `chromewebdriver.exe`
- * (depending on the platform).
- * It also:
+ * It:
  *  * makes absolute sure that `chromeOptions.w3c` is set to `true`. This is crucial so that chrome
  *    is compliant with the w3c webdriver standard, which is what this API expects.
  *  * passed the `specific` properties onto the `alwaysMatch.chromeOptions`. Check

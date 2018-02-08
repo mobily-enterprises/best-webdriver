@@ -5,9 +5,7 @@ const FirefoxDriver = require('../drivers/FirefoxDriver')
  * Class that represents the {@link https://github.com/mozilla/geckodriver Firefox browser}.
  *
  *
- * It implements the `run()` method, which will run `geckodriver` or `geckodriver.exe`
- * (depending on the platform).
- * It also:
+ * It:
  *  * passed the `specific` properties onto the `alwaysMatch.moz:firefoxOptions`. Check
  *    {@link https://github.com/mozilla/geckodriver#mozfirefoxoptions Firefox's specific options}
  *    to see what you can pass as keys to the `specific` parameter
