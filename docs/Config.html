@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      Actions - Documentation
+      Config - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -76,7 +76,7 @@
   <div id="main">
     
       <h1 class="page-title">
-        Actions
+        Config
       </h1>
     
 
@@ -87,63 +87,13 @@
     
       <h2>
         
-        Actions
+        Config
         
       </h2>
 
       
         <div class="class-description">
-          <p>The class responsible of creating action objects, which are a list
-of UI actions to be carried out.</p>
-<p>Once the action object is created, you can add &quot;ticks&quot; to it using the
-property <code>tick</code> (which is actually a getter). The way you use <code>tick</code> depends on the devices you created.</p>
-<p>If you call the constructor lile this:</p>
-<pre class="prettyprint source"><code>var actions = new Actions()</code></pre><p>It's the same as typing:</p>
-<pre class="prettyprint source"><code>var actions = new Actions(
-  new Actions.Keyboard('keyboard'),
-  new Actions.Pointer('mouse', Pointer.Type.MOUSE)
-)</code></pre><p>This will make two devices, <code>mouse</code> and <code>keyboard</code>, available.</p>
-<p>Such a scenario will allow you to call:</p>
-<pre class="prettyprint source"><code>actions.tick.keyboardDown('r').mouseDown()
-actions.tick.keyboardUp('r').mouseUp()</code></pre><p>Here, <code>keyboardUp</code> was available as a combination of the keyboard ID <code>keyboard</code>
-and the keyboard action <code>Up</code>.</p>
-<p>In short:</p>
-<ul>
-<li><ul>
-<li>Keyboard devices will have the methods <code>Up</code>, <code>Down</code></li>
-</ul>
-</li>
-<li><ul>
-<li>Pointer devices will have the methors <code>Move</code>, <code>Up</code>, <code>Down</code>, <code>Cancel</code></li>
-</ul>
-</li>
-<li><ul>
-<li>Both of them have the method <code>pause</code></li>
-</ul>
-</li>
-</ul>
-<p>If you create an actions object like this:</p>
-<pre class="prettyprint source"><code> var actions = new Actions(new Actions.Keyboard('cucumber'))</code></pre><p>You are then able to run:</p>
-<pre class="prettyprint source"><code> actions.tick.cucumberDown('r')
- actions.tick.cucumberUp('r')</code></pre><p>However running:</p>
-<pre class="prettyprint source"><code> actions.tick.cucumberMove('r')</code></pre><p>Will result in an error, since <code>cucumber</code> is a keyboard device, and it doesn't
-implement <code>move</code> (only pointers do)</p>
-<p>If you have two devices set (like the default <code>keyboard</code> and <code>mouse</code>, which
-is the most common use-case), you can set one action per tick:</p>
-<pre class="prettyprint source"><code> var actions = new Actions() // By default, mouse and keyboard
- // Only a keyboard action in this tick. Mouse will pause
- actions.tick.keyboardDown('r')
- // Only a mouse action in this tick. Keyboard will pause
- actions.tick.mouseDown()
- // Both a mouse and a keyboard action this tick
- actions.tick.keyboardUp('r').mouseUp()</code></pre><p>You can only add one action per device in each tick. This will give an error,
-because the <code>mouse</code> device is trying to define two different actions in the same
-tick:</p>
-<pre class="prettyprint source"><code> actions.tick.mouseDown().mouseUp()</code></pre><p>You are able to chain tick calls if you want to:</p>
-<pre class="prettyprint source"><code> actions
- .tick.keyboardDown('r').mouseDown()
- .tick.keyboardUp('r').mouseUp()</code></pre><p>Once you have decided your actions, you can submit them:</p>
-<pre class="prettyprint source"><code>await driver.performActions(actions)</code></pre>
+          <p>A class that represents a Webdriver configuration</p>
         </div>
       
     
@@ -160,13 +110,13 @@ tick:</p>
   
 
   <span class='name-container'>
-    <a class="link-icon" href="#Actions">
+    <a class="link-icon" href="#Config">
       <svg height="20" width="20" style="fill: black;">
         <use xlink:href="#linkIcon"></use>
       </svg>
     </a>
-    <h4 class="name" id="Actions">
-      <span class="type-signature"></span>new Actions<span class="signature">(&hellip;inputDevice)</span><span class="type-signature"></span>
+    <h4 class="name" id="Config">
+      <span class="type-signature"></span>new Config<span class="signature">()</span><span class="type-signature"></span>
     </h4>
   </span>
 
@@ -175,7 +125,129 @@ tick:</p>
 
 
   <div class="description">
-    <p>The constructor</p>
+    <p>The main aim of Config class is to provide a configuration object that
+will be used when creating a new session with the webdriver</p>
+<p> A basic (empty) session configuration object looks like this:</p>
+<pre class="prettyprint source"><code>   {
+     capabilities: {
+       alwaysMatch: {
+         'goog:chromeOptions': { w3c: true }
+       },
+       firstMatch: []
+     }
+   }</code></pre><p>Note that <code>goog:chromeOptions</code> is set as this option is necessary to make the
+Chrome webdriver work with this API.</p>
+<p>Configuration options are set with the methods <a href="Config.html#setAlwaysMatch">Config#setAlwaysMatch</a>,
+<a href="Config.html#addFirstMatch">Config#addFirstMatch</a>, <a href="Config.html#set">Config#set</a> and <a href="Config.html#setSpecific">Config#setSpecific</a></p>
+  </div>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="config_Config.js.html">config/Config.js</a>, <a href="config_Config.js.html#line6">line 6</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+      <h3 class="subsection-title">Methods</h3>
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#setAlwaysMatch">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="setAlwaysMatch">
+      <span class="type-signature"></span>setAlwaysMatch<span class="signature">(path, value, force)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Method to set the <code>alwaysMatch</code> property in the browser's capabilities</p>
   </div>
 
 
@@ -197,7 +269,54 @@ tick:</p>
       <th>Type</th>
 
       
-        <th>Attributes</th>
+
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>path</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The name of the property to set. It can be a path; if path is has a <code>.</code> (e.g.
+                     <code>something.other</code>), the property
+                     <code>sessionParameters.capabilities.alwaysMatch.something.other</code> will be set</p>
+          
+            <h6>Properties</h6>
+            
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
       
 
       
@@ -210,14 +329,14 @@ tick:</p>
     
       <tr>
         
-          <td class="name"><code>inputDevice</code></td>
+          <td class="name"><code>browserName</code></td>
         
 
         <td class="type">
           
             
     <span class="param-type">
-      <a href="InputDevice.html">InputDevice</a>
+      string
     </span>
 
     
@@ -227,23 +346,311 @@ tick:</p>
         </td>
 
         
-          <td class="attributes">
-            
 
-            
+        
 
+        <td class="description last">
+          <p>The user agent</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>browserVersion</code></td>
+        
+
+        <td class="type">
+          
             
-              &lt;repeatable><br>
-            
-          </td>
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
         
 
         
 
         <td class="description last">
-          <p>Input devices that will be used to carry out
-                        actions. By default, two devices are created:
-                        <code>keyboard</code> and <code>mouse</code></p>
+          <p>Identifies the version of the user agent</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>platformName</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Identifies the operating system of the endpoint node</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>acceptInsecureCerts</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>pageLoadStrategy</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Defines the current session’s page load strategy. It can be <code>none</code>, <code>eager</code> or <code>normal</code></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>proxy</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      object
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Defines the current session’s proxy configuration. See the
+                     <a href="https://w3c.github.io/webdriver/webdriver-spec.html#dfn-proxy-configuration">spec's                      proxy options</a></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>setWindowRect</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>timeouts</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      object
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Describes the timeouts imposed on certain session operations. Can have keys <code>implicit</code>, <code>pageLoad</code> or <code>script</code></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>unhandledPromptBehavior</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>Describes the current session’s user prompt handler. It
+                can be: <code>dismiss</code>, <code>accept</code>, <code>dismiss and notify</code>, <code>accept and notify</code>, <code>ignore</code></p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The value to assign to the property</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if already present.</p>
           
         </td>
       </tr>
@@ -287,7 +694,7 @@ tick:</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line98">line 98</a>
+          <a href="config_Config.js.html">config/Config.js</a>, <a href="config_Config.js.html#line65">line 65</a>
         </li>
       </ul>
     </dd>
@@ -313,334 +720,20 @@ tick:</p>
 
 
   <div class="example-container">
-    <a class="link-icon" href="#Actions-examples">
+    <a class="link-icon" href="#setAlwaysMatch-examples">
       <svg height="20" width="20" style="fill: black;">
         <use xlink:href="#linkIcon"></use>
       </svg>
     </a>
-    <h5 id="Actions-examples">Example</h5>
+    <h5 id="setAlwaysMatch-examples">Example</h5>
     
 
-  <pre class="prettyprint"><code>// Creating an actions object. This...
-var actions = new Actions()
-// Is the same as:
-var Pointer = Actions.Pointer
-var Keyboard = Actions.Keyboard
-var actions = new Actions( new Actions.Keyboard('keyboard'), new Actions.Pointer('mouse', Pointer.Type.MOUSE))
-
-// You can also be creative with names
-var actions = new Actions.Pointer('da_mouse', Pointer.Type.MOUSE)</code></pre>
+  <pre class="prettyprint"><code>this.setAlwaysMatch('platformName', 'linux')
+this.setAlwaysMatch('timeouts.implicit', 10000)</code></pre>
 
 
   </div>
 
-
-      
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-
-<h4 class="name" id=".Key">
-  <span class="type-signature">(static) </span>Key<span class="type-signature"></span>
-</h4>
-
-
-
-
-  <div class="description">
-    <p>Constant returning special KEY characters (enter, etc.)
- Constant are from the global variable <a href="global.html#KEY">KEY</a></p>
-  </div>
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line163">line 163</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-  <h5>Example</h5>
-  
-
-  <pre class="prettyprint"><code>var actions = new Actions()
-actions.tick.keyboardDown(Actions.Key.ENTER).keyboardUp(Actions.Key.ENTER)</code></pre>
-
-
-
-
-          
-        
-            
-
-<h4 class="name" id=".Keyboard">
-  <span class="type-signature">(static) </span>Keyboard<span class="type-signature"></span>
-</h4>
-
-
-
-
-  <div class="description">
-    <p>The <a href="Keyboard.html">Keyboard</a> class constructor</p>
-  </div>
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line168">line 168</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-          
-        
-            
-
-<h4 class="name" id=".Pointer">
-  <span class="type-signature">(static) </span>Pointer<span class="type-signature"></span>
-</h4>
-
-
-
-
-  <div class="description">
-    <p>The <a href="Keyboard.html">Keyboard</a> class constructor</p>
-  </div>
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line175">line 175</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-          
-        
-            
-
-<h4 class="name" id="tick">
-  <span class="type-signature"></span>tick<span class="type-signature"></span>
-</h4>
-
-
-
-
-  <div class="description">
-    <p>As a getter, it will return an object with the right methods depending on
-what devices were passed when constructing the object.
-For example running:</p>
-<pre class="prettyprint source"><code> var actions = new Actions(new Actions.Keyboard('cucumber'))</code></pre><p>Will ensure that <code>tick</code> will return an object with the properties
-<code>cucumberUp</code>, <code>cucumberDown</code> and <code>pause</code>
-More conventionally, creating the action object like this:</p>
-<pre class="prettyprint source"><code> var actions = new Actions()</code></pre><p>Will default to two devices, <code>mouse</code> and <code>keyboard</code>. So, the object returned
-by the <code>tick</code> getter will return an object with the methods <code>keyboardUp()</code>, <code>keyboardDown()</code>,
-<code>keyboardPause()</code>, <code>mouseUp()</code>, <code>mouseDown()</code>, <code>mouseCancel()</code>, <code>mousePause()</code></p>
-  </div>
-
-
-
-
-<dl class="details">
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source">
-      <ul class="dummy">
-        <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line238">line 238</a>
-        </li>
-      </ul>
-    </dd>
-  
-
-  
-
-  
-
-  
-</dl>
-
-
-
-
-
-
-          
-        
-    
-
-    
-      <h3 class="subsection-title">Methods</h3>
 
       
         
@@ -649,13 +742,13 @@ by the <code>tick</code> getter will return an object with the methods <code>key
   
 
   <span class='name-container'>
-    <a class="link-icon" href="#compile">
+    <a class="link-icon" href="#addFirstMatch">
       <svg height="20" width="20" style="fill: black;">
         <use xlink:href="#linkIcon"></use>
       </svg>
     </a>
-    <h4 class="name" id="compile">
-      <span class="type-signature"></span>compile<span class="signature">()</span><span class="type-signature"></span>
+    <h4 class="name" id="addFirstMatch">
+      <span class="type-signature"></span>addFirstMatch<span class="signature">(key, value, force)</span><span class="type-signature"></span>
     </h4>
   </span>
 
@@ -664,10 +757,732 @@ by the <code>tick</code> getter will return an object with the methods <code>key
 
 
   <div class="description">
-    <p>Compiles the stored actions into a <code>compiledActions</code> object, which is
-an object compatible with the webdriver protocol for actions</p>
-<p>There is no need to call this method directly, since the driver always tries
-to <code>compile()</code> actions before sending them over.</p>
+    <p>Adds a property to the <code>firstMatch</code> array in the browser's capabilities.</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+        <th>Default</th>
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>key</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The name of the property to set</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The value to assign</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+              false
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if needed</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="config_Config.js.html">config/Config.js</a>, <a href="config_Config.js.html#line84">line 84</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="example-container">
+    <a class="link-icon" href="#addFirstMatch-examples">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h5 id="addFirstMatch-examples">Example</h5>
+    
+
+  <pre class="prettyprint"><code>this.addFirstMatch('browserName', 'chrome')
+this.addFirstMatch('browserName', 'firefox')</code></pre>
+
+
+  </div>
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#set">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="set">
+      <span class="type-signature"></span>set<span class="signature">(path, value, force)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Sets a key (or a path) on the object which will be sent to the webdriver when
+creating a session</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+        <th>Default</th>
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>path</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The name of the property to set. It can be a path; if path is has a <code>.</code> (e.g.
+                     <code>something.other</code>), the property
+                     <code>sessionParameters.something.other</code> will be set</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>The value to assign</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+          <td class="default">
+            
+              true
+            
+          </td>
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if needed</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="config_Config.js.html">config/Config.js</a>, <a href="config_Config.js.html#line105">line 105</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="example-container">
+    <a class="link-icon" href="#set-examples">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h5 id="set-examples">Example</h5>
+    
+
+  <pre class="prettyprint"><code>this.set('login', 'blah')
+this.set('pass', 'blah')</code></pre>
+
+
+  </div>
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#setSpecific">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="setSpecific">
+      <span class="type-signature"></span>setSpecific<span class="signature">(name, path, value, force)</span><span class="type-signature"></span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Sets a configuration option for the specific browser.</p>
+  </div>
+
+
+
+
+
+
+
+  <h5>Parameters:</h5>
+  
+
+<table class="params">
+  <thead>
+    <tr>
+      
+        <th>Name</th>
+      
+
+      <th>Type</th>
+
+      
+
+      
+
+      <th class="last">Description</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    
+      <tr>
+        
+          <td class="name"><code>name</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      browserName
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The name of the browser to set. It can be
+                      <code>chrome</code>, <code>firefox</code>, <code>safari</code> or <code>edge</code></p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>path</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      string
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The name of the property to set. It can be a path; if path is has a <code>.</code> (e.g.
+                     <code>something.other</code>), the property
+                     <code>sessionParameters.something.other</code> will be set</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>value</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      *
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>The value to assign</p>
+          
+        </td>
+      </tr>
+
+    
+      <tr>
+        
+          <td class="name"><code>force</code></td>
+        
+
+        <td class="type">
+          
+            
+    <span class="param-type">
+      boolean
+    </span>
+
+    
+
+
+          
+        </td>
+
+        
+
+        
+
+        <td class="description last">
+          <p>It will overwrite keys if needed</p>
+          
+        </td>
+      </tr>
+
+    
+  </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source">
+      <ul class="dummy">
+        <li>
+          <a href="config_Config.js.html">config/Config.js</a>, <a href="config_Config.js.html#line127">line 127</a>
+        </li>
+      </ul>
+    </dd>
+  
+
+  
+
+  
+
+  
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="example-container">
+    <a class="link-icon" href="#setSpecific-examples">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h5 id="setSpecific-examples">Example</h5>
+    
+
+  <pre class="prettyprint"><code>this.setSpecific('chrome', 'FIXME1', 'blah')
+this.setSpecific('safari', 'FIXME2', 'blah')</code></pre>
+
+
+  </div>
+
+
+      
+        
+
+
+  
+
+  <span class='name-container'>
+    <a class="link-icon" href="#getSessionParameters">
+      <svg height="20" width="20" style="fill: black;">
+        <use xlink:href="#linkIcon"></use>
+      </svg>
+    </a>
+    <h4 class="name" id="getSessionParameters">
+      <span class="type-signature"></span>getSessionParameters<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span>
+    </h4>
+  </span>
+
+  
+
+
+
+  <div class="description">
+    <p>Return the current session parameters. This is used by the <a href="Driver.html#newSession">Driver#newSession</a> call
+to get the parameters to be sent over</p>
   </div>
 
 
@@ -710,7 +1525,7 @@ to <code>compile()</code> actions before sending them over.</p>
     <dd class="tag-source">
       <ul class="dummy">
         <li>
-          <a href="actions_Actions.js.html">actions/Actions.js</a>, <a href="actions_Actions.js.html#line194">line 194</a>
+          <a href="config_Config.js.html">config/Config.js</a>, <a href="config_Config.js.html#line152">line 152</a>
         </li>
       </ul>
     </dd>

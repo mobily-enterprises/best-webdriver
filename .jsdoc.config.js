@@ -19,7 +19,7 @@ module.exports = {
       'src/drivers/SafariDriver.js',
       'src/drivers/EdgeDriver.js',
       'src/Element.js',
-      'src/Config.js',
+      'src/config/Config.js',
       'src/actions/Actions.js',
       'src/actions/InputDevice.js',
       'src/actions/Pointer.js',

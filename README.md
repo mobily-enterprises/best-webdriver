@@ -147,7 +147,7 @@ You will see:
       }
     }
 
-Remember that in [Browser#setAlwaysMatch](https://mercmobily.github.io/best-webdriver/Browser.html#setAlwaysMatch), [Browser#set](https://mercmobily.github.io/best-webdriver/Browser.html#set) and [Browser#setSpecific](https://mercmobily.github.io/best-webdriver/Browser.html#setSpecific), the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatch('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
+Remember that in [Config#setAlwaysMatch](https://mercmobily.github.io/best-webdriver/Config.html#setAlwaysMatch), [Config#set](https://mercmobily.github.io/best-webdriver/Config.html#set) and [Config#setSpecific](https://mercmobily.github.io/best-webdriver/Config.html#setSpecific), the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatch('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
 
 #### Running the API without spawning a webdriver
 

@@ -147,7 +147,7 @@ You will see:
       }
     }
 
-Remember that in {@link Browser#setAlwaysMatch}, {@link Browser#set} and {@link Browser#setSpecific}, the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatch('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
+Remember that in {@link Config#setAlwaysMatch}, {@link Config#set} and {@link Config#setSpecific}, the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatch('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
 
 #### Running the API without spawning a webdriver
 

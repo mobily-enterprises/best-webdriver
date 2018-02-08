@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      actions/Pointer.js - Documentation
+      config/Config.js - Documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -78,7 +78,7 @@
   <div id="main">
     
       <h1 class="page-title">
-        actions/Pointer.js
+        config/Config.js
       </h1>
     
 
@@ -87,249 +87,162 @@
 
 <section>
   <article>
-    <pre class="prettyprint source linenums"><code>const InputDevice = require('./InputDevice')
-const Element = require('../Element')
+    <pre class="prettyprint source linenums"><code>const DO = require('deepobject')
 
 /**
- * Class for Pointer objects.
- * When a Pointer object is passed to the {@link Action} constructor:
-
- *     var actions = new Actions(new Actions.Pointer('bigMouse'))
- *
- * the action's `tick` will have the following methods (assuming that the Pointer's ID
- * is `mouse`):
- *
- *  * {@link Pointer#Up action.tick.bigMouseUp()}
- *  * {@link Pointer#Down action.tick.bigMouseDown()}
- *  * {@link Pointer#Move action.tick.bigMouseMove()}
- *  * {@link Pointer#Cancel action.tick.bigMouseCancel()}
- *
- * Note: input device objects are only ever used in {@link Actions}
- * @extends InputDevice
- * @example
- * var mouse = new Actions.Pointer('mouse', Pointer.Type.MOUSE)
- * var touch1 = new Actions.Pointer('touch1', Pointer.Type.TOUCH)
- * var touch2 = new Actions.Pointer('touch2', Pointer.Type.TOUCH)
- * var actions = new Actions(mouse, touch1, touch2)
- * actions.tick.mouseDown().touch1Down().touch2Down()
+ * A class that represents a Webdriver configuration
  */
-class Pointer extends InputDevice {
+class Config {
   /**
-   * Each device is associated a unique ID
-   * like `mouse`, `touch`, `pen`.
-   * @param {string} id The unique ID of the device
-   * @param {string} pointerType It can be `Pointer.Type.MOUSE`, `Pointer.Type.PEN`
-   *                             or `Pointer.Type.TOUCH`
+   * The main aim of Config class is to provide a configuration object that
+   * will be used when creating a new session with the webdriver
    *
-  */
-  constructor (id, pointerType) {
-    super(id)
-    this.pointerType = pointerType || Pointer.Type.MOUSE
-    this.type = 'pointer'
-  }
-
-  /**
-   * The types of pointer types, used to create the right type of pointer.
-   * E.g. `Pointer.Type.MOUSE`, `Pointer.Type.PEN` or `Pointer.Type.TOUCH`,
+   *  A basic (empty) session configuration object looks like this:
    *
-   * It actually returns:
+   *        {
+   *          capabilities: {
+   *            alwaysMatch: {
+   *              'goog:chromeOptions': { w3c: true }
+   *            },
+   *            firstMatch: []
+   *          }
+   *        }
    *
-   *      {
-   *        MOUSE: 'mouse',
-   *        PEN: 'pen',
-   *        TOUCH: 'touch'
-   *      }
-  */
-  static get Type () {
-    return {
-      MOUSE: 'mouse',
-      PEN: 'pen',
-      TOUCH: 'touch'
-    }
-  }
-
-  /**
-   * The button types on a pointer.
+   * Note that `goog:chromeOptions` is set as this option is necessary to make the
+   * Chrome webdriver work with this API.
    *
-   * It actually returns:
+   * Configuration options are set with the methods {@link Config#setAlwaysMatch},
+   * {@link Config#addFirstMatch}, {@link Config#set} and {@link Config#setSpecific}
    *
-   *    {
-   *      LEFT: 0,
-   *      MIDDLE: 1,
-   *      RIGHT: 2
-   *    }
-  */
-  static get Button () {
-    return {
-      LEFT: 0,
-      MIDDLE: 1,
-      RIGHT: 2
-    }
-  }
-
-  /**
-   * The types of origins, used in `Move()` commands. See {@link Actions} on how to use
-   * this constant.
-   * E.g. `Pointer.Origin.VIEWPORT` or `Pointer.Origin.POINTER`
-   *
-   * It actually returns:
-   *
-   *     {
-   *       VIEWPORT: 'viewport',
-   *       POINTER: 'pointer'
-   *     }
-  */
-  static get Origin () {
-    return {
-      VIEWPORT: 'viewport',
-      POINTER: 'pointer'
-    }
-  }
-
-  _tickMethods () {
-    return {
-
-      /**
-       * Move the pointer to a specified `origin` location, using `x` and `y` and offset, and taking `duration` milliseconds
-       *
-       * This method will be added to the action's `tick` property. **prefixed** with the Pointer's ID.
-       *
-       * @param {Object} params Instructions on where to move the pointer
-       * @param {Element|string} params.origin=Pointer.Origin.VIEWPORT Where to move the pointer to. It can be an {@link Element} object,
-       *                      or Pointer.Origin.VIEWPORT or Pointer.Origin.POINTER
-       * @param {number} params.x The x offset, from params.origin.
-       * @param {number} params.y The y offset, from params.origin.
-       * @param {number} params.duration How long the operation will take, in milliseconds
-       *
-       * @example
-       *
-       *     // Defining a pointer device called "cucumber", and passing it
-       *     // to the actions constructor
-       *     var actions = new Actions( new Actions.Pointer('bigMouse'))
-       *     // the `cucumberMove` method is now available in the tick property
-       *     actions.tick.bigMouseMove({ x: 400, y: 400 })
-       *
-       * @memberof Pointer#
-      */
-      Move: (args) => {
-        // Work out origin, defaulting to VIEWPORT.
-        // If it's an element, it will be seriaslised as a webdriver object
-        // w3c: for Chrome, we still have the ELEMENT key
-        // In any case, it MUST be an element, VIEWPORT or POINTER
-        var origin
-        if (!args.origin) {
-          origin = Pointer.Origin.VIEWPORT
-        } else {
-          if (args.origin instanceof Element) {
-            origin = {
-              'element-6066-11e4-a52e-4f735466cecf': args.origin.id,
-              ELEMENT: args.origin.id
-            }
-          } else {
-            origin = args.origin
-            if (origin !== Pointer.Origin.VIEWPORT &amp;&amp;
-                origin !== Pointer.Origin.POINTER) {
-              throw new Error('When using move(), origin must be an element, Pointer.Origin.VIEWPORT or Pointer.Origin.POINTER')
-            } else {
-            }
-          }
-        }
-
-        return {
-          type: 'pointerMove',
-          duration: args.duration || 0,
-          origin,
-          x: args.x || 0,
-          y: args.y || 0
-        }
-      },
-
-      /**
-       * Press a pointer button
-       *
-       * This method will be added to the action's `tick` property. **prefixed** with the Pointer's ID.
-       *
-       * @param {number} button=Pointer.Button.LEFT The button to press. It can be `Pointer.Button.LEFT` (0),
-       *                        `Pointer.Button.MIDDLE` (1) or `Pointer.Button.RIGHT` (2)
-       *
-       * @example
-       *     var actions = new Actions( new Actions.Pointer('bigMouse'))
-       *     actions.tick.bigMouseDown()
-       *     actions.tick.bigMouseDown(Pointer.Button.RIGHT)
-       *
-       * @memberof Pointer#
-      */
-      Down: (button = 0) => {
-        return {
-          type: 'pointerDown',
-          button
-        }
-      },
-
-      /** Release a pointer button
-       *
-       * This method will be added to the action's `tick` property. **prefixed** with the Pointer's ID.
-       *
-       * @param {number} button=Pointer.Button.LEFT The button to let go
-       *
-       * @example
-       *     var actions = new Actions( new Actions.Pointer('bigMouse'))
-       *     actions.tick.bigMouseUp()
-       *     actions.tick.bigMouseUp(Pointer.Button.RIGHT)
-       *
-       * @memberof Pointer#
-      */
-      Up: (button = 0) => {
-        return {
-          type: 'pointerUp',
-          button
-        }
-      },
-
-      /**
-       * Cancels the pointer
-       *
-       * This method will be added to the action's `tick` property. **prefixed** with the Pointer's ID.
-       * @example
-       *     var bigMouse = new Actions.Pointer('bigMouse')
-       *
-       *     // This will take 4 seconds. NOTE: there is no await before actions.performActions
-       *     var actions = new Actions(bigMouse)
-       *     actions.tick.bigMouseDown().tick.bigMouseUp().tick.bigMouseCancel()
-       *
-       * @memberof Pointer#
-      */
-      Cancel: () => {
-        return {
-          type: 'pointerCancel'
-        }
-      },
-
-      /**
-       * Pause the pointer for the specified length of time
-       *
-       * This method will be added to the action's `tick` property. **prefixed** with the Pointer's ID.
-       * @param {number} duration=0 Duration of the pause
-       *
-       * @example
-       *    var bigMouse = new Actions.Pointer('bigMouse')
-       *    var bigKeyboard = new Actions.Keyboard('bigKeyboard')
-       *
-       *    var actions = new Actions(bigMouse, bigKeyboard)
-       *    actions.tick.bigKeyboardDown('a').bigMousePause()
-       *    actions.performActions(actions)
-       *
-       * @memberof Pointer#
-      */
-      Pause: (duration) => {
-        return { type: 'pause', duration }
+   */
+  constructor () {
+    this.sessionParameters = {
+      capabilities: {
+        alwaysMatch: {
+          'goog:chromeOptions': { w3c: true }
+        },
+        firstMatch: []
       }
-
     }
+  }
+
+  /**
+   * Method to set the `alwaysMatch` property in the browser's capabilities
+   *
+   * @param {string} path The name of the property to set. It can be a path; if path is has a `.` (e.g.
+   *                      `something.other`), the property
+   *                      `sessionParameters.capabilities.alwaysMatch.something.other` will be set
+   * @param {string} path.browserName The user agent
+   * @param {string} path.browserVersion Identifies the version of the user agent
+   * @param {string} path.platformName Identifies the operating system of the endpoint node
+   * @param {boolean} path.acceptInsecureCerts Indicates whether untrusted and self-signed TLS certificates are implicitly trusted on navigation for the duration of the session
+   * @param {string} path.pageLoadStrategy Defines the current session’s page load strategy. It can be `none`, `eager` or `normal`
+   * @param {object} path.proxy Defines the current session’s proxy configuration. See the
+                     {@link https://w3c.github.io/webdriver/webdriver-spec.html#dfn-proxy-configuration spec's
+                     proxy options}
+   * @param {boolean} path.setWindowRect Indicates whether the remote end supports all of the commands in Resizing and Positioning Windows
+   * @param {object} path.timeouts Describes the timeouts imposed on certain session operations. Can have keys `implicit`, `pageLoad` or `script`
+   * @param {string} path.unhandledPromptBehavior Describes the current session’s user prompt handler. It
+   *                 can be: `dismiss`, `accept`, `dismiss and notify`, `accept and notify`, `ignore`
+   * @param {*} value The value to assign to the property
+   * @param {boolean} force It will overwrite keys if already present.
+   *
+   * @example
+   * this.setAlwaysMatch('platformName', 'linux')
+   * this.setAlwaysMatch('timeouts.implicit', 10000)
+   */
+  setAlwaysMatch (path, value, force = false) {
+    var alwaysMatch = this.sessionParameters.capabilities.alwaysMatch
+    if (force || typeof DO.get(alwaysMatch, path) === 'undefined') {
+      DO.set(alwaysMatch, path, value)
+    }
+    return this
+  }
+
+  /**
+   * Adds a property to the `firstMatch` array in the browser's capabilities.
+   *
+   * @param {string} key The name of the property to set
+   * @param {*} value The value to assign
+   * @param {boolean} force It will overwrite keys if needed
+   *
+   * @example
+   * this.addFirstMatch('browserName', 'chrome')
+   * this.addFirstMatch('browserName', 'firefox')
+   */
+  addFirstMatch (key, value, force = false) {
+    if (force || !this.sessionParameters.capabilities.firstMatch.indexOf(key) === -1) {
+      this.sessionParameters.capabilities.firstMatch.push({ [key]: value })
+    }
+    return this
+  }
+
+  /**
+   * Sets a key (or a path) on the object which will be sent to the webdriver when
+   * creating a session
+   *
+   * @param {string} path The name of the property to set. It can be a path; if path is has a `.` (e.g.
+   *                      `something.other`), the property
+   *                      `sessionParameters.something.other` will be set
+   * @param {*} value The value to assign
+   * @param {boolean} force It will overwrite keys if needed
+   *
+   * @example
+   * this.set('login', 'blah')
+   * this.set('pass', 'blah')
+   */
+  set (path, value, force = true) {
+    if (force || typeof DO.get(this.sessionParameters, path) === 'undefined') {
+      DO.set(this.sessionParameters, path, value)
+    }
+    return this
+  }
+
+  /**
+   * Sets a configuration option for the specific browser.
+   *
+   * @param {browserName} name The name of the browser to set. It can be
+   *                       `chrome`, `firefox`, `safari` or `edge`
+   * @param {string} path The name of the property to set. It can be a path; if path is has a `.` (e.g.
+   *                      `something.other`), the property
+   *                      `sessionParameters.something.other` will be set
+   * @param {*} value The value to assign
+   * @param {boolean} force It will overwrite keys if needed
+   *
+   * @example
+   * this.setSpecific('chrome', 'FIXME1', 'blah')
+   * this.setSpecific('safari', 'FIXME2', 'blah')
+   */
+  setSpecific (browserName, path, value, force = true) {
+    var specificKey
+    switch (browserName) {
+      case 'chrome': specificKey = 'goog:chromeOptions'; break
+      case 'edge': specificKey = 'edgeOptions'; break
+      case 'firefox': specificKey = 'moz:firefoxOptions'; break
+      case 'safari': specificKey = 'safari.options'; break
+    }
+
+    if (!specificKey) {
+      throw new Error('setSpecificKey called for a browser that doesn\'t support them')
+    }
+    if (force || typeof DO.get(this.sessionParameters, specificKey + '.' + path) === 'undefined') {
+      DO.set(this.sessionParameters, `capabilities.alwaysMatch.${specificKey}.${path}`, value)
+    }
+    return this
+  }
+
+  /**
+   * Return the current session parameters. This is used by the {@link Driver#newSession} call
+   * to get the parameters to be sent over
+   *
+   * @return {Object} The full session parameters
+   *
+   */
+  getSessionParameters () {
+    return this.sessionParameters
   }
 }
-
-exports = module.exports = Pointer
+exports = module.exports = Config
 </code></pre>
   </article>
 </section>
