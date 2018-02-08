@@ -95,7 +95,6 @@ This is display the configuration object created by default by the Chrome browse
       capabilities: {
         alwaysMatch: {
           goog:chromeOptions: { w3c: true },
-          browserName: 'chrome'
         },
        firstMatch: []
       }
@@ -113,7 +112,8 @@ It's important that you understand the configuration option:
 You can also set the session options using the setting methods:
 
     var config = new Config()
-    confog.setAlwaysMatch('pageLoadStrategy', 'eager')
+    config.setAlwaysMatch('browserName', 'chrome')
+          .setAlwaysMatch('pageLoadStrategy', 'eager')
           .addFirstMatch({ platformName: 'linux' })
           .set('login', 'merc')
           .set('password', 'youwish')

@@ -147,7 +147,6 @@ console.log('Session parameters:', require('util').inspect(params, { depth: 10 }
   capabilities: {
     alwaysMatch: {
       goog:chromeOptions: { w3c: true },
-      browserName: 'chrome'
     },
    firstMatch: []
   }
@@ -160,7 +159,8 @@ console.log('Session parameters:', require('util').inspect(params, { depth: 10 }
 </ul>
 <h4>Setting session parameters</h4><p>You can also set the session options using the setting methods:</p>
 <pre class="prettyprint source"><code>var config = new Config()
-confog.setAlwaysMatch('pageLoadStrategy', 'eager')
+config.setAlwaysMatch('browserName', 'chrome')
+      .setAlwaysMatch('pageLoadStrategy', 'eager')
       .addFirstMatch({ platformName: 'linux' })
       .set('login', 'merc')
       .set('password', 'youwish')
