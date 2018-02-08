@@ -41,10 +41,10 @@ To open up a driver, simply run:
 
     ;(async () => {
       try {
-        const { drivers, browsers, Actions } = require('best-webdriver')
+        const { drivers, Config, Actions } = require('best-webdriver')
 
         // Create a new driver object, using the Chrome browser
-        var driver = new drivers.ChromeDriver(new browsers.Chrome())
+        var driver = new drivers.ChromeDriver(new Config())
 
         // Create a new session. This will also run `chromewebdriver` for you
         await driver.newSession()
@@ -73,7 +73,7 @@ Understanding how sessions are created is crucial. This section explains the ses
 
 Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:
 
-    var driver = new drivers.ChromeDriver(new browsers.Chrome())
+    var driver = new drivers.ChromeDriver(new Config())
 
 At this point, no process is spawned yet. However, when you run:
 
@@ -85,8 +85,8 @@ You can use any one of the chromedrivers available: {@link ChromeDriver}, {@link
 
 When creating a session, the driver will use configuration options provided by the browser. For example if you type:
 
-    var chrome = new browsers.Chrome()
-    var params = chrome.getSessionParameters()
+    var config = new Config()
+    var params = config.getSessionParameters()
     console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))
 
 This is display the configuration object created by default by the Chrome browser. You will see:
@@ -94,7 +94,7 @@ This is display the configuration object created by default by the Chrome browse
     {
       capabilities: {
         alwaysMatch: {
-          chromeOptions: { w3c: true },
+          goog:chromeOptions: { w3c: true },
           browserName: 'chrome'
         },
        firstMatch: []
@@ -112,12 +112,12 @@ It's important that you understand the configuration option:
 
 You can also set the session options using the setting methods:
 
-    var chrome = new browsers.Chrome()
-    chrome.setAlwaysMatchKey('pageLoadStrategy', 'eager')
+    var config = new Config()
+    confog.setAlwaysMatch('pageLoadStrategy', 'eager')
           .addFirstMatch({ platformName: 'linux' })
-          .setRootKey('login', 'merc')
-          .setRootKey('password', 'youwish')
-          .setSpecificKey('detach', true)
+          .set('login', 'merc')
+          .set('password', 'youwish')
+          .setSpecific('chrome', 'detach', true)
 
     var params = chrome.getSessionParameters()
     console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))
@@ -125,7 +125,7 @@ You can also set the session options using the setting methods:
 You will see:
 
     {
-      // set by setRootKey()
+      // set by set()
       login: 'merc',
       pass: 'youwish',
 
@@ -133,10 +133,10 @@ You will see:
         alwaysMatch: {
 
           // Set by the Chrome constructor
-          chromeOptions: { w3c: true, detach: true },
+          goog:chromeOptions: { w3c: true, detach: true },
           browserName: 'chrome'
 
-          // Set my setAlwaysMatchKey()
+          // Set my setAlwaysMatch()
           pageLoadStrategy: 'eager'
         },
         firstMatch: [
@@ -147,7 +147,7 @@ You will see:
       }
     }
 
-Remember that in {@link Browser#setAlwaysMatchKey}, {@link Browser#setRootKey} and {@link Browser#setSpecificKey}, the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatchKey('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
+Remember that in {@link Browser#setAlwaysMatch}, {@link Browser#set} and {@link Browser#setSpecific}, the key can actually be a path: if it has a `.` (e.g. `chrome.setAlwaysMatch('timeouts.implicit`), the property `capabilities.alwaysMatch.timeouts.implicit` will be set.
 
 #### Running the API without spawning a webdriver
 
@@ -156,12 +156,9 @@ This is especially handy if you are using for example an online service, or a we
 
 Here is how you do it. Notice the `spawn: false` property:
 
-    // Create a new Chrome browser object
-    var chrome = new browsers.Chrome()
-
     // Create the driver, using that browser's
     // configuration WITHOUT spawning a chromedriver process
-    var driver = new drivers.ChromeDriver(chrome, {
+    var driver = new drivers.ChromeDriver(new Config(), {
       spawn: false,
       hostname: '10.10.10.45',
       port: 4444
@@ -176,20 +173,18 @@ Lastly (and more commonly), you might want to connect to a generic webdriver pro
 Here is how you would run it:
 
     // Create a new generic browser object, specifying the alwaysMatch parameter
-    var remote = new browsers.Browser()
+    var config = new Config()
 
-    remote.setAlwaysMatchKey('browserName', 'chrome')
-          .setAlwaysMatchKey('platformName', 'linux')
+    config.setAlwaysMatch('browserName', 'chrome')
+          .setAlwaysMatch('platformName', 'linux')
 
     // Creating the driver
-    var driver = new drivers.Driver(remote, {
+    var driver = new drivers.Driver(config, {
       hostname: '10.10.10.45',
       port: 4444
     })
 
-Note that since you used the generic {@link Browser} browser, the session configuration did _not_ include the browser-specific `{ w3c: true }` value.
-
-Also note that you used the generic {@link Driver}, which means that no browser-specific workarounds for W3C compliance will be applied. If you did want that to happen, you would simply run:
+Note that you are using the generic {@link Driver}, which means that no browser-specific workarounds for W3C compliance will be applied. If you did want that to happen, for example with Chrome, you would simply run:
 
     var driver = new drivers.ChromeDriver(remote, {
 
@@ -198,7 +193,7 @@ Also note that you used the generic {@link Driver}, which means that no browser-
 If you have the following chunk of code:
 
     // Create a new driver object, using the Chrome browser
-    var driver = new drivers.ChromeDriver(new browsers.Chrome())
+    var driver = new drivers.ChromeDriver(new Config())
 
     // Create a new session. This will also run `chromewebdriver` for you
     await driver.newSession()
@@ -218,7 +213,7 @@ Once you've created a driver object, you can use it to actually make webdriver c
 
 For example:
 
-    var driver = new drivers.ChromeDriver(new browsers.Chrome())
+    var driver = new drivers.ChromeDriver(new Config())
     await driver.newSession()
     await driver.navigateTo('https://www.google.com')
     var screenshotData = await driver.takeScreenshot()
@@ -419,7 +414,7 @@ The result of this is that one simple chained method, {@link Driver#waitFor}/{@l
 
 The main limitation of this API is that _it will only ever speak in w3c webdriver protocol_. For example, as of today Chrome doesn't yet implement {@link Actions}. While other APIs try to "emulate" actions (with crippling limitations) by calling non-standard endpoints, this API will simply submit the actions to the chrome webdriver and surely receive an error in response.
 
-Another limitation is that it's an API that is very close to the metal: you are supposed to understand how the session configuration works, for example; so, while you do have helper methods such as `setAlwaysMatchKey()`, `addFirstMatch()` etc., you are still expected to _understand_ what these calls do. Also, browser-specific parameters are added via `setSpecificKey()`; however, there are no helpers methods to get these parameters right. For example, if you want to add plugins to Chrome using the `extensions` option, you will need to create an array of packed extensions loaded from the disk and converted to base64. This _may_ change in the future, as this API matures; however, it won't add more classes and any enhancement will always be close enough to the API to be easy to understand.
+Another limitation is that it's an API that is very close to the metal: you are supposed to understand how the session configuration works, for example; so, while you do have helper methods such as `setAlwaysMatch()`, `addFirstMatch()` etc., you are still expected to _understand_ what these calls do. Also, browser-specific parameters are added via `setSpecificKey()`; however, there are no helpers methods to get these parameters right. For example, if you want to add plugins to Chrome using the `extensions` option, you will need to create an array of packed extensions loaded from the disk and converted to base64. This _may_ change in the future, as this API matures; however, it won't add more classes and any enhancement will always be close enough to the API to be easy to understand.
 
 ### Go test!
 
