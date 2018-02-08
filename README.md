@@ -133,10 +133,13 @@ You will see:
         alwaysMatch: {
 
           // Set by the Chrome constructor
-          goog:chromeOptions: { w3c: true, detach: true },
-          browserName: 'chrome'
+          goog:chromeOptions: {
+            w3c: true,
+            detach: true
+          },
 
           // Set my setAlwaysMatch()
+          browserName: 'chrome',
           pageLoadStrategy: 'eager'
         },
         firstMatch: [
