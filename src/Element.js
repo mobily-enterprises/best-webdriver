@@ -4,22 +4,22 @@ const KEY = require('./KEY')
 
 /**
 * The base class for Elements
- * @mixes FindHelpersMixin
- * @augments FindHelpersMixin
  *
- * An Element object is returned by {@link Driver#findElement} and
- * {@link Driver#findElements}.
+ * Elements are never instanced directly: they are returned by
+ * {@link Driver#findElement} and {@link Driver#findElements}.
  *
  * Element objects are then used to either get specific information about them
  * using for example `element.getText()`, or to perform actions on them such as
  * `element.click()` or `element.findElements` (which will return more elements)
+ *
+ * @mixes FindHelpersMixin
+ * @augments FindHelpersMixin
  * @inheritdoc
  */
 var Element = class {
   /**
    * Constructor. You never have to run this yourself, since both {@link Driver#findElement}
-   * and {@link Driver#findElements} will run `new Element()` for you based on what was
-   * returned by the webdriver.
+   * and {@link Driver#findElements} will run `new Element()` for you.
    *
    * @param {Driver} driver The driver that originally created this element
    * @param {object} elObject An element object as it was returned by the webdriver.

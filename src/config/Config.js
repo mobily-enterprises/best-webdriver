@@ -22,8 +22,8 @@ class Config {
    * Note that `goog:chromeOptions` is set as this option is necessary to make the
    * Chrome webdriver work with this API.
    *
-   * Configuration options are set with the methods {@link Browser#setAlwaysMatch},
-   * {@link Browser#addFirstMatch}, {@link Browser#set} and {@link Browser#setSpecific}
+   * Configuration options are set with the methods {@link Config#setAlwaysMatch},
+   * {@link Config#addFirstMatch}, {@link Config#set} and {@link Config#setSpecific}
    *
    */
   constructor () {

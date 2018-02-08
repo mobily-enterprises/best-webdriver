@@ -14,11 +14,11 @@ const KEY = require('../KEY')
  *
  * @example
  * // Create a driver using the Chrome browser
- * var driver1 = new Driver(new Chrome())
+ * var driver1 = new Driver(new Config())
  * await driver.newSession()
  *
  * // Create a driver, but does NOT spawn a new webcontroller process
- * var driver2 = new Driver(new Chrome(), {
+ * var driver2 = new Driver(new Config(), {
  *   spawn: false,
  *   hostname: '127.0.0.1',
  *   port: 4444
@@ -39,8 +39,8 @@ var Driver = class {
    * and are able to adjust calls and return values so that they follow the
    * w3c webdriver Protocol
    *
-   * @param {Browser} browser The browser that this API will pilot
-   * @param {Object} opt Options to configure the driver
+   * @param {Config} config The session config that will be sent to the webdriver
+   * @param {Object} opt Options to configure the API itself
    * @param {string} opt.hostname=127.0.0.1 The hostname to connect to.
    * @param {number} opt.port The port. If not specified, a free port will automatically be found
    * @param {number} opt.pollInterval=300 How many milliseconds to wait between each poll when using `waitFor()` by default
@@ -71,7 +71,9 @@ var Driver = class {
   }
 
   /**
-   * Set executable for the browser
+   * Set executable for the specific webdriver.
+   * Deriving classes like {@link ChromeDriver}, {@link SafariDriver} etc.
+   * will set the specific executable to run.
    *
    * @param {string} executable The name of the executable to run
    */
@@ -81,6 +83,8 @@ var Driver = class {
 
   /**
    * Run the actual webdriver's executable, depending on the browser
+   * This method might be overridden by deriving classes like
+   * {@link ChromeDriver} or {@link SafariDriver}
    *
    * @param {Object} opt Options to configure the webdriver executable
    * @param {number} opt.port The port the webdriver executable will listen to
