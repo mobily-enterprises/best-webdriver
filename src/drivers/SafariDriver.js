@@ -15,6 +15,9 @@ class SafariDriver extends Driver {
     super(...args)
     // Set the default executable
     this.setExecutable(process.platform === 'win32' ? 'safariDriver.exe' : 'safariDriver')
+
+    // Set the browser's name
+    this.name = 'safari'
   }
 }
 

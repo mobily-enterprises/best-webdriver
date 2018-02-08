@@ -15,6 +15,9 @@ class FirefoxDriver extends Driver {
     super(...args)
     // Set the default executable
     this.setExecutable(process.platform === 'win32' ? 'geckodriver.exe' : 'geckodriver')
+
+    // Set the browser's name
+    this.name = 'firefox'
   }
 }
 exports = module.exports = FirefoxDriver

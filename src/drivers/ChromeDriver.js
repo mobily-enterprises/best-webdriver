@@ -13,6 +13,9 @@ class ChromeDriver extends Driver {
     super(...args)
     // Set the default executable
     this.setExecutable(process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver')
+
+    // Set the browser's name
+    this.name = 'chrome'
   }
   /**
    * w3c: Fixes Chrome's setTimeouts implementation, which will require three different

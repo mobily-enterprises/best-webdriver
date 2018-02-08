@@ -49,8 +49,8 @@ var Driver = class {
    * @param {string} opt.stdio=ignore (If spawn === true) The default parameter to pass to {@link https://nodejs.org/api/child_process.html#child_process_options_stdio stdio} when spawning new preocess.
    * @param {Array} opt.args (If spawn === true) The arguments to pass to the webdriver command
    */
-  constructor (browser, options = {}) {
-    this._browser = browser
+  constructor (config, options = {}) {
+    this._config = config
     this._hostname = options.hostname || '127.0.0.1'
     this._spawn = typeof options.spawn !== 'undefined' ? !!options.spawn : true
     this._executable = null
@@ -101,7 +101,7 @@ var Driver = class {
     *
     * @example
     * // Create a driver using the Chrome browser
-    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
+    * var driver = new drivers.ChromeDriver(new Config())
     * driver.setPollInterval(200)
     */
   setPollInterval (ms) {
@@ -114,7 +114,7 @@ var Driver = class {
     * @param {number} timeout How many milliseconds between failing the call
     *
     * @example
-    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
+    * var driver = new drivers.ChromeDriver(new Config())
     * driver.setPollTimeout(200)
     */
   setPollTimeout (ms) {
@@ -133,7 +133,7 @@ var Driver = class {
     *
     * @example
     * // Create a driver using the Chrome browser
-    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
+    * var driver = new drivers.ChromeDriver(new Config())
     * await driver.navigateTo('http://www.google.com')
     *
     * // The findElementCss has 5 seconds to work
@@ -222,7 +222,7 @@ var Driver = class {
    * This method is called by {@link Driver#newSession|newSession}
    *
    * @example
-   * var driver = new drivers.ChromeDriver(new browsers.Chrome())
+   * var driver = new drivers.ChromeDriver(new Config())
    * await driver.startWebDriver()
    */
   async startWebDriver () {
@@ -283,7 +283,7 @@ var Driver = class {
     *
     * @example
     * // Create a driver using the Chrome browser
-    * var driver = new drivers.ChromeDriver(new browsers.Chrome())
+    * var driver = new drivers.ChromeDriver(new Config())
     * // ...
     * // ...
     * await driver.stopWebDriver()
@@ -327,7 +327,7 @@ var Driver = class {
    * @return {Promise<object>} An object containing the keys `sessionId` and `capabilities`
    *
    * @example
-   * var driver = new drivers.ChromeDriver(new browsers.Chrome())
+   * var driver = new drivers.ChromeDriver(new Config())
    * var session = await driver.newSession()
    */
   async newSession () {
@@ -338,7 +338,7 @@ var Driver = class {
       // First of all, try and run the webdriver, if it's not running already
       await this.startWebDriver()
 
-      var value = await this._execute('post', '', this._browser.getSessionParameters())
+      var value = await this._execute('post', '', this._config.getSessionParameters())
 
       // W3C conforming response; check if value is an object containing a `capabilities` object property
       // and a `sessionId` string property

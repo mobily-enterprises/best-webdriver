@@ -15,6 +15,9 @@ class EdgeDriver extends Driver {
     super(...args)
     // Set the default executable
     this.setExecutable('MicrosoftWebDriver.exe')
+
+    // Set the browser's name
+    this.name = 'edge'
   }
 }
 

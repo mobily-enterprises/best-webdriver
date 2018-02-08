@@ -1,4 +1,4 @@
-const { drivers, browsers, Actions } = require('best-webdriver') // eslint-disable-line no-unused-vars
+const { drivers, Config, Actions } = require('best-webdriver') // eslint-disable-line no-unused-vars
 const chai = require('chai')
 const express = require('express')
 const http = require('http')
@@ -24,46 +24,45 @@ function sleep (ms) { // eslint-disable-line no-unused-vars
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function getActiveBrowsers (allBrowsers) {
+async function getActiveDrivers (allDrivers) {
   //
-  async function browserThere (Browser) {
-    var browser = new Browser()
-    var driver = new Browser.Driver(browser)
+  async function driverThere (Driver) {
+    var driver = new Driver(new Config())
     try {
       await driver.startWebDriver()
     } catch (e) {
-      console.log(`${browser.name} not found.`)
+      console.log(`${driver.name} not found.`)
       return false
     }
     await driver.stopWebDriver()
-    console.log(`${browser.name} found!`)
+    console.log(`${driver.name} found!`)
     return true
   }
 
-  var browsers = []
-  for (var i = 0, l = allBrowsers.length; i < l; i++) {
-    var Browser = allBrowsers[i]
-    if (await browserThere(Browser)) {
-      browsers.push(Browser)
+  var drivers = []
+  for (var i = 0, l = allDrivers.length; i < l; i++) {
+    var Driver = allDrivers[i]
+    if (await driverThere(Driver)) {
+      drivers.push(Driver)
     }
   }
-  if (!browsers.length) {
+  if (!drivers.length) {
     throw new Error('No webdrivers found')
   }
-  return browsers
+  return drivers
 }
 
 (async () => {
-  var allBrowsers = await getActiveBrowsers([ browsers.Chrome, browsers.Firefox, browsers.Edge, browsers.Safari ])
-  // var allBrowsers = await getActiveBrowsers([ browsers.Firefox ])
+  var activeDrivers = await getActiveDrivers([ drivers.ChromeDriver, drivers.FirefoxDriver, drivers.EdgeDriver, drivers.SafariDriver ])
+  // var allDrivers = await getActiveBrowsers([ browsers.Firefox ])
 
-  allBrowsers.forEach((Browser) => {
-    var browser = new Browser()
-    var browserName = browser.name
+  activeDrivers.forEach((Driver) => {
+    var driver = new Driver()
+    var driverName = driver.name
 
     /* eslint-disable no-unused-expressions */
     /* globals describe,it,before,after,run */
-    describe(`[${browserName}] start all tests`, async function () {
+    describe(`[${driverName}] start all tests`, async function () {
       var server
       var port
       var url
@@ -74,7 +73,8 @@ async function getActiveBrowsers (allBrowsers) {
         port = server.address().port
         url = `http://127.0.0.1:${port}/`
 
-        driver = new Browser.Driver(new Browser())
+        var config = new Config()
+        driver = new Driver(config)
         await driver.startWebDriver()
       })
 
@@ -90,7 +90,7 @@ async function getActiveBrowsers (allBrowsers) {
       // ************ BASIC NON-ELEMENT CALLS **********
       // ***********************************************
 
-      describe(`[${browserName}] basic non-element calls`, async function () {
+      describe(`[${driverName}] basic non-element calls`, async function () {
         it('checks the status', async function () {
           var status = await driver.status()
           expect(status).to.be.an('object')
@@ -195,7 +195,7 @@ async function getActiveBrowsers (allBrowsers) {
       // ************ ACTIONS                 **********
       // ***********************************************
 
-      describe(`[${browserName}] actions`, async function () {
+      describe(`[${driverName}] actions`, async function () {
         it('mouse actions', async function () {
           this.timeout(10000)
           // var actions = new Actions()
@@ -233,7 +233,7 @@ async function getActiveBrowsers (allBrowsers) {
       // ************ WAITFOR                 **********
       // ***********************************************
 
-      describe(`[${browserName}] waitFor`, async function () {
+      describe(`[${driverName}] waitFor`, async function () {
         it('wait for an element', async function () {
           expect(true).to.be.true
         })
@@ -246,7 +246,7 @@ async function getActiveBrowsers (allBrowsers) {
       // ************ ELEMENTS                 **********
       // ***********************************************
 
-      describe(`[${browserName}] elements`, async function () {
+      describe(`[${driverName}] elements`, async function () {
         it('driver\'s findElement', async function () {
           expect(true).to.be.true
         })
