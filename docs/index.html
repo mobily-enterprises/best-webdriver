@@ -134,12 +134,12 @@
 <li>To provide a software layer around Chrome's own limitations or mistakes in implementing the W3c protocol</li>
 </ul>
 <p><em>Please note that in this guide it will always be assumed that the code is placed in <code>// ...add more code here</code>, and that the async function, require and session creation won't be repeated.</em></p>
-<h3>Understanding session options</h3><p>Understanding how sessions are created is crucial. This section explains the session object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic Browser browser.</p>
-<h4>The basic session object</h4><p>Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:</p>
+<h3>Understanding session options</h3><p>Understanding how sessions are created is crucial. This section explains the config object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic <a href="Driver.html">Driver</a>.</p>
+<h4>The basic config object</h4><p>Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using the <a href="ChromeDriver.html">ChromeDriver</a>:</p>
 <pre class="prettyprint source"><code>var driver = new drivers.ChromeDriver(new Config())</code></pre><p>At this point, no process is spawned yet. However, when you run:</p>
-<pre class="prettyprint source"><code>await driver.newSession()</code></pre><p>The driver, by default, will use the browser's driver's<code>run()</code> method to spawn a <code>chromedriver</code> process, and will then connect to it and create a new browsing session.</p>
+<pre class="prettyprint source"><code>await driver.newSession()</code></pre><p>The driver, by default, will use the driver's<code>run()</code> method to spawn a <code>chromedriver</code> process, and will then connect to it and create a new browsing session.</p>
 <p>You can use any one of the chromedrivers available: <a href="ChromeDriver.html">ChromeDriver</a>, <a href="FirefoxDriver.html">FirefoxDriver</a>, <a href="SafariDriver.html">SafariDriver</a>, <a href="EdgeDriver.html">EdgeDriver</a>.</p>
-<p>When creating a session, the driver will use configuration options provided by the browser. For example if you type:</p>
+<p>The basic configuration is pretty empty. To see it:</p>
 <pre class="prettyprint source"><code>var config = new Config()
 var params = config.getSessionParameters()
 console.log('Session parameters:', require('util').inspect(params, { depth: 10 } ))</code></pre><p>This is display the configuration object created by default by the Chrome browser. You will see:</p>
@@ -155,9 +155,9 @@ console.log('Session parameters:', require('util').inspect(params, { depth: 10 }
 <li>It must have a <code>capabilities</code> key</li>
 <li>Under <code>capabilities</code>, it must have the keys <code>alwaysMatch</code> (object) and <code>firstMatch</code> (an array)</li>
 <li>It may have more keys in the object's root namespace</li>
-<li><code>chromeOptions</code> (under <code>alwaysMatch</code>) represents Chrome-specific options. In this case, <code>w3c:true</code> is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).</li>
+<li><code>goog:chromeOptions</code> (under <code>alwaysMatch</code>) represents Chrome-specific options. In this case, <code>w3c:true</code> is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).</li>
 </ul>
-<h4>Setting session parameters</h4><p>You can also set the session options using the setting methods:</p>
+<h4>Setting session parameters</h4><p>You can set the config options using the setting methods:</p>
 <pre class="prettyprint source"><code>var config = new Config()
 config.setAlwaysMatch('browserName', 'chrome')
       .setAlwaysMatch('pageLoadStrategy', 'eager')
@@ -206,20 +206,20 @@ var driver = new drivers.ChromeDriver(new Config(), {
   hostname: '10.10.10.45',
   port: 4444
 })</code></pre><p>Note that since you are using the <a href="ChromeDriver.html">ChromeDriver</a> driver, the remote end will be assumed to be a Chrome webdriver: it will fix any mistakes and partial implementations of the W3C protocol.</p>
-<h4>The generic &quot;Browser&quot; browser</h4><p>Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called Browser, which is a &quot;blank&quot; browser without any pre-pared browser-specific options.</p>
+<h4>The generic &quot;Driver&quot; driver</h4><p>Lastly, you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic driver <a href="Driver.html">Driver</a>, which is a &quot;plain&quot; driver without the ability to spawn a webdriver process (obviously) and, more cruclaly, no browser-specific layering to fix problems with vendor-specific issues with their implementation.</p>
 <p>Here is how you would run it:</p>
 <pre class="prettyprint source"><code>// Create a new generic browser object, specifying the alwaysMatch parameter
 var config = new Config()
 
-config.setAlwaysMatch('browserName', 'chrome')
-      .setAlwaysMatch('platformName', 'linux')
+// We only care that this is a linux browser
+config.setAlwaysMatch('platformName', 'linux')
 
 // Creating the driver
 var driver = new drivers.Driver(config, {
   hostname: '10.10.10.45',
   port: 4444
-})</code></pre><p>Note that you are using the generic <a href="Driver.html">Driver</a>, which means that no browser-specific workarounds for W3C compliance will be applied. If you did want that to happen, for example with Chrome, you would simply run:</p>
-<pre class="prettyprint source"><code>var driver = new drivers.ChromeDriver(remote, {</code></pre><h3>Running amok with driver calls</h3><p>If you have the following chunk of code:</p>
+})</code></pre><p>Note that you are using the generic <a href="Driver.html">Driver</a>, which means that no browser-specific workarounds for W3C compliance will be applied.</p>
+<h3>Running amok with driver calls</h3><p>If you have the following chunk of code:</p>
 <pre class="prettyprint source"><code>// Create a new driver object, using the Chrome browser
 var driver = new drivers.ChromeDriver(new Config())
 

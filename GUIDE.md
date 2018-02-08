@@ -67,11 +67,11 @@ _Please note that in this guide it will always be assumed that the code is place
 
 ### Understanding session options
 
-Understanding how sessions are created is crucial. This section explains the session object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic {@link Browser} browser.
+Understanding how sessions are created is crucial. This section explains the config object itself (and helper methods), creating a session without spawning a webdriver process, and creating a session with the generic {@link Driver}.
 
-#### The basic session object
+#### The basic config object
 
-Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using Chrome as the browser:
+Most of the time, especially when you are just starting with webdrivers, you tend to use APIs such as this one for one specific browser's webdriver. Most APIs (including this one) will spawn a Chrome webdriver process, for example, when you create a new session using the {@link ChromeDriver}:
 
     var driver = new drivers.ChromeDriver(new Config())
 
@@ -79,11 +79,11 @@ At this point, no process is spawned yet. However, when you run:
 
     await driver.newSession()
 
-The driver, by default, will use the browser's driver's`run()` method to spawn a `chromedriver` process, and will then connect to it and create a new browsing session.
+The driver, by default, will use the driver's`run()` method to spawn a `chromedriver` process, and will then connect to it and create a new browsing session.
 
 You can use any one of the chromedrivers available: {@link ChromeDriver}, {@link FirefoxDriver}, {@link SafariDriver}, {@link EdgeDriver}.
 
-When creating a session, the driver will use configuration options provided by the browser. For example if you type:
+The basic configuration is pretty empty. To see it:
 
     var config = new Config()
     var params = config.getSessionParameters()
@@ -105,11 +105,11 @@ It's important that you understand the configuration option:
 * It must have a `capabilities` key
 * Under `capabilities`, it must have the keys `alwaysMatch` (object) and `firstMatch` (an array)
 * It may have more keys in the object's root namespace
-* `chromeOptions` (under `alwaysMatch`) represents Chrome-specific options. In this case, `w3c:true` is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).
+* `goog:chromeOptions` (under `alwaysMatch`) represents Chrome-specific options. In this case, `w3c:true` is specified in order to use Chrome with this API (since this API implements webdriver in its pure form, you need Chrome to use the W3c protocol as much as possible).
 
 #### Setting session parameters
 
-You can also set the session options using the setting methods:
+You can set the config options using the setting methods:
 
     var config = new Config()
     config.setAlwaysMatch('browserName', 'chrome')
@@ -172,17 +172,17 @@ Here is how you do it. Notice the `spawn: false` property:
 
 Note that since you are using the {@link ChromeDriver} driver, the remote end will be assumed to be a Chrome webdriver: it will fix any mistakes and partial implementations of the W3C protocol.
 
-#### The generic "Browser" browser
+#### The generic "Driver" driver
 
-Lastly (and more commonly), you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic browser called {@link Browser}, which is a "blank" browser without any pre-pared browser-specific options.
+Lastly, you might want to connect to a generic webdriver proxy, which will accept your session requirement and will provide you with a suitable browser. In this case, you will use the generic driver {@link Driver}, which is a "plain" driver without the ability to spawn a webdriver process (obviously) and, more cruclaly, no browser-specific layering to fix problems with vendor-specific issues with their implementation.
 
 Here is how you would run it:
 
     // Create a new generic browser object, specifying the alwaysMatch parameter
     var config = new Config()
 
-    config.setAlwaysMatch('browserName', 'chrome')
-          .setAlwaysMatch('platformName', 'linux')
+    // We only care that this is a linux browser
+    config.setAlwaysMatch('platformName', 'linux')
 
     // Creating the driver
     var driver = new drivers.Driver(config, {
@@ -190,9 +190,7 @@ Here is how you would run it:
       port: 4444
     })
 
-Note that you are using the generic {@link Driver}, which means that no browser-specific workarounds for W3C compliance will be applied. If you did want that to happen, for example with Chrome, you would simply run:
-
-    var driver = new drivers.ChromeDriver(remote, {
+Note that you are using the generic {@link Driver}, which means that no browser-specific workarounds for W3C compliance will be applied.
 
 ### Running amok with driver calls
 
