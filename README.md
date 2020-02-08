@@ -4,9 +4,9 @@
 
 Reading this short document is enough to cover _every_ aspect of the API.
 
-Be sure to check out the [API documentation](https://mercmobily.github.io/best-webdriver/index.html)
+Be sure to check out the [API documentation](https://mobily-enterprises.github.io/best-webdriver/)
 
-Yes, the [best webdriver](https://github.com/mercmobily/best-webdriver) is hosted on github
+Yes, the [best webdriver](https://github.com/mobilyenterprises/best-webdriver) is hosted on github
 
 Yes, it's also [available on NPM](https://www.npmjs.com/package/best-webdriver)
 
