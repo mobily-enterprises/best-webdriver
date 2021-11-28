@@ -11,6 +11,10 @@ const Driver = require('./Driver')
 class ChromeDriver extends Driver {
   constructor (...args) {
     super(...args)
+
+    const config = args[0]
+    if (config) config.addFirstMatch({ browserName: 'chrome'})
+    
     // Set the default executable
     this.setExecutable(process.platform === 'win32' ? 'chromedriver.exe' : 'chromedriver')
 
@@ -20,11 +24,14 @@ class ChromeDriver extends Driver {
   /**
    * w3c: Fixes Chrome's setTimeouts implementation, which will require three different
    * calls rather than the one call
+   * NOTE: The code has been commented out
    */
   async setTimeouts (p) {
-    if (p.pageLoad) await this._execute('post', '/timeouts', { type: 'page load', ms: p.pageLoad })
-    if (p.implicit) await this._execute('post', '/timeouts', { type: 'implicit', ms: p.implicit })
-    if (p.script) await this._execute('post', '/timeouts', { type: 'script', ms: p.script })
+    await this._execute('post', '/timeouts', p)
+    
+    // if (p.pageLoad) await this._execute('post', '/timeouts', { type: 'pageLoad', ms: p.pageLoad })
+    // if (p.implicit) await this._execute('post', '/timeouts', { type: 'implicit', ms: p.implicit })
+    // if (p.script) await this._execute('post', '/timeouts', { type: 'script', ms: p.script })
   }
 
   /**
