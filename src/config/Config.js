@@ -78,13 +78,21 @@ class Config {
    * @param {boolean} force It will overwrite keys if needed
    *
    * @example
-   * this.addFirstMatch('browserName', 'chrome')
+   * this.addFirstMatch({browserName: 'chrome'})
+   * this.addFirstMatch({browserName: 'firefox'})
+   * NOTE: WAS:
+   * this.addFirstMatch({'browserName', 'chrome')
    * this.addFirstMatch('browserName', 'firefox')
    */
-  addFirstMatch (key, value, force = false) {
-    if (force || !this.sessionParameters.capabilities.firstMatch.indexOf(key) === -1) {
-      this.sessionParameters.capabilities.firstMatch.push({ [key]: value })
-    }
+  // addFirstMatch (key, value, force = false) {
+  //  if (force || !this.sessionParameters.capabilities.firstMatch.indexOf(key) === -1) {
+  //    this.sessionParameters.capabilities.firstMatch.push({ [key]: value })
+  //  }
+  //  return this
+  //}
+  addFirstMatch (obj) {
+    this.sessionParameters.capabilities.firstMatch.push(obj)
+
     return this
   }
 
