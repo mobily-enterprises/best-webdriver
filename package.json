@@ -1,6 +1,6 @@
 {
   "name": "best-webdriver",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Best webdriver around using async/await, simplified down-to-earth API, easy to debug, 1:1 matching with the webdriver API. You will be testing in 20 minutes, not 20 hours",
   "main": "index.js",
   "scripts": {
