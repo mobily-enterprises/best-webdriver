@@ -1,4 +1,4 @@
-const { drivers, Config, Actions } = require('best-webdriver') // eslint-disable-line no-unused-vars
+const { drivers, Config, Actions } = require('../index.js') // eslint-disable-line no-unused-vars
 const chai = require('chai')
 const express = require('express')
 const http = require('http')
@@ -24,7 +24,7 @@ function sleep (ms) { // eslint-disable-line no-unused-vars
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function getActiveDrivers (allDrivers) {
+async function getActiveStartedDriversObjects (allDrivers) {
   //
   async function driverThere (Driver) {
     var driver = new Driver(new Config())
@@ -34,17 +34,16 @@ async function getActiveDrivers (allDrivers) {
       console.log(`${driver.name} not found.`)
       return false
     }
-    await driver.stopWebDriver()
+    // await driver.stopWebDriver()
     console.log(`${driver.name} found!`)
-    return true
+    return driver
   }
 
   var drivers = []
   for (var i = 0, l = allDrivers.length; i < l; i++) {
     var Driver = allDrivers[i]
-    if (await driverThere(Driver)) {
-      drivers.push(Driver)
-    }
+    const driver = await driverThere(Driver)
+    if (driver) drivers.push(driver)
   }
   if (!drivers.length) {
     throw new Error('No webdrivers found')
@@ -53,11 +52,10 @@ async function getActiveDrivers (allDrivers) {
 }
 
 (async () => {
-  var activeDrivers = await getActiveDrivers([ drivers.ChromeDriver, drivers.FirefoxDriver, drivers.EdgeDriver, drivers.SafariDriver ])
+  var activeDrivers = await getActiveStartedDriversObjects([ drivers.ChromeDriver, drivers.FirefoxDriver, drivers.EdgeDriver, drivers.SafariDriver ])
   // var allDrivers = await getActiveBrowsers([ browsers.Firefox ])
 
-  activeDrivers.forEach((Driver) => {
-    var driver = new Driver()
+  activeDrivers.forEach((driver) => {
     var driverName = driver.name
 
     /* eslint-disable no-unused-expressions */
@@ -66,16 +64,13 @@ async function getActiveDrivers (allDrivers) {
       var server
       var port
       var url
-      var driver
 
       before(async function () {
         server = await startServer()
         port = server.address().port
         url = `http://127.0.0.1:${port}/`
 
-        var config = new Config()
-        driver = new Driver(config)
-        await driver.startWebDriver()
+        // await driver.startWebDriver()
       })
 
       // Close things up
