@@ -153,7 +153,7 @@ async function getActiveStartedDriversObjects (allDrivers) {
         })
         it('getWindowRect/setWindowRect', async function () {
           var rect = await driver.getWindowRect()
-          console.log('RECT:', rect)
+          // console.log('RECT:', rect)
           expect(rect).to.be.an('object')
           expect(rect).to.have.all.keys('height', 'width', 'x', 'y')
           var newRect1 = await driver.setWindowRect({ x: 100, y: 100 })
