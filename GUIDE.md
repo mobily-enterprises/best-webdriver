@@ -4,9 +4,9 @@
 
 Reading this short document is enough to cover _every_ aspect of the API.
 
-Be sure to check out the [API documentation](https://mercmobily.github.io/best-webdriver/index.html)
+Be sure to check out the [API documentation](https://mobily-enterprises.github.io/best-webdriver/index.html)
 
-Yes, the [best webdriver](https://github.com/mercmobily/best-webdriver) is hosted on github
+Yes, the [best webdriver](https://github.com/mobily-enterprises/best-webdriver) is hosted on github
 
 Yes, it's also [available on NPM](https://www.npmjs.com/package/best-webdriver)
 
@@ -15,7 +15,7 @@ Yes, it's also [available on NPM](https://www.npmjs.com/package/best-webdriver)
 * Slim code: **817 lines of code** and **7 active classes**, compared to the selenium-webdriver's **5654 lines of code** and **92 classes**
 * 100% [W3C's webdriver](https://w3c.github.io/webdriver/webdriver-spec.html#compatibility) compliant. The code only ever makes pure webdriver calls
 * (Having said that) Compatibility layer for specific browsers, in order to fix mistakes and gaps in drivers' implementations
-* [Well documented API](https://mercmobily.github.io/best-webdriver/index.html) which comes with a simple quickstart guide
+* [Well documented API](https://mobily-enterprises.github.io/best-webdriver/index.html) which comes with a simple quickstart guide
 * The API is async/await friendly. Each call returns a promise. Development is a breeze
 * Easy to debug. There is a 1:1 mapping between calls and the webdriver protocol, without trickery
 * Simple system to define sequences of webdriver UI actions
