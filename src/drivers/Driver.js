@@ -1,6 +1,6 @@
 const consolelog = require('debug')('webdriver:Driver')
 const getPort = require('get-port')
-const request = require('request-promise-native')
+const axios = require('axios')
 const utils = require('../utils')
 const Element = require('../Element.js')
 const FindHelpersMixin = require('../FindHelpersMixin')
@@ -398,8 +398,8 @@ var Driver = class {
    */
   async status () {
     var _urlBase = `http://${this._hostname}:${this._port}`
-    var res = await request.get({ url: `${_urlBase}/status`, json: true })
-    return utils.checkRes(res).value
+    var res = await axios({ method: 'get', url: `${_urlBase}/status` })
+    return utils.checkRes(res.data).value
   }
 
   /**
@@ -442,15 +442,20 @@ var Driver = class {
       if (!this._ready()) throw new Error('Executing command on non-ready driver')
     }
 
-    var p = { url: `${this._urlBase}${command}` }
-
-    p.json = method === 'post' ? params || {} : true
+    var p = { method, url: null }
+    if (method === 'post' || method === 'put') p.data = params || {}
+    p.url = `${this._urlBase}${command}`
 
     // Getting the result
-    var res = await request[method](p)
+    try {
+      var res = await axios(p)
+    } catch(e){ 
+      console.log(e)
+    }
 
+    if (!res) debugger
     // Return the result, checking if everything is OK
-    return utils.checkRes(res).value
+    return utils.checkRes(res.data).value
   }
 
   /**
